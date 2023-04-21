@@ -1,0 +1,219 @@
+[20-Jan-2020 07:52:15 Asia/Jakarta] PHP Fatal error:  Call to a member function real_escape_string() on boolean in /home/arigunaw/public_html/system/database/drivers/mysqli/mysqli_driver.php on line 391
+[24-Feb-2020 11:14:24 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[06-Mar-2020 13:33:50 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[06-Mar-2020 13:33:51 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[06-Mar-2020 13:35:50 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[25-Aug-2020 10:37:08 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[25-Aug-2020 10:37:17 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[06-Sep-2020 15:09:09 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 115
+[06-Sep-2020 15:13:49 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[06-Sep-2020 15:20:28 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[21-Sep-2020 09:41:28 Asia/Jakarta] PHP Fatal error:  Call to a member function real_escape_string() on boolean in /home/arigunaw/public_html/system/database/drivers/mysqli/mysqli_driver.php on line 391
+[29-Sep-2020 14:22:56 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 130
+[29-Sep-2020 14:23:08 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[29-Sep-2020 14:26:12 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 130
+[01-Oct-2020 09:49:54 Asia/Jakarta] PHP Fatal error:  Call to a member function real_escape_string() on boolean in /home/arigunaw/public_html/system/database/drivers/mysqli/mysqli_driver.php on line 391
+[01-Oct-2020 09:49:54 Asia/Jakarta] PHP Fatal error:  Call to a member function real_escape_string() on boolean in /home/arigunaw/public_html/system/database/drivers/mysqli/mysqli_driver.php on line 391
+[01-Oct-2020 09:50:40 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:04:36 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:04:41 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:04:54 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:05:07 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:05:11 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 10:05:15 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Penjualan_detail_model.php on line 39
+[01-Oct-2020 11:25:45 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[01-Oct-2020 11:25:53 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[01-Oct-2020 11:26:02 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[13-Oct-2020 11:02:07 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[13-Oct-2020 11:02:13 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[20-Apr-2021 08:20:31 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 44
+[20-Apr-2021 08:21:40 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 44
+[20-Apr-2021 08:21:40 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[20-Apr-2021 08:21:40 Asia/Jakarta] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/arigunaw/public_html/system/database/DB_query_builder.php on line 1391
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 101
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/arigunaw/public_html/system/database/DB_query_builder.php on line 1391
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/arigunaw/public_html/system/database/DB_query_builder.php on line 1391
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[07-Jun-2021 21:09:21 Asia/Jakarta] PHP Fatal error:  Call to a member function row() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 26
+[10-Jun-2021 12:30:57 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[10-Jul-2021 16:45:04 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 16:45:47 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 16:46:41 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 16:48:09 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 17:14:11 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 17:22:08 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 17:54:01 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 19:15:41 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 19:26:45 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 19:30:58 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 19:46:24 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[10-Jul-2021 19:47:01 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[10-Jul-2021 20:05:54 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:08:54 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:12:22 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:20:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:34:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:51:53 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[10-Jul-2021 20:52:47 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 07:26:06 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 07:27:03 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 13:44:17 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 15:51:59 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 15:59:09 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 27
+[11-Jul-2021 15:59:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 15:59:56 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 16:00:21 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 16:01:05 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 16:01:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 16:02:08 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:02:26 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:02:43 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:05:25 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:07:42 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:10:44 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:11:02 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:13:30 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:13:45 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[11-Jul-2021 16:21:52 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 49
+[11-Jul-2021 16:24:10 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 48
+[11-Jul-2021 16:25:19 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:25:53 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3200 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:45:01 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:47:51 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[11-Jul-2021 16:50:20 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[12-Jul-2021 06:25:27 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/arigunaw/public_html/application/views/laporan/pjual.php on line 52
+[12-Jul-2021 15:05:10 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[12-Jul-2021 17:40:47 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[12-Jul-2021 18:17:40 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[13-Jul-2021 07:02:21 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[13-Jul-2021 17:45:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:24:54 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:26:15 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:26:49 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:27:25 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:56:01 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:57:53 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 20:59:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 21:00:21 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 21:00:44 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 21:01:42 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 21:03:41 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 21:04:07 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:22:21 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:22:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:24:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:26:56 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:28:46 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:29:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[14-Jul-2021 22:31:33 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/arigunaw/public_html/system/core/Loader.php on line 934
+[09-Aug-2021 11:12:06 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[22-Aug-2021 15:20:45 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[04-Oct-2021 14:06:56 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[04-Oct-2021 14:06:56 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[04-Oct-2021 14:06:57 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[09-Oct-2021 02:18:25 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[09-Oct-2021 02:18:25 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[26-Oct-2021 08:30:20 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[26-Oct-2021 08:30:20 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[26-Oct-2021 08:30:20 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[26-Oct-2021 08:30:53 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[26-Oct-2021 08:31:31 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[26-Oct-2021 08:31:31 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[26-Oct-2021 08:31:31 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[26-Oct-2021 08:32:34 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[06-Nov-2021 16:41:52 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Karyawan_model.php on line 20
+[22-Nov-2021 17:13:29 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 108
+[24-Nov-2021 10:47:54 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[24-Nov-2021 10:47:54 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[24-Nov-2021 10:47:54 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[24-Nov-2021 10:47:54 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/CodeGenerator.php on line 10
+[19-Dec-2021 21:16:27 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:32 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:43 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:45 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:46 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:50 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:53 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:55 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:16:57 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:17:37 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:17:46 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:17:53 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:18:03 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:18:09 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:19:33 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:20:22 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:21:17 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[19-Dec-2021 21:21:35 Asia/Jakarta] PHP Fatal error:  Cannot use object of type stdClass as array in /home/arigunaw/public_html/application/views/home.php on line 110
+[22-Dec-2021 15:49:04 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Barang_model.php on line 21
+[16-Jan-2022 13:50:32 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 151
+[16-Jan-2022 13:50:32 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/arigunaw/public_html/application/models/Penjualan_model.php on line 151
+[17-Jan-2022 09:21:38 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 09:21:43 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 09:21:49 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 09:22:03 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 09:23:47 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 09:24:42 Asia/Jakarta] PHP Fatal error:  Call to a member function result() on boolean in /home/jeghozza/public_html/application/models/Admin_model.php on line 20
+[17-Jan-2022 14:01:44 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:02:08 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:02:42 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:03:28 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:05:10 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:05:46 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:07:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:20:34 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:21:33 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:22:28 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:22:59 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:25:42 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:28:28 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:32:23 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:35:09 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:51:34 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:52:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 83 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 17:06:31 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:20:42 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:23:39 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:24:39 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:25:28 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:25:52 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:28:06 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:29:06 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:30:24 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:31:21 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 20:32:55 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 21:11:34 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 21:14:04 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 21:14:30 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 21:16:23 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 21:22:45 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 84 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:33:06 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:33:33 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:40:07 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:52:09 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:52:37 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:52:53 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:53:39 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:54:51 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:55:39 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:57:12 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:59:32 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 14:59:51 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 15:03:13 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 15:03:30 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 15:10:15 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 15:10:41 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 15:10:59 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[17-Jan-2022 16:39:11 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 00:40:10 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 4096 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 04:50:39 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 07:14:50 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 16:44:00 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 16:44:36 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[18-Jan-2022 18:48:24 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[19-Jan-2022 00:22:52 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[19-Jan-2022 08:15:23 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[19-Jan-2022 13:48:06 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[19-Jan-2022 17:33:18 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
+[20-Jan-2022 09:25:58 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/jeghozza/public_html/system/database/drivers/mysqli/mysqli_result.php on line 183
