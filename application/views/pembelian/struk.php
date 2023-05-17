@@ -8,7 +8,7 @@
 <table class="table" style="width:500px;">
 <tr><td rowspan="4" width="100"><img alt="" class="img-circle" src="<?=base_url();?>/assets/logo1.png" height='7%'/ ></td></tr>
 	    <tr><td>Kode Beli</td><td><?php echo $kode_beli; ?></td></tr>
-	    <tr><td>Tanggal Beli</td><td><?php echo $tanggal_beli; ?></td></tr>
+	    <tr><td>Tanggal Beli</td><td><?php echo $tanggal_beli . ' ' . $waktu_beli; ?></td></tr>
 	    <tr><td>Kode Admin</td><td><?php echo $kode_admin; ?></td></tr>
         <tr><td>Kode Suplier</td><td><?php echo $kode_suplier; ?></td></tr>
 	    <tr><td colspan="3"><table class="table table-bordered table-hover table-striped"    >

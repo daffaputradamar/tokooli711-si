@@ -86,8 +86,21 @@ class Penjualan_model extends CI_Model
             $this->db->or_like('LOWER(pelanggan)', $_cari);
         }
         
-        $this->db->limit($limit, $start);
+        $this->db->order_by('kode_jual', 'desc');
+        // $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
+    }
+
+    public function get_limit_data_filter($kode_barang, $tgl_awal, $tgl_akhir, $limit, $start = 0)
+    {
+        return $this->db->query("
+            SELECT p.*
+            FROM penjualan p
+            JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
+            WHERE pd.kode_barang = '$kode_barang'
+            AND p.tanggal_jual_date BETWEEN '$tgl_awal' AND '$tgl_akhir'
+            ORDER BY p.kode_jual DESC
+        ")->result();
     }
 
     public function insert($data)

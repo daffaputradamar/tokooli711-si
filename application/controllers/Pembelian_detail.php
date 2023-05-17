@@ -152,15 +152,17 @@ class Pembelian_detail extends CI_Controller
         }
     }
     
-    public function delete($id,$barang) 
+    public function delete($barang) 
     {
-        $row = $this->Pembelian_detail_model->selectById($id);
+        // $row = $this->Pembelian_detail_model->selectById($id);
 
-        if ($row) {
-            $this->Pembelian_detail_model->delete($id,$barang);
-            
+        // if ($row) {
+            // $this->Pembelian_detail_model->delete($id,$barang);
+
+            unset($_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian'][$barang]);
+
             redirect(site_url('pembelian/insert'));
-        }
+        // }
     }
     
 

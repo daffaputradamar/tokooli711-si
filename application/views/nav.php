@@ -39,6 +39,7 @@
     
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
+    <script src="<?=base_url();?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
@@ -112,7 +113,7 @@
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-    <?php if($_SESSION['level']=="admin"){ ?>
+    <?php if($_SESSION['level']=="admin" || $_SESSION['level']=="karyawan_admin"){ ?>
     <div class="page-sidebar-wrapper">
         <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
         <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
@@ -125,91 +126,102 @@
             <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
             <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
             <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" >
-                <li class="start">
-                    <a href="<?=base_url()?>index.php/home">
-                        <i class="icon-home"></i>
-                        <span class="title">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <i class="icon-briefcase"></i>
-                        <span class="title">Master Data</span>
-                        <span class="arrow "></span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="<?= base_url() ?>index.php/barang">Barang</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url() ?>index.php/merk">Merk</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url() ?>index.php/karyawan">Karyawan</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url() ?>index.php/suplier">Suplier</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="<?= base_url() ?>index.php/pembelian">
-                        <i class="icon-basket"></i>
-                        <span class="title">Pembelian</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url() ?>index.php/penjualan">
-                        <i class="icon-basket"></i>
-                        <span class="title">Penjualan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <i class="icon-wallet"></i>
-                        <span class="title">Laporan</span>
-                        <span class="arrow "></span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="<?= base_url() ?>index.php/laporan/laporan_barang">
-                                Laporan Barang</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url() ?>index.php/laporan/beli">
-                                Laporan Pembelian</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url() ?>index.php/laporan/jual">
-                                Laporan Penjualan</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="<?= base_url() ?>index.php/ramal">
-                        <i class="icon-graph"></i>
-                        <span class="title">Ramal Stok </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url() ?>index.php/ramal/index2">
-                        <i class="icon-graph"></i>
-                        <span class="title">Pengujian Ramal Stok</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="<?= base_url() ?>index.php/ramal_harga">
-                        <i class="icon-graph"></i>
-                        <span class="title">Ramal Harga </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url() ?>index.php/ramal_harga/index2">
-                        <i class="icon-graph"></i>
-                        <span class="title">Pengujian Ramal Harga</span>
-                    </a>
-                </li>
+                <?php if($_SESSION['level']=="admin" || $_SESSION['level']=="karyawan_admin"){ ?>
+                    <li class="start">
+                        <a href="<?=base_url()?>index.php/home">
+                            <i class="icon-home"></i>
+                            <span class="title">Dashboard</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($_SESSION['level']=="admin"){ ?>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="icon-briefcase"></i>
+                            <span class="title">Master Data</span>
+                            <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="<?= base_url() ?>index.php/barang">Barang</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/merk">Merk</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/karyawan">Karyawan</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/suplier">Suplier</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/promo">Promo</a>
+                            </li>
+                        </ul>
+                    </li>
+                <?php } ?>
+                <?php if($_SESSION['level']=="admin" || $_SESSION['level']=="karyawan_admin"){ ?>
+                    <li>
+                        <a href="<?= base_url() ?>index.php/pembelian">
+                            <i class="icon-basket"></i>
+                            <span class="title">Pembelian</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($_SESSION['level']=="admin"){ ?>
+                    <li>
+                        <a href="<?= base_url() ?>index.php/penjualan">
+                            <i class="icon-basket"></i>
+                            <span class="title">Penjualan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="icon-wallet"></i>
+                            <span class="title">Laporan</span>
+                            <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="<?= base_url() ?>index.php/laporan/laporan_barang">
+                                    Laporan Barang</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/laporan/beli">
+                                    Laporan Pembelian</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>index.php/laporan/jual">
+                                    Laporan Penjualan</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="<?= base_url() ?>index.php/ramal">
+                            <i class="icon-graph"></i>
+                            <span class="title">Ramal Stok </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url() ?>index.php/ramal/index2">
+                            <i class="icon-graph"></i>
+                            <span class="title">Pengujian Ramal Stok</span>
+                        </a>
+                    </li>
+    
+                    <li>
+                        <a href="<?= base_url() ?>index.php/ramal_harga">
+                            <i class="icon-graph"></i>
+                            <span class="title">Ramal Harga </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url() ?>index.php/ramal_harga/index2">
+                            <i class="icon-graph"></i>
+                            <span class="title">Pengujian Ramal Harga</span>
+                        </a>
+                    </li>
+                <?php } ?>
 
             </ul>
             <!-- END SIDEBAR MENU -->
@@ -218,7 +230,7 @@
     <?php } ?>
     <!-- END SIDEBAR -->
     <!-- BEGIN CONTENT -->
-    <?php if($_SESSION['level']=="admin"){ ?>
+    <?php if($_SESSION['level']=="admin" || $_SESSION['level']=="karyawan_admin"){ ?>
     <div class="page-content-wrapper">
     <?php } ?>
         <div class="page-content">

@@ -59,6 +59,23 @@ class Karyawan_model extends CI_Model
         $this->db->delete($this->table);
     }
 
+    function reset($id)
+    {
+        $data = array(
+            'percobaan_stok' => 0
+            );
+        $this->db->where($this->primary, $id);
+        $this->db->update($this->table, $data);
+    }
+
+    function updateTry($id) {
+        $this->db->query("
+            UPDATE karyawan
+            SET percobaan_stok = percobaan_stok + 1
+            WHERE kode_karyawan = '$id' 
+        ");
+    }
+
 }
 
 /* End of file Karyawan_model.php */

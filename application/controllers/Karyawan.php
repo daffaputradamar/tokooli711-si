@@ -170,6 +170,17 @@ class Karyawan extends CI_Controller
         }
     }
 
+    public function reset($id) 
+    {
+        $row = $this->Karyawan_model->selectById($id);
+
+        if ($row) {
+            $this->Karyawan_model->reset($id);
+            
+            redirect(site_url('karyawan'));
+        }
+    }
+
 }
 
 /* End of file Karyawan.php */

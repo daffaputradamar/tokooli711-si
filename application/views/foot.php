@@ -29,23 +29,10 @@
 <![endif]-->
 
 
-<script>
-$("#bayar").on("change", function() {
-    console.log($(this).val());
-});
-
-function kembalian() {
-    console.log(document.getElementById("bayar").value);
-    document.getElementById("kembali").value = document.getElementById("bayar").value - document.getElementById("total")
-        .value
-}
-</script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" type="text/javascript"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js" type="text/javascript"></script>
 
-<script src="<?=base_url();?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="<?=base_url();?>assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="<?=base_url();?>assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
@@ -84,6 +71,18 @@ jQuery(document).ready(function() {
     Index.init(); // init index page
     Tasks.initDashboardWidget(); // init tash dashboard widget
 });
+</script>
+
+<script>
+$("#bayar").on("change", function() {
+    console.log($(this).val());
+});
+
+function kembalian() {
+    console.log(document.getElementById("bayar").value);
+    document.getElementById("kembali").value = document.getElementById("bayar").value - document.getElementById("total")
+        .value
+}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

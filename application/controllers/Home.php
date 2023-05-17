@@ -67,7 +67,7 @@ class Home extends CI_Controller
 
         $data['listkaryawan']=$this->Karyawan_model->selectByAll();
         
-        if ($_SESSION['level'] == "karyawan") {
+        if ($_SESSION['level'] != "admin") {
             $data['karyawan']=$this->Karyawan_model->selectById($_SESSION['kode']);
         } else {
             $data['admin']=$this->Admin_model->selectById($_SESSION['kode']);

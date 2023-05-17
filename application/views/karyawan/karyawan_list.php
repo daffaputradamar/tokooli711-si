@@ -38,6 +38,7 @@
 		<th>Nama Karyawan</th>
 		<th>Alamat Karyawan</th>
 		<th>Telp Karyawan</th>
+		<th>Percobaan Stok</th>
 		<th>Action</th>
             </tr><?php
             foreach ($karyawan_data as $karyawan)
@@ -48,6 +49,12 @@
 			<td><?php echo $karyawan->nama_karyawan ?></td>
 			<td><?php echo $karyawan->alamat_karyawan ?></td>
 			<td><?php echo $karyawan->telp_karyawan ?></td>
+            <td><?= $karyawan->percobaan_stok ?> 
+                <br>
+                <?php if ($karyawan->percobaan_stok > 0) { 
+    				echo anchor(site_url('karyawan/reset/'.$karyawan->kode_karyawan),'Reset','class="btn btn-warning"'); 
+                }?>
+            </td>
 			<td style="text-align:center" width="250px">
 				<?php 
 				echo anchor(site_url('karyawan/view/'.$karyawan->kode_karyawan),'Lihat','class="btn btn-info"'); 

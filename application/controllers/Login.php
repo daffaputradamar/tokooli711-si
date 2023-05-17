@@ -56,7 +56,11 @@ class Login extends CI_Controller {
 								//var_dump($row->psswd);
 								$status=TRUE;
 								$kode=$row->kode_karyawan;
-								$level="karyawan";							
+								if ($row->level == 0) {
+									$level="karyawan";							
+								} else {
+									$level="karyawan_admin";	
+								}
 							}
 						}
 						

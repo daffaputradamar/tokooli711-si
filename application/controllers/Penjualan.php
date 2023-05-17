@@ -1,11 +1,12 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Penjualan extends CI_Controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->model('Penjualan_model');
@@ -15,6 +16,7 @@ class Penjualan extends CI_Controller
         $this->load->model('Admin_model');
         $this->load->model('Barang_model');
         $this->load->model('Penjualan_detail_model');
+        $this->load->model('Promo_model');
         session_start();
     }
     public function _rule()
@@ -31,11 +33,26 @@ class Penjualan extends CI_Controller
 
     public function index()
     {
-        $this->load->view('nav');
         $this->load->library('pagination');
+
+        $config['per_page'] = 10;
+        $config['page_query_string'] = true;
+
         $cari = urldecode($this->input->get('cari'));
         $filterkaryawan = empty(urldecode($this->input->get('filterkaryawan'))) ? "ALL" : urldecode($this->input->get('filterkaryawan'));
         $start = intval($this->input->get('start'));
+
+        $is_filter = $this->input->post('filter');
+        if (isset($is_filter)) {
+            $filter_barang = $this->input->post('kode_barang');
+            $filter_tgl_awal = $this->input->post('tgl_awal');
+            $filter_tgl_akhir = $this->input->post('tgl_akhir');
+
+            $penjualan_all = $this->Penjualan_model->get_limit_data_filter($filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $config['per_page'], $start);
+
+        } else {
+            $penjualan_all = $this->Penjualan_model->get_limit_data($config['per_page'], $start, $cari);
+        }
 
         if ($cari <> '') {
             $config['base_url'] = base_url() . 'penjualan?cari=' . urlencode($cari);
@@ -53,13 +70,8 @@ class Penjualan extends CI_Controller
             }
         }
 
-
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Penjualan_model->total_rows($cari, $filterkaryawan);
-        $penjualan = $this->Penjualan_model->get_limit_data($config['per_page'], $start, $cari, $filterkaryawan);
-
-        // return;
+        $penjualan = array_slice($penjualan_all, $start, $config['per_page']);
+        $config['total_rows'] = count($penjualan_all);
 
         $this->pagination->initialize($config);
 
@@ -71,7 +83,10 @@ class Penjualan extends CI_Controller
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
+            'listbarang' => $this->Barang_model->selectByAll()
         );
+
+        $this->load->view('nav');
         $this->load->view('penjualan/penjualan_list', $data);
         $this->load->view('foot');
     }
@@ -183,6 +198,7 @@ class Penjualan extends CI_Controller
                         }
                     } else {
                         echo "<script>alert('Stok kurang')</script>";
+                        $this->Karyawan_model->updateTry($kode_user);
                         if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
                             redirect(site_url('home'), 'refresh');
                         } else {
@@ -203,7 +219,7 @@ class Penjualan extends CI_Controller
                             'subtotal' => ($this->input->post('rupiah') <> -1) ? $this->input->post('rupiah') : (float)$barang->harga_jual * (float)$this->input->post('jumlah'),
                             'is_using_rupiah' => ($this->input->post('rupiah') <> -1) ? true : false,
                         );
-                        
+
                         $_SESSION[$kode_user . 'detailbarang'][$this->input->post('kode_barang')] = $data;
                         // $this->Penjualan_detail_model->update($data['kode_jual'], $data['kode_barang'], $data);
                         if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
@@ -213,6 +229,7 @@ class Penjualan extends CI_Controller
                         }
                     } else {
                         echo "<script>alert('Stok kurang')</script>";
+                        $this->Karyawan_model->updateTry($kode_user);
                         if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
                             redirect(site_url('home'), 'refresh');
                         } else {
@@ -225,14 +242,14 @@ class Penjualan extends CI_Controller
             // echo $this->uri->segment(3);
             $this->_rule();
 
-            if ($this->form_validation->run() == FALSE) {
+            if ($this->form_validation->run() == false) {
                 if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
                     echo "<script>alert('isi data dengan lengkap!!')</script>";
                     redirect(site_url('home'), 'refresh');
                 } else {
                     redirect(site_url('penjualan/insert'), 'refresh');
                 }
-                // $this->datainsert();
+            // $this->datainsert();
             } else {
                 $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
 
@@ -256,6 +273,7 @@ class Penjualan extends CI_Controller
                 $data = array(
                     'kode_jual' => $kode_jual,
                     'tanggal_jual' => $this->input->post('tanggal_jual'),
+                    'tanggal_jual_date' => date('Y-m-d', strtotime($this->input->post('tanggal_jual'))),
                     'waktu_jual' => date("h:i:s a"),
                     'kode_admin' => $this->input->post('kode_admin'),
                     'kode_karyawan' => $this->input->post('kode_karyawan'),
@@ -319,7 +337,7 @@ class Penjualan extends CI_Controller
     {
         $this->_rule();
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->dataupdate($this->uri->segment(3));
         } else {
             $data = array(
@@ -369,6 +387,7 @@ class Penjualan extends CI_Controller
                 'total' => $row->total,
                 'bayar' => $row->bayar,
                 'pelanggan' => $row->pelanggan,
+                'promo' => $this->Promo_model->selectTopOne()
             );
             $data['listkaryawan'] = $this->Karyawan_model->selectByAll();
             $data['listbarang'] = $this->Barang_model->selectByAll();
