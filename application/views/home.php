@@ -76,8 +76,8 @@
 						<div class="row">
 							<div class="form-group col-md-5 col-lg-8">
 								<label for="">Barang</label>
-								<select name="kode_barang" class="form-control selectpicker" data-live-search="true"
-									placeholder="kode_barang">
+								<select id="kode_barang" name="kode_barang" class="form-control selectpicker"
+									data-live-search="true" placeholder="kode_barang">
 									<?php foreach ($listbarang as $komp) {
 									    if ($kode_barang == $komp->kode_barang) {
 									        ?>
@@ -124,16 +124,14 @@
 										placeholder="Rupiah" value="-1" />
 								</div>
 							</div>
-							<div class="form-group col text-right" style="margin-right: 2rem;">
-								<br>
-								<?php
-				if ($_SESSION['level'] != "admin" && $karyawan->percobaan_stok >= 2) {
-				    ?>
-								<span class="text-danger">Input data sudah lebih dari 2x, <br> Hubungi admin agar
-									bisa membuat transaksi</span>
-								<?php } else { ?>
-								<input type="submit" class="btn btn-primary" name="submitlist" value="Tambah" />
-								<?php } ?>
+							<div class="form-group col text-right" style="margin-right: 2rem; margin-top: 2.5rem">
+								<div id="btnValidasiPercobaan">
+									<!-- <span class="text-danger">Input data sudah lebih dari 2x, <br> Hubungi admin agar
+										bisa membuat transaksi</span> -->
+
+									<input type="submit" class="btn btn-primary" name="submitlist" value="Tambah" />
+								</div>
+
 							</div>
 						</div>
 						<table class="table table-bordered table-hover table-striped">
@@ -502,6 +500,38 @@
 </div>
 <?php } ?>
 <script>
+	document.addEventListener("DOMContentLoaded", function() {
+		fetch(`<?=base_url()?>/home/get_percobaan_stok`, {
+				method: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.text())
+			.then(data => {
+				let dataPercobaan = JSON.parse(data.trim()) ?? []
+
+				if (!dataPercobaan || dataPercobaan.length == 0) {
+					return;
+				}
+
+				var selectBarang = document.getElementById("kode_barang")
+				selectBarang.addEventListener('change', (e) => {
+					let btnValidasiPercobaan = document.getElementById("btnValidasiPercobaan")
+					if (dataPercobaan.some(v => v.id_barang == e.target.value)) {
+						btnValidasiPercobaan.innerHTML =
+							`<span class="text-danger">Input data sudah lebih dari 2x, <br> Hubungi admin agar bisa membuat transaksi</span>`
+					} else {
+						btnValidasiPercobaan.innerHTML =
+							`<input type="submit" class="btn btn-primary" name="submitlist" value="Tambah" />`
+					}
+				})
+
+				selectBarang.dispatchEvent(new Event('change'))
+			})
+	});
+
 	function roundToTwo(num) {
 		return +(Math.round(num + "e+2") + "e-2");
 	}
@@ -555,6 +585,7 @@
 	document.getElementsByName("kode_barang")[0].dispatchEvent(new Event('change', {
 		'bubbles': true
 	}));
+
 	sum();
 </script>
 <!-- END PAGE CONTENT INNER

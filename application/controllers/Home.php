@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Home extends CI_Controller
@@ -10,6 +11,7 @@ class Home extends CI_Controller
         // 	redirect('login');
         // }
         $this->load->model('Karyawan_model');
+        $this->load->model('Percobaan_karyawan_model');
         $this->load->model('Admin_model');
         $this->load->model('CodeGenerator');
         $this->load->model('Penjualan_model');
@@ -48,7 +50,7 @@ class Home extends CI_Controller
         // return print_r($total_all);
 
         $data = array(
-           
+
         'kode_jual' => set_value('kode_jual', '-'),
         'tanggal_jual' => set_value('tanggal_jual', date('d-m-Y')),
         'kode_admin' => set_value('kode_admin', $_SESSION['kode']),
@@ -66,9 +68,10 @@ class Home extends CI_Controller
         $data['listdetail']=$detail_penjualan;
 
         $data['listkaryawan']=$this->Karyawan_model->selectByAll();
-        
+
         if ($_SESSION['level'] != "admin") {
             $data['karyawan']=$this->Karyawan_model->selectById($_SESSION['kode']);
+            // return print_r($data['percobaan']);
         } else {
             $data['admin']=$this->Admin_model->selectById($_SESSION['kode']);
         }
@@ -93,6 +96,7 @@ class Home extends CI_Controller
         } else {
             $data['pesan']="";
         }
+
         $this->load->view('home', $data);
         $this->load->view('foot');
     }
@@ -123,15 +127,15 @@ class Home extends CI_Controller
     public function datainsert()
     {
         //$this->load->view('nav');
-        
+
         $this->load->view('penjualan/penjualan_form');
         //$this->load->view('foot');
     }
-    
+
     public function insert()
     {
         $total=0;
-        
+
         if ($this->input->post('submitlist')<>"") {
             if ($this->input->post('jumlah')<>"") {
                 $cek=$this->Penjualan_detail_model->jumlahbyid($this->input->post('kode_jual'), $this->input->post('kode_barang'));
@@ -148,7 +152,7 @@ class Home extends CI_Controller
                         'jumlah'=>$this->input->post('jumlah'),
                         'subtotal'=> (int)$barang->harga_jual*(int)$this->input->post('jumlah'),
                         );
-                    
+
                         $this->Penjualan_detail_model->insert($data);
                         redirect(site_url('penjualan/insert'), 'refresh');
                     } else {
@@ -167,7 +171,7 @@ class Home extends CI_Controller
                         'jumlah'=>$this->input->post('jumlah'),
                         'subtotal'=> (int)$barang->harga_jual*(int)$this->input->post('jumlah'),
                         );
-                    
+
                         $this->Penjualan_detail_model->update($data['kode_jual'], $data['kode_barang'], $data);
                         redirect(site_url('penjualan/insert'), 'refresh');
                     } else {
@@ -200,6 +204,14 @@ class Home extends CI_Controller
                 redirect(site_url('penjualan'));
             }
         }
+    }
+
+    public function get_percobaan_stok()
+    {
+        $data = $this->Percobaan_karyawan_model->get_percobaan_by_karyawan($_SESSION['kode']);
+        header('Content-Type: application/json');
+        echo(json_encode($data));
+        return;
     }
 }
 

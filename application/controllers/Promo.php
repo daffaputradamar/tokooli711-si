@@ -38,7 +38,7 @@ class Promo extends CI_Controller
 
         $config['per_page'] = 10;
         $config['page_query_string'] = true;
-        $promo = $this->Promo_model->selectByAll();
+        $promo = $this->Promo_model->selectByAll($cari);
         $config['total_rows'] = count($promo);
 
 

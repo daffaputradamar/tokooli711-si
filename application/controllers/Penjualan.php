@@ -10,6 +10,7 @@ class Penjualan extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Penjualan_model');
+        $this->load->model('Percobaan_karyawan_model');
         $this->load->library('form_validation');
         $this->load->model('CodeGenerator');
         $this->load->model('Karyawan_model');
@@ -198,7 +199,11 @@ class Penjualan extends CI_Controller
                         }
                     } else {
                         echo "<script>alert('Stok kurang')</script>";
-                        $this->Karyawan_model->updateTry($kode_user);
+                        $this->Percobaan_karyawan_model->insert(array(
+                            'id_barang' => $this->input->post('kode_barang'),
+                            'id_karyawan' => $kode_user,
+                            'isactive' => 1
+                        ));
                         if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
                             redirect(site_url('home'), 'refresh');
                         } else {
@@ -229,7 +234,11 @@ class Penjualan extends CI_Controller
                         }
                     } else {
                         echo "<script>alert('Stok kurang')</script>";
-                        $this->Karyawan_model->updateTry($kode_user);
+                        $this->Percobaan_karyawan_model->insert(array(
+                            'id_barang' => $this->input->post('kode_barang'),
+                            'id_karyawan' => $kode_user,
+                            'isactive' => 1
+                        ));
                         if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
                             redirect(site_url('home'), 'refresh');
                         } else {
@@ -249,7 +258,7 @@ class Penjualan extends CI_Controller
                 } else {
                     redirect(site_url('penjualan/insert'), 'refresh');
                 }
-            // $this->datainsert();
+                // $this->datainsert();
             } else {
                 $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
 
@@ -387,7 +396,7 @@ class Penjualan extends CI_Controller
                 'total' => $row->total,
                 'bayar' => $row->bayar,
                 'pelanggan' => $row->pelanggan,
-                'promo' => $this->Promo_model->selectTopOne()
+                'promo' => $this->Promo_model->selectTopOne($row->tanggal_jual)
             );
             $data['listkaryawan'] = $this->Karyawan_model->selectByAll();
             $data['listbarang'] = $this->Barang_model->selectByAll();

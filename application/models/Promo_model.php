@@ -14,16 +14,23 @@ class Promo_model extends CI_Model
         parent::__construct();
     }
 
-    public function selectByAll()
+    public function selectByAll($cari)
     {
+        $this->db->or_like('text', $cari);
         $this->db->order_by('created_at', 'desc');
         return $this->db->get($this->table)->result();
     }
 
-    public function selectTopOne()
+    public function selectTopOne($tgl_transaksi = null)
     {
-        $this->db->where('dtfrom <=', date('Y-m-d'));
-        $this->db->where('dtthru >=', date('Y-m-d'));
+        if($tgl_transaksi == null) {
+            $date = date('Y-m-d');
+        } else {
+            $date = date('Y-m-d', strtotime($tgl_transaksi));
+        }
+
+        $this->db->where('dtfrom <=', $date);
+        $this->db->where('dtthru >=', $date);
         $this->db->where('isactive', true);
         $this->db->limit(1);
         return $this->db->get($this->table)->row();

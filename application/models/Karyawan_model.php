@@ -1,74 +1,88 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Karyawan_model extends CI_Model
 {
-
     public $table = 'karyawan';
     public $primary = 'kode_karyawan';
- 
-    function __construct()
+
+    public function __construct()
     {
         parent::__construct();
     }
 
-   
-    function selectByAll()
+
+    public function selectByAll()
     {
         return $this->db->get($this->table)->result();
     }
 
-    function selectById($id)
+    public function selectById($id)
     {
         $this->db->where($this->primary, $id);
         return $this->db->get($this->table)->row();
     }
-    
-    function total_rows() {
+
+    public function total_rows()
+    {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
-    function get_limit_data($limit, $start = 0, $cari = NULL) {
-        $this->db->like('kode_karyawan', $cari);
-	$this->db->or_like('nama_karyawan', $cari);
-	$this->db->or_like('alamat_karyawan', $cari);
-    $this->db->or_like('telp_karyawan', $cari);
-    $this->db->or_like('username', $cari);
-	$this->db->or_like('password', $cari);
-	$this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result();
+    public function get_limit_data($limit, $start = 0, $cari = null)
+    {
+        return $this->db->query("
+            SELECT 
+            k.kode_karyawan
+            , k.nama_karyawan
+            , k.alamat_karyawan
+            , k.telp_karyawan
+            , CASE WHEN pk.id_barang IS NOT NULL THEN 1 ELSE 0 END isblocked
+            FROM karyawan k
+            LEFT JOIN (
+                SELECT pk.id_karyawan, pk.id_barang, COUNT(1) jml_percobaan
+                FROM percobaan_karyawan pk
+                WHERE pk.isactive = 1
+                GROUP BY pk.id_karyawan, pk.id_barang
+                HAVING COUNT(1) >= 2
+                ORDER BY jml_percobaan DESC
+            ) pk ON k.kode_karyawan = pk.id_karyawan
+            WHERE 
+                k.kode_karyawan LIKE '%$cari%'
+                OR k.nama_karyawan LIKE '%$cari%'
+                OR k.alamat_karyawan LIKE '%$cari%'
+                OR k.telp_karyawan LIKE '%$cari%'
+            GROUP BY
+                k.kode_karyawan,
+                k.nama_karyawan,
+                k.alamat_karyawan,
+                k.telp_karyawan
+            LIMIT $start, $limit;
+        ")->result();
     }
 
-    function insert($data)
+    public function insert($data)
     {
         $this->db->insert($this->table, $data);
     }
 
-    function update($id, $data)
+    public function update($id, $data)
     {
         $this->db->where($this->primary, $id);
         $this->db->update($this->table, $data);
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $this->db->where($this->primary, $id);
         $this->db->delete($this->table);
     }
 
-    function reset($id)
+    public function updateTry($id)
     {
-        $data = array(
-            'percobaan_stok' => 0
-            );
-        $this->db->where($this->primary, $id);
-        $this->db->update($this->table, $data);
-    }
-
-    function updateTry($id) {
         $this->db->query("
             UPDATE karyawan
             SET percobaan_stok = percobaan_stok + 1

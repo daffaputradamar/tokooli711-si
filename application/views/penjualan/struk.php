@@ -26,10 +26,9 @@
 		<td colspan="3">----------------------------------------------------------</td>
 	</tr>
 	<tr>
-
 		<td><?php echo $kode_jual; ?></td>
 		<td><?php echo $tanggal_jual; ?></td>
-		<td><?php echo $waktu_jual ?></td>
+		<td style="width: 120px;"><?php echo $waktu_jual ?></td>
 	</tr>
 	<tr>
 		<td colspan="3">----------------------------------------------------------</td>
@@ -49,7 +48,7 @@
 			<!--        </div>-->
 			<!--    <?php } ?>-->
 			<!--</div>-->
-			<table style="margin-left :0; width:300px; font-size: 14px;margin-right: 10px; margin-bottom: 0;">
+			<table style="margin-left :0; width:280px; font-size: 14px;margin-right: 10px; margin-bottom: 0;">
 				<?php $start = 0;
 		foreach ($listdetail as $penjualandetail) {
 		    ?>
@@ -109,7 +108,7 @@
 
 			<div class="form-group col-md-12">
 				<label colspan="3"
-					style="margin-left :0;">----------------------------------------------------------</label>
+					style="margin-left :0;">---------------------------------------------------------</label>
 				<label style="margin-left :0; width:300px; font-size: 14px;" for=>Kasir :
 					<?php echo isset($kasir->nama_karyawan) ? $kasir->nama_karyawan : $kasir->nama_admin; ?></label><br>
 				<label style="margin-left :0; width:300px; font-size: 14px;" for=>Klien / Kendaraan :
@@ -119,12 +118,12 @@
 				<label style="margin-left :0; width:300px; font-size: 14px;" for=>KM Kendaraan :
 					<?php echo $km_kendaraan; ?></label><br>
 				<label style="margin-left :0; width:300px; font-size: 14px;"
-					colspan="3">----------------------------------------------------------</label><br />
-				<div style="margin:0; width:300px; font-size: 14px;">
+					colspan="3">---------------------------------------------------------</label><br />
+				<div style="margin:0; width:280px; font-size: 14px;">
 					<?php echo (isset($promo->text)) ? $promo->text : ''; ?>
 				</div>
 				<label style="margin-left :0; width:300px; font-size: 14px;"
-					colspan="3">----------------------------------------------------------</label>
+					colspan="3">---------------------------------------------------------</label>
 				<p align="center" , margin="0">T E R I M A &nbsp; &nbsp; K A S I H</p><br>
 			</div>
 		</td>
