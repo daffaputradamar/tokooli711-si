@@ -76,6 +76,7 @@ class Barang extends CI_Controller
 		'harga_beli' => $row->harga_beli,
 		'harga_jual' => $row->harga_jual,
 		'stok' => $row->stok,
+		'stok_before' => $row->stok_before,
 		'keterangan' => $row->keterangan,
 	    );
             $this->load->view('barang/barang_read', $data);

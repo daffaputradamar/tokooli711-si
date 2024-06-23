@@ -26,6 +26,12 @@ class Karyawan_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    public function selectByUsername($username)
+    {
+        $this->db->where('username', $username);
+        return $this->db->get($this->table)->row();
+    }
+
     public function total_rows()
     {
         $this->db->from($this->table);

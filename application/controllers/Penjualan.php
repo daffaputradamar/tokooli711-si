@@ -357,11 +357,14 @@ class Penjualan extends CI_Controller
             return true;
         } else {
             echo "<script>alert('Stok kurang')</script>";
-            $this->Percobaan_karyawan_model->insert(array(
-                'id_barang' => $input->post('kode_barang'),
-                'id_karyawan' => $kode_user,
-                'isactive' => 1
-            ));
+            
+            if ($_SESSION['level'] != "admin") { 
+                $this->Percobaan_karyawan_model->insert(array(
+                    'id_barang' => $input->post('kode_barang'),
+                    'id_karyawan' => $kode_user,
+                    'isactive' => 1
+                ));
+            }
 
             $this->return_redirect();
         }

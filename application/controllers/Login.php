@@ -17,7 +17,7 @@ class Login extends CI_Controller
 
     public function index()
     {
-        $status = false;
+        $is_valid_login = false;
         $this->load->view('login');
         $kode = 'ADM00001';
         $level = "";
@@ -28,50 +28,33 @@ class Login extends CI_Controller
 
             $user = $this->input->post("username");
             $psswd = $this->input->post("psswd");
-            if ($user == 'admin' && $psswd == 'programer') {
-                $status = true;
-                $level = "admin";
-            } else {
 
-                $data = $this->Admin_model->selectByAll();
-                //var_dump($data);
-                foreach ($data as $row) {
+            $admin = $this->Admin_model->selectByUsername($user);
 
-                    if($row->username == $user) {
-                        //var_dump($row->email);
-                        if($row->psswd == $psswd) {
-                            //var_dump($row->psswd);
-                            $status = true;
-                            $kode = $row->kode_admin;
-                            $level = "admin";
-                            $can_see_stock = true;
-                            $can_see_sales = true;
-                            //var_dump($status);
-                        }
-                    }
-
+            if(isset($admin)) {
+                if($admin->psswd == $psswd) {
+                    $is_valid_login = true;
+                    $kode = $admin->kode_admin;
+                    $level = "admin";
+                    $can_see_stock = true;
+                    $can_see_sales = true;
                 }
-                if($status == false && $level == "") {
-                    $data = $this->Karyawan_model->selectByAll();
-                    //var_dump($data);
-                    foreach ($data as $row) {
+            }
 
-                        if($row->username == $user) {
-                            //var_dump($row->email);
-                            if($row->password == $psswd) {
-                                //var_dump($row->psswd);
-                                $status = true;
-                                $kode = $row->kode_karyawan;
-                                $can_see_stock = $row->can_see_stock;
-                                $can_see_sales = $row->can_see_sales;
+            if(!$is_valid_login) {
+                $karyawan = $this->Karyawan_model->selectByUsername($user);
+                
+                if(isset($karyawan)) {
+                    if($karyawan->password == $psswd) {
+                        $is_valid_login = true;
+                        $kode = $karyawan->kode_karyawan;
+                        $can_see_stock = $karyawan->can_see_stock;
+                        $can_see_sales = $karyawan->can_see_sales;
 
-                                if ($row->level == 0) {
-                                    $level = "karyawan";
-                                } else {
-                                    $level = "karyawan_admin";
-                                }
-
-                            }
+                        if ($karyawan->level == 0) {
+                            $level = "karyawan";
+                        } else {
+                            $level = "karyawan_admin";
                         }
 
                     }
@@ -79,32 +62,20 @@ class Login extends CI_Controller
             }
 
         }
-        if($status == true) {
-            // $sessionku = array('username' => $user,'kode'=>$kode);
-            // $this->session->set_userdata($sessionku);
+        if($is_valid_login) {
             $_SESSION["username"] = $user;
             $_SESSION["kode"] = $kode;
             $_SESSION["level"] = $level;
             $_SESSION["can_see_stock"] = $can_see_stock;
             $_SESSION["can_see_sales"] = $can_see_sales;
 
-            //echo $this->session->userdata('kode');
-            // echo "success";
             redirect('home', 'refresh');
         }
-        // if(isset($status) and $status==TRUE or $status==1){
-        // 	if($kode==""){$kode="KRY0000000";}
-        // 		$sessionku = array('username' => $user,'kodekaryawan'=>$kode);
-        // 		$this->session->set_userdata($sessionku);
-        // 		redirect('home','refresh');
-        // }
-        // var_dump($status);
 
 
     }
     public function logout()
     {
-        // $this->session->sess_destroy();
         redirect('login', 'refresh');
     }
     public function checksession()
@@ -118,19 +89,6 @@ class Login extends CI_Controller
     {
         var_dump($_SESSION);
     }
-    // 	function coba1(){
-    // 		$_SESSION["favcolor"] = "green";
-    // $_SESSION["favanimal"] = "ca1t";
-    // echo "Session variables are set.";
-    // }
-
-    // function coba2(){
-    // // echo $this->session->userdata('username');
-    // 		echo "Favorite color is " . $_SESSION["favcolor"] . ".<br>";
-    // echo "Favorite animal is " . $_SESSION["favanimal"] . ".";
-    // 	}
-
-
 }
 
 

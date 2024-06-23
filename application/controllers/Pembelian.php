@@ -46,7 +46,6 @@ class Pembelian extends CI_Controller
             $filter_tgl_akhir = $this->input->post('tgl_akhir');
 
             $pembelian_all = $this->Pembelian_model->get_limit_data_filter($filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $config['per_page'], $start);
-
         } else {
             $pembelian_all = $this->Pembelian_model->get_limit_data($config['per_page'], $start, $cari);
         }
@@ -96,14 +95,14 @@ class Pembelian extends CI_Controller
         $this->load->view('nav');
         if ($row) {
             $data = array(
-        'kode_beli' => $row->kode_beli,
-        'tanggal_beli' => $row->tanggal_beli,
-        'waktu_beli' => $row->waktu_beli,
-        'no_faktur' => $row->no_faktur,
-        'kode_suplier' => $row->kode_suplier,
-        'kode_admin' => $row->kode_admin,
-        'total' => $row->total,
-        );
+                'kode_beli' => $row->kode_beli,
+                'tanggal_beli' => $row->tanggal_beli,
+                'waktu_beli' => $row->waktu_beli,
+                'no_faktur' => $row->no_faktur,
+                'kode_suplier' => $row->kode_suplier,
+                'kode_admin' => $row->kode_admin,
+                'total' => $row->total,
+            );
             $data['listbarang'] = $this->Barang_model->selectByAll();
             $data['listdetail'] = $this->Pembelian_detail_model->selectById($data['kode_beli']);
             $this->load->view('pembelian/pembelian_read', $data);
@@ -115,26 +114,25 @@ class Pembelian extends CI_Controller
     {
         $total_all = 0;
 
-        $detail_pembelian = isset($_SESSION[$_SESSION['kode'].'detailbarang_pembelian']) ? $_SESSION[$_SESSION['kode'].'detailbarang_pembelian'] : array();
-        ;
+        $detail_pembelian = isset($_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian']) ? $_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian'] : array();;
         foreach ($detail_pembelian as $pembeliandetail) {
             $total_all += $pembeliandetail['harga_beli'] * $pembeliandetail['jumlah'];
         }
 
         $data = array(
 
-        'kode_beli' => set_value('kode_beli', '-'),
-        // $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB')
-        'tanggal_beli' => set_value('tanggal_beli', date('d-m-Y')),
-        'kode_admin' => set_value('kode_admin', $_SESSION['kode']),
-        'no_faktur' => set_value('no_faktur', '-'),
-        'total' => set_value('total', $this->Pembelian_detail_model->totalall($this->input->post('kode_beli'))),
-        'kode_suplier' => set_value('kode_suplier'),
-        'total' => set_value($total_all)
-    );
+            'kode_beli' => set_value('kode_beli', '-'),
+            // $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB')
+            'tanggal_beli' => set_value('tanggal_beli', date('d-m-Y')),
+            'kode_admin' => set_value('kode_admin', $_SESSION['kode']),
+            'no_faktur' => set_value('no_faktur', '-'),
+            'total' => set_value('total', $this->Pembelian_detail_model->totalall($this->input->post('kode_beli'))),
+            'kode_suplier' => set_value('kode_suplier'),
+            'total' => set_value($total_all)
+        );
         $data['listbarang'] = $this->Barang_model->selectByAll();
         // $data['listdetail']=$this->Pembelian_detail_model->selectById($data['kode_beli']);
-        $data['listdetail'] = isset($_SESSION[$_SESSION['kode'].'detailbarang_pembelian']) ? $_SESSION[$_SESSION['kode'].'detailbarang_pembelian'] : array();
+        $data['listdetail'] = isset($_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian']) ? $_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian'] : array();
         $data['totalall'] = $total_all;
 
         // unset($_SESSION[$_SESSION['kode'].'detailbarang_pembelian']);
@@ -164,80 +162,63 @@ class Pembelian extends CI_Controller
             $_SESSION[$kode_user . 'kode_suplier'] = $kode_supplier;
 
             if ($this->input->post('jumlah') <> "") {
-                // $cek=$this->Pembelian_detail_model->jumlahbyid($this->input->post('kode_beli'), $this->input->post('kode_barang'));
+                $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
+                //var_dump($barang);
+                $data = array(
+                    // 'kode_beli' => $this->input->post('kode_beli'),
+                    'kode_barang' => $this->input->post('kode_barang'),
+                    'nama_barang' => $barang->nama_barang,
+                    'harga_beli' => $barang->harga_beli,
+                    'harga_jual' => $barang->harga_jual,
+                    'jumlah' => $this->input->post('jumlah'),
+                    'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
+                );
 
-                $cek = isset($_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')]);
-
-                if (!$cek) {
-                    $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
-                    //var_dump($barang);
-                    $data = array(
-                        // 'kode_beli' => $this->input->post('kode_beli'),
-                        'kode_barang' => $this->input->post('kode_barang'),
-                        'nama_barang' => $barang->nama_barang,
-                        'harga_beli' => $barang->harga_beli,
-                        'harga_jual' => $barang->harga_jual,
-                        'jumlah' => $this->input->post('jumlah'),
-                        'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
-                        );
-
-                    $_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')] = $data;
-                    // $this->Pembelian_detail_model->insert($data);
-                    redirect(site_url('pembelian/insert'), 'refresh');
-                } else {
-                    $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
-                    $data = array(
-                        // 'kode_beli' => $this->input->post('kode_beli'),
-                        'kode_barang' => $this->input->post('kode_barang'),
-                        'nama_barang' => $barang->nama_barang,
-                        'harga_beli' => $barang->harga_beli,
-                        'harga_jual' => $barang->harga_jual,
-                        'jumlah' => $this->input->post('jumlah'),
-                        'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
-                        );
-
-                    $_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')] = $data;
-                    // $this->Pembelian_detail_model->update($data['kode_beli'], $data['kode_barang'], $data);
-                    redirect(site_url('pembelian/insert'), 'refresh');
-                }
+                $_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')] = $data;
+                // $this->Pembelian_detail_model->insert($data);
+                redirect(site_url('pembelian/insert'), 'refresh');
             }
         } else {
             $this->_rule();
-            if ($this->form_validation->run() == false and $this->input->post('total') == null) {
-                $this->datainsert();
-            } else {
-
-                $kode_beli = $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB');
-                $detail_pembelian = $_SESSION[$kode_user . 'detailbarang_pembelian'];
-                $total_all = 0;
-
-                foreach ($detail_pembelian as $pembeliandetail) {
-                    $total_all += $pembeliandetail['harga_beli'] * $pembeliandetail['jumlah'];
-                    $data = array(
-                        'kode_beli' => $kode_beli,
-                        'kode_barang' => $pembeliandetail['kode_barang'],
-                        'harga_beli' => $pembeliandetail['harga_beli'],
-                        'jumlah' => $pembeliandetail['jumlah'],
-                        'subtotal' => (float)$pembeliandetail['harga_beli'] * (float)$pembeliandetail['jumlah'],
-                    );
-                    $this->Pembelian_detail_model->insert($data);
-                }
-
-                $data = array(
-            'kode_beli' => $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB'),
-            'tanggal_beli' => $this->input->post('tanggal_beli'),
-            'tanggal_beli_date' => date('Y-m-d', strtotime($this->input->post('tanggal_beli'))),
-            'waktu_beli' => date("h:i:s a"),
-            'kode_admin' => $this->input->post('kode_admin'),
-            'no_faktur' => $this->input->post('no_faktur'),
-            'total' => $this->Pembelian_detail_model->totalall($kode_beli),
-            'kode_suplier' => $this->input->post('kode_suplier'),
-            );
-                $this->Pembelian_detail_model->updatestok($kode_beli);
-                $this->Pembelian_model->insert($data);
-                unset($_SESSION[$kode_user . 'detailbarang_pembelian']);
-                redirect(site_url('pembelian'));
+            if ($this->form_validation->run() == false and $this->input->post('total')==null) {
+                return $this->datainsert();
             }
+
+            $kode_beli = $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB');
+            $detail_pembelian = $_SESSION[$kode_user . 'detailbarang_pembelian'];
+            $total_all = 0;
+
+            foreach ($detail_pembelian as $pembeliandetail) {
+                $total_all += $pembeliandetail['harga_beli'] * $pembeliandetail['jumlah'];
+                $data = array(
+                    'kode_beli' => $kode_beli,
+                    'kode_barang' => $pembeliandetail['kode_barang'],
+                    'harga_beli' => $pembeliandetail['harga_beli'],
+                    'jumlah' => $pembeliandetail['jumlah'],
+                    'subtotal' => (float)$pembeliandetail['harga_beli'] * (float)$pembeliandetail['jumlah'],
+                );
+                $this->Pembelian_detail_model->insert($data);
+            }
+
+            $data = array(
+                'kode_beli' => $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB'),
+                'tanggal_beli' => $this->input->post('tanggal_beli'),
+                'tanggal_beli_date' => date('Y-m-d', strtotime($this->input->post('tanggal_beli'))),
+                'waktu_beli' => date("h:i:s a"),
+                'kode_admin' => $this->input->post('kode_admin'),
+                'no_faktur' => $this->input->post('no_faktur'),
+                'total' => $this->Pembelian_detail_model->totalall($kode_beli),
+                'kode_suplier' => $this->input->post('kode_suplier'),
+            );
+            $this->Pembelian_detail_model->updatestok($kode_beli);
+            $this->Pembelian_model->insert($data);
+
+            unset($_SESSION[$kode_user . 'detailbarang_pembelian']);
+            unset($_SESSION[$kode_user . 'tanggal_beli']);
+            unset($_SESSION[$kode_user . 'no_faktur']);
+            unset($_SESSION[$kode_user . 'kode_suplier']);
+
+            redirect(site_url('pembelian'));
         }
     }
 
@@ -249,12 +230,12 @@ class Pembelian extends CI_Controller
         if ($row) {
             $data = array(
 
-        'kode_beli' => set_value('kode_beli', $row->kode_beli),
-        'tanggal_beli' => set_value('tanggal_beli', $row->tanggal_beli),
-        'kode_admin' => set_value('kode_admin', $row->kode_admin),
-        'total' => set_value('total', $this->Pembelian_detail_model->totalall($this->uri->segment(3))),
-        'kode_suplier' => set_value('kode_suplier', $row->kode_suplier),
-        );
+                'kode_beli' => set_value('kode_beli', $row->kode_beli),
+                'tanggal_beli' => set_value('tanggal_beli', $row->tanggal_beli),
+                'kode_admin' => set_value('kode_admin', $row->kode_admin),
+                'total' => set_value('total', $this->Pembelian_detail_model->totalall($this->uri->segment(3))),
+                'kode_suplier' => set_value('kode_suplier', $row->kode_suplier),
+            );
             $data['listbarang'] = $this->Barang_model->selectByAll();
             $data['listdetail'] = $this->Pembelian_detail_model->selectById($data['kode_beli']);
             $this->load->view('pembelian/pembelian_form', $data);
@@ -277,10 +258,10 @@ class Pembelian extends CI_Controller
                         'harga_beli' => $barang->harga_beli,
                         'jumlah' => $this->input->post('jumlah'),
                         'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
-                        );
+                    );
 
                     $this->Pembelian_detail_model->insert($data);
-                    redirect(site_url('pembelian/update/'.$this->uri->segment(3)), 'refresh');
+                    redirect(site_url('pembelian/update/' . $this->uri->segment(3)), 'refresh');
                 } else {
                     $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
                     //var_dump($barang);
@@ -290,10 +271,10 @@ class Pembelian extends CI_Controller
                         'harga_beli' => $barang->harga_beli,
                         'jumlah' => $this->input->post('jumlah'),
                         'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
-                        );
+                    );
 
                     $this->Pembelian_detail_model->update($data['kode_beli'], $data['kode_barang'], $data);
-                    redirect(site_url('pembelian/update/'.$this->uri->segment(3)), 'refresh');
+                    redirect(site_url('pembelian/update/' . $this->uri->segment(3)), 'refresh');
                 }
             }
         } else {
@@ -303,12 +284,12 @@ class Pembelian extends CI_Controller
                 $this->dataupdate($this->uri->segment(3));
             } else {
                 $data = array(
-        'kode_beli' => $this->input->post('kode_beli'),
-        'tanggal_beli' => $this->input->post('tanggal_beli'),
-        'kode_admin' => $this->input->post('kode_admin'),
-        'no_faktur' => $this->input->post('no_faktur'),
-        'total' => $this->Pembelian_detail_model->totalall($this->uri->segment(3)),
-        );
+                    'kode_beli' => $this->input->post('kode_beli'),
+                    'tanggal_beli' => $this->input->post('tanggal_beli'),
+                    'kode_admin' => $this->input->post('kode_admin'),
+                    'no_faktur' => $this->input->post('no_faktur'),
+                    'total' => $this->Pembelian_detail_model->totalall($this->uri->segment(3)),
+                );
 
                 $this->Pembelian_model->update($this->uri->segment(3), $data);
 
@@ -335,13 +316,13 @@ class Pembelian extends CI_Controller
         $row = $this->Pembelian_model->selectById($id);
         if ($row) {
             $data = array(
-        'kode_beli' => $row->kode_beli,
-        'tanggal_beli' => $row->tanggal_beli,
-        'waktu_beli' => $row->waktu_beli,
-        'kode_admin' => $row->kode_admin,
-        'total' => $row->total,
-        'kode_suplier' => $row->kode_suplier,
-        );
+                'kode_beli' => $row->kode_beli,
+                'tanggal_beli' => $row->tanggal_beli,
+                'waktu_beli' => $row->waktu_beli,
+                'kode_admin' => $row->kode_admin,
+                'total' => $row->total,
+                'kode_suplier' => $row->kode_suplier,
+            );
             $data['listbarang'] = $this->Barang_model->selectByAll();
             $data['listdetail'] = $this->Pembelian_detail_model->selectById($data['kode_beli']);
             $this->load->view('pembelian/struk', $data);

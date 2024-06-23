@@ -39,7 +39,8 @@
 		<th>Merk</th>
 		<th>Harga Beli</th>
 		<th>Harga Jual</th>
-		<th>Stok</th>
+		<th>Stok Saat Ini</th>
+		<th>Stok Terakhir</th>
 		<th>Action</th>
             </tr><?php
             foreach ($barang_data as $barang)
@@ -52,6 +53,7 @@
 			<td><?php echo $barang->harga_beli ?></td>
 			<td><?php echo $barang->harga_jual ?></td>
 			<td><?php echo $barang->stok ?></td>
+			<td><?php echo $barang->stok_before ?></td>
 			<td style="text-align:center" width="250px">
 				<?php 
 				echo anchor(site_url('barang/view/'.$barang->kode_barang),'Lihat','class="btn btn-info"'); 

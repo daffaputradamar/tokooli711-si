@@ -83,7 +83,7 @@ class Pembelian_detail_model extends CI_Model
         $this->db->where($this->primary, $id);
         $data=$this->db->get('pembelian_detail')->result();
         foreach ($data as $row) {
-            $this->db->where('kode_barang', $row->kode_barang);
+            $this->db->query("update barang set stok_before = stok where kode_barang='$row->kode_barang' ");
             $this->db->query("update barang set stok=stok+".$row->jumlah." where kode_barang='$row->kode_barang' ");
         }
     }

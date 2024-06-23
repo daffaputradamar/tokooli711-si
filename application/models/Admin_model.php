@@ -25,6 +25,12 @@ class Admin_model extends CI_Model
         $this->db->where($this->primary, $id);
         return $this->db->get($this->table)->row();
     }
+
+    function selectByUsername($username)
+    {
+        $this->db->where('username', $username);
+        return $this->db->get($this->table)->row();
+    }
     
     function total_rows() {
         $this->db->from($this->table);
