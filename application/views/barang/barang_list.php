@@ -40,7 +40,7 @@
 		<th>Harga Beli</th>
 		<th>Harga Jual</th>
 		<th>Stok Saat Ini</th>
-		<th>Stok Terakhir</th>
+		<th>Stok Sebelum</th>
 		<th>Action</th>
             </tr><?php
             foreach ($barang_data as $barang)

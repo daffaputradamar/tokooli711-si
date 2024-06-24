@@ -12,7 +12,7 @@
 	    <tr><td>Harga Beli</td><td><?php echo $harga_beli; ?></td></tr>
 	    <tr><td>Harga Jual</td><td><?php echo $harga_jual; ?></td></tr>
 	    <tr><td>Stok Saat Ini</td><td><?php echo $stok; ?></td></tr>
-	    <tr><td>Stok Terakhir</td><td><?php echo $stok_before; ?></td></tr>
+	    <tr><td>Stok Sebelum</td><td><?php echo $stok_before; ?></td></tr>
 	    <tr><td>Keterangan</td><td><?php echo $keterangan; ?></td></tr>
 	    <tr><td></td><td><a href="<?php echo site_url('barang') ?>" class="btn btn-default">Cancel</a></td></tr>
 	</table></div></div></div>
