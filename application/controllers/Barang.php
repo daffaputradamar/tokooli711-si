@@ -1,17 +1,18 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Barang extends CI_Controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         session_start();
         if (!isset($_SESSION['level'])) {
             redirect('login');
-        } else if($_SESSION['level']== 'karyawan') {
+        } elseif($_SESSION['level'] == 'karyawan') {
             redirect('home');
         }
         $this->load->model('Barang_model');
@@ -19,24 +20,24 @@ class Barang extends CI_Controller
         $this->load->model('CodeGenerator');
         $this->load->model('Merk_model');
     }
-     public function _rule() 
+    public function _rule()
     {
-	$this->form_validation->set_rules('kode_barang', 'kode barang', 'trim|required');
-	$this->form_validation->set_rules('nama_barang', 'nama barang', 'trim|required');
-	$this->form_validation->set_rules('kode_merk', 'kode merk', 'trim|required');
-	$this->form_validation->set_rules('harga_beli', 'harga beli', 'trim|required');
-	$this->form_validation->set_rules('harga_jual', 'harga jual', 'trim|required');
-	$this->form_validation->set_rules('stok', 'stok', 'trim|required');
-	$this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
+        $this->form_validation->set_rules('kode_barang', 'kode barang', 'trim|required');
+        $this->form_validation->set_rules('nama_barang', 'nama barang', 'trim|required');
+        $this->form_validation->set_rules('kode_merk', 'kode merk', 'trim|required');
+        $this->form_validation->set_rules('harga_beli', 'harga beli', 'trim|required');
+        $this->form_validation->set_rules('harga_jual', 'harga jual', 'trim|required');
+        $this->form_validation->set_rules('stok', 'stok', 'trim|required');
+        $this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
     }
 
     public function index()
     {
-         $this->load->view('nav');
+        $this->load->view('nav');
         $this->load->library('pagination');
         $cari = urldecode($this->input->get('cari'));
         $start = intval($this->input->get('start'));
-        
+
         if ($cari <> '') {
             $config['base_url'] = base_url() . 'barang?cari=' . urlencode($cari);
             $config['first_url'] = base_url() . 'barang?cari=' . urlencode($cari);
@@ -46,11 +47,11 @@ class Barang extends CI_Controller
         }
 
         $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
+        $config['page_query_string'] = true;
         $config['total_rows'] = $this->Barang_model->total_rows($cari);
         $barang = $this->Barang_model->get_limit_data($config['per_page'], $start, $cari);
 
-        
+
         $this->pagination->initialize($config);
 
         $data = array(
@@ -61,121 +62,125 @@ class Barang extends CI_Controller
             'start' => $start,
         );
         $this->load->view('barang/barang_list', $data);
-         $this->load->view('foot');
+        $this->load->view('foot');
     }
 
-    public function view($id) 
+    public function view($id)
     {
         $this->load->view('nav');
         $row = $this->Barang_model->selectById($id);
         if ($row) {
             $data = array(
-		'kode_barang' => $row->kode_barang,
-		'nama_barang' => $row->nama_barang,
-		'kode_merk' => $row->kode_merk,
-		'harga_beli' => $row->harga_beli,
-		'harga_jual' => $row->harga_jual,
-		'stok' => $row->stok,
-		'stok_before' => $row->stok_before,
-		'keterangan' => $row->keterangan,
-	    );
+        'kode_barang' => $row->kode_barang,
+        'nama_barang' => $row->nama_barang,
+        'kode_merk' => $row->kode_merk,
+        'harga_beli' => $row->harga_beli,
+        'harga_jual' => $row->harga_jual,
+        'stok' => $row->stok,
+        'stok_before' => $row->stok_before,
+        'keterangan' => $row->keterangan,
+        );
             $this->load->view('barang/barang_read', $data);
-        } 
+        }
         $this->load->view('foot');
     }
 
-    public function datainsert() 
+    public function datainsert()
     {
         $this->load->view('nav');
         $data = array(
-           
-	    'kode_barang' => set_value('kode_barang',$this->CodeGenerator->buatkode('barang','kode_barang',10,'BRG')),
-	    'nama_barang' => set_value('nama_barang'),
-	    'kode_merk' => set_value('kode_merk'),
-	    'harga_beli' => set_value('harga_beli'),
-	    'harga_jual' => set_value('harga_jual'),
-	    'stok' => set_value('stok'),
-	    'keterangan' => set_value('keterangan'),
-	);
-        $data['listmerk']=$this->Merk_model->selectByAll();
+
+        'kode_barang' => set_value('kode_barang', $this->CodeGenerator->buatkode('barang', 'kode_barang', 10, 'BRG')),
+        'nama_barang' => set_value('nama_barang'),
+        'kode_merk' => set_value('kode_merk'),
+        'harga_beli' => set_value('harga_beli'),
+        'harga_jual' => set_value('harga_jual'),
+        'stok' => set_value('stok'),
+        'stok_before' => set_value('stok_before'),
+        'keterangan' => set_value('keterangan'),
+    );
+        $data['listmerk'] = $this->Merk_model->selectByAll();
         $this->load->view('barang/barang_form', $data);
         $this->load->view('foot');
     }
-    
-    public function insert() 
+
+    public function insert()
     {
         $this->_rule();
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->datainsert();
         } else {
             $data = array(
-		'kode_barang' => $this->input->post('kode_barang'),
-		'nama_barang' => $this->input->post('nama_barang'),
-		'kode_merk' => $this->input->post('kode_merk'),
-		'harga_beli' => $this->input->post('harga_beli'),
-		'harga_jual' => $this->input->post('harga_jual'),
-		'stok' => $this->input->post('stok'),
-		'keterangan' => $this->input->post('keterangan'),
-	    );
+        'kode_barang' => $this->input->post('kode_barang'),
+        'nama_barang' => $this->input->post('nama_barang'),
+        'kode_merk' => $this->input->post('kode_merk'),
+        'harga_beli' => $this->input->post('harga_beli'),
+        'harga_jual' => $this->input->post('harga_jual'),
+        'stok' => $this->input->post('stok'),
+        'stok_before' => $this->input->post('stok_before'),
+        'keterangan' => $this->input->post('keterangan'),
+        );
 
             $this->Barang_model->insert($data);
             redirect(site_url('barang'));
         }
     }
-    
-    public function dataupdate($id) 
+
+    public function dataupdate($id)
     {
         $this->load->view('nav');
         $row = $this->Barang_model->selectById($id);
 
         if ($row) {
             $data = array(
-                
-		'kode_barang' => set_value('kode_barang', $row->kode_barang),
-		'nama_barang' => set_value('nama_barang', $row->nama_barang),
-		'kode_merk' => set_value('kode_merk', $row->kode_merk),
-		'harga_beli' => set_value('harga_beli', $row->harga_beli),
-		'harga_jual' => set_value('harga_jual', $row->harga_jual),
-		'stok' => set_value('stok', $row->stok),
-		'keterangan' => set_value('keterangan', $row->keterangan),
-	    );
-            $data['listmerk']=$this->Merk_model->selectByAll();
+
+        'kode_barang' => set_value('kode_barang', $row->kode_barang),
+        'nama_barang' => set_value('nama_barang', $row->nama_barang),
+        'kode_merk' => set_value('kode_merk', $row->kode_merk),
+        'harga_beli' => set_value('harga_beli', $row->harga_beli),
+        'harga_jual' => set_value('harga_jual', $row->harga_jual),
+        'stok' => set_value('stok', $row->stok),
+        'stok_before' => set_value('stok_before', $row->stok_before),
+        'keterangan' => set_value('keterangan', $row->keterangan),
+        );
+            $data['listmerk'] = $this->Merk_model->selectByAll();
             $this->load->view('barang/barang_form', $data);
         }
         $this->load->view('foot');
     }
-    
-    public function update() 
+
+    public function update()
     {
         $this->_rule();
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->dataupdate($this->uri->segment(3));
         } else {
             $data = array(
-		'kode_barang' => $this->input->post('kode_barang'),
-		'nama_barang' => $this->input->post('nama_barang'),
-		'kode_merk' => $this->input->post('kode_merk'),
-		'harga_beli' => $this->input->post('harga_beli'),
-		'harga_jual' => $this->input->post('harga_jual'),
-		'stok' => $this->input->post('stok'),
-		'keterangan' => $this->input->post('keterangan'),
-	    );
+        'kode_barang' => $this->input->post('kode_barang'),
+        'nama_barang' => $this->input->post('nama_barang'),
+        'kode_merk' => $this->input->post('kode_merk'),
+        'harga_beli' => $this->input->post('harga_beli'),
+        'harga_jual' => $this->input->post('harga_jual'),
+        'stok' => $this->input->post('stok'),
+        'stok_before' => $this->input->post('stok_before'),
+        'keterangan' => $this->input->post('keterangan'),
+        );
 
             $this->Barang_model->update($this->uri->segment(3), $data);
-            
+
             redirect(site_url('barang'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Barang_model->selectById($id);
 
         if ($row) {
             $this->Barang_model->delete($id);
-            
+
             redirect(site_url('barang'));
         }
     }
