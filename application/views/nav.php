@@ -21,8 +21,8 @@
     <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
     <link href="<?=base_url();?>/assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css"/>
     <link href="<?=base_url();?>/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css">
+    <!-- <link href="<?=base_url();?>/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
+    <link href="<?=base_url();?>/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css"> -->
     <!-- END PAGE LEVEL PLUGIN STYLES -->
     <!-- BEGIN PAGE STYLES -->
     <link href="<?=base_url();?>/assets/admin/pages/css/tasks.css" rel="stylesheet" type="text/css"/>

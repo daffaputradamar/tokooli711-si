@@ -18,36 +18,35 @@
             <div class="portlet-body">
                 <br>
 
-                <?= form_open('laporan/jual', 'class="form-inline" role="form"');?>
+                <?= form_open('laporan/jual', 'class="form-inline" role="form"'); ?>
 
                 <table class="table">
                     <tr>
                         <td>Nama Barang</td>
                         <td>:</td>
                         <td>
-                            <select name="kode_barang" class="form-control selectpicker" data-live-search="true"
-                                style="width:300px" placeholder="kode_barang">
+                            <select name="kode_barang" class="form-control selectpicker" data-live-search="true" style="width:300px" placeholder="kode_barang">
                                 <?php foreach ($barang as $komp) {
-    if ($kode_barang==$komp->kode_barang) {
-        ?>
-                                <option value="<?= $komp->kode_barang ?>">
-                                    <?= $komp->nama_barang ?>
-                                </option>
+                                    if ($kode_barang == $komp->kode_barang) {
+                                ?>
+                                        <option value="<?= $komp->kode_barang ?>">
+                                            <?= $komp->nama_barang ?>
+                                        </option>
+                                    <?php
+                                    }
+                                }
+                                foreach ($barang as $komp) {
+                                    if ($kode_barang <> $komp->kode_barang) {
+                                    ?>
+                                        <option value="<?= $komp->kode_barang ?>">
+                                            <?= $komp->nama_barang ?>
+                                            [<?= $komp->merk ?>]
+                                        </option>
                                 <?php
-    }
-}
-                                                foreach ($barang as $komp) {
-                                                    if ($kode_barang<>$komp->kode_barang) {
-                                                        ?>
-                                <option value="<?= $komp->kode_barang ?>">
-                                    <?= $komp->nama_barang ?>
-                                    [<?= $komp->merk ?>]
-                                </option>
-                                <?php
-                                                    }
-                                                }
-                                                
-                                                ?>
+                                    }
+                                }
+
+                                ?>
                             </select>
                         </td>
                     </tr>
@@ -77,7 +76,7 @@
         <div class="portlet box blue">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-book"></i> Laporan Jual per Bulan
+                    <i class="fa fa-book"></i>Generate Laporan Penjualan
                 </div>
                 <div class="tools">
                     <a href="" class="collapse" data-original-title="" title="">
@@ -91,23 +90,40 @@
             <div class="portlet-body">
                 <br>
 
-                <?= form_open('laporan/jual', 'class="form-inline" role="form"');?>
-                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label> Harian :
-                        <input type="radio" class="form-control" name="rad" value="0" checked>
-                    </label>
-                    <label> Bulanan :
-                        <input type="radio" class="form-control" name="rad" value="1">
-                    </label>
+                <?= form_open('laporan/jual', 'class="form-inline" role="form"'); ?>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="tipe">Jenis Laporan :</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="form-group" style="display: block;">
+                            <input type="radio" class="form-control" name="rad" value="0" checked>
+                            <label for="tipe"> Harian </label>
+                        </div>
+                        <div class="form-group" style="display: block;">
+                            <input type="radio" class="form-control" name="rad" value="1">
+                            <label for="tipe"> Bulanan </label>
+                        </div>
+                    </div>
                 </div>
                 <br>
-                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label> Tanggal : </label>
-                    <input type="date" class="form-control" id='mulai' name="mulai">
-                </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="row">
+                    <div class="col-md-2">
+                        <label> Tanggal : </label>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="date" class="form-control" id='mulai' name="mulai">
 
-                <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-10">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </div>
                 </form>
                 <hr>
 
@@ -146,24 +162,25 @@
                             </tr>
                         </thead>
                         <?php
-$total=0;
+                        $total = 0;
                         foreach ($listgaji as $gaji) {
-                            ?>
-                        <?php if (!is_null($gaji->nama_karyawan)) { ?>
-                        <tr>
-                            <td>
-                                <b><?=$gaji->nama_karyawan;?></b>
-                            </td>
-                            <td><?=$gaji->telp_karyawan;?>
-                            </td>
-                            <td>
-                                Rp. <?php echo $this->CodeGenerator->rp($gaji->gaji); $total+=$gaji->gaji;  ?>
-                            </td>
+                        ?>
+                            <?php if (!is_null($gaji->nama_karyawan)) { ?>
+                                <tr>
+                                    <td>
+                                        <b><?= $gaji->nama_karyawan; ?></b>
+                                    </td>
+                                    <td><?= $gaji->telp_karyawan; ?>
+                                    </td>
+                                    <td>
+                                        Rp. <?php echo $this->CodeGenerator->rp($gaji->gaji);
+                                            $total += $gaji->gaji;  ?>
+                                    </td>
 
-                        </tr>
+                                </tr>
                         <?php
-                        }
-                        }?>
+                            }
+                        } ?>
                     </table>
 
                 </div>
@@ -173,7 +190,7 @@ $total=0;
                         <div class="stat-left pull-left">
                             <div class="stat-number">
                                 <div class=" theme-font-color bold">
-                                    Total Bea lain- lain bulan ini : Rp. <?= $this->CodeGenerator->rp($total)?>
+                                    Total Bea lain- lain bulan ini : Rp. <?= $this->CodeGenerator->rp($total) ?>
                                 </div>
                             </div>
                         </div>
@@ -185,3 +202,21 @@ $total=0;
     </div>
 
 </div>
+<script>
+    $(document).ready(function() {
+
+        $('input[type=radio][name="rad"]').change(function() {
+            if (this.value == '0') {
+                $('#mulai').attr('type', 'date');
+            } else if (this.value == '1') {
+                $('#mulai').attr('type', 'month');
+            }
+        });
+
+        $('input:radio[name="rad"]')
+            .filter(`[value="0"]`)
+            .prop('checked', true)
+            .trigger("change");
+
+    });
+</script>

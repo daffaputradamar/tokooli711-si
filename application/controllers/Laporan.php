@@ -60,10 +60,13 @@ class Laporan extends CI_Controller
         $data['listjual'] = $this->Penjualan_model->laporan($mulai, $this->uri->segment(4));
 
         $kode_jual = array();
+        $data['listdetail'] = array();
         foreach ($data['listjual'] as $val) {
             array_push($kode_jual, $val->kode_jual);
         }
-        $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
+        if(!empty($kode_jual)){
+            $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
+        }
         $data['byTgl'] = $this->Penjualan_model->omsetByTgl($this->uri->segment(3), $this->uri->segment(4));
         $data['hbeli'] = $this->Penjualan_model->beliByTgl($this->uri->segment(3), $this->uri->segment(4));
         $data['hjual'] = $this->Penjualan_model->jualByTgl($this->uri->segment(3), $this->uri->segment(4));
@@ -78,10 +81,13 @@ class Laporan extends CI_Controller
         $data['listjual'] = $this->Penjualan_model->laporan($mulai, $this->uri->segment(4));
 
         $kode_jual = array();
+        $data['listdetail'] = array();
         foreach ($data['listjual'] as $val) {
             array_push($kode_jual, $val->kode_jual);
         }
-        $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
+        if(!empty($kode_jual)){
+            $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
+        }
         $data['byTgl'] = $this->Penjualan_model->omsetByTgl($this->uri->segment(3), $this->uri->segment(4));
         $data['hbeli'] = $this->Penjualan_model->beliByTgl($this->uri->segment(3), $this->uri->segment(4));
         $data['hjual'] = $this->Penjualan_model->jualByTgl($this->uri->segment(3), $this->uri->segment(4));
