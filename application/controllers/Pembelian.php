@@ -33,29 +33,32 @@ class Pembelian extends CI_Controller
 
     public function index()
     {
-        $cari = urldecode($this->input->get('cari'));
-        $start = $this->input->get('start') !== null ? intval($this->input->get('start')) : 0;
+        $this->load->library('pagination');
 
         $config['per_page'] = 10;
         $config['page_query_string'] = true;
 
-        $is_filter = $this->input->post('filter');
-        if (isset($is_filter)) {
-            $filter_barang = $this->input->post('kode_barang');
-            $filter_tgl_awal = $this->input->post('tgl_awal');
-            $filter_tgl_akhir = $this->input->post('tgl_akhir');
+        $cari = urldecode($this->input->get('cari'));
+        $start = intval($this->input->get('start'));
 
-            $pembelian_all = $this->Pembelian_model->get_limit_data_filter($filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $config['per_page'], $start);
+        $filter_barang = urldecode($this->input->get('kode_barang'));
+        $filter_tgl_awal = urldecode($this->input->get('tgl_awal'));
+        $filter_tgl_akhir = urldecode($this->input->get('tgl_akhir'));
+
+        $pembelian_all = $this->Pembelian_model->get_limit_data_filter($config['per_page'], $start, $filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $cari);
+
+        $base_url_pembelian = base_url() . 'pembelian';
+        if ($cari <> '') {
+            $config['base_url'] = $base_url_pembelian . '?cari=' . urlencode($cari);
+            $config['first_url'] = $base_url_pembelian . '?cari=' . urlencode($cari);
         } else {
-            $pembelian_all = $this->Pembelian_model->get_limit_data($config['per_page'], $start, $cari);
+            $config['base_url'] = $base_url_pembelian . '?';
+            $config['first_url'] = $base_url_pembelian . '?';
         }
 
-        if ($cari <> '') {
-            $config['base_url'] = base_url() . 'pembelian?cari=' . urlencode($cari);
-            $config['first_url'] = base_url() . 'pembelian?cari=' . urlencode($cari);
-        } else {
-            $config['base_url'] = base_url() . 'pembelian';
-            $config['first_url'] = base_url() . 'pembelian';
+        if (!empty($filter_barang)) { 
+            $config['base_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
+            $config['first_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
         }
 
         $pembelian = array_slice($pembelian_all, $start, $config['per_page']);
@@ -67,23 +70,17 @@ class Pembelian extends CI_Controller
         $data = array(
             'pembelian_data' => $pembelian,
             'cari' => $cari,
+            'kode_barang' => $filter_barang,
+            'tgl_awal' => $filter_tgl_awal,
+            'tgl_akhir' => $filter_tgl_akhir,
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
             'listbarang' => $this->Barang_model->selectByAll()
         );
 
-        if (isset($is_filter)) {
-            $data['filter'] = array(
-                'kode_barang' => $filter_barang,
-                'tgl_awal' => $filter_tgl_awal,
-                'tgl_akhir' => $filter_tgl_akhir
-            );
-        }
-
 
         $this->load->view('nav');
-        $this->load->library('pagination');
 
         $this->load->view('pembelian/pembelian_list', $data);
         $this->load->view('foot');

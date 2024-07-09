@@ -91,16 +91,33 @@ class Penjualan_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
-    public function get_limit_data_filter($kode_barang, $tgl_awal, $tgl_akhir, $limit, $start = 0)
+    public function get_limit_data_filter($limit, $start, $kode_barang, $tgl_awal, $tgl_akhir, $filterkaryawan = 'ALL', $cari = '')
     {
-        return $this->db->query("
-            SELECT p.*
+        $sql = "SELECT p.*
             FROM penjualan p
-            JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
-            WHERE pd.kode_barang = '$kode_barang'
-            AND p.tanggal_jual_date BETWEEN '$tgl_awal' AND '$tgl_akhir'
-            ORDER BY p.kode_jual DESC
-        ")->result();
+            WHERE 1 = 1";
+
+        if (!empty($kode_barang)) {
+            $sql .= " AND EXISTS (
+                    SELECT 1 FROM penjualan_detail pd WHERE pd.kode_jual = p.kode_jual
+                    AND pd.kode_barang = '$kode_barang'
+                    )
+                    AND p.tanggal_jual_date BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+        }
+        
+        if ($filterkaryawan <> 'ALL') {
+            $sql .= " AND p.kode_karyawan = '$filterkaryawan'";
+        }
+
+        if (!empty($cari)) {
+            $sql .= " AND (LOWER(p.kode_jual) LIKE '%$cari%' OR LOWER(p.tanggal_jual) LIKE '%$cari%' OR LOWER(p.kode_admin) LIKE '%$cari%' OR LOWER(p.kode_karyawan) LIKE '%$cari%' OR LOWER(p.keterangan) LIKE '%$cari%' OR LOWER(p.nomor_polisi) LIKE '%$cari%' OR LOWER(p.km_kendaraan) LIKE '%$cari%' OR LOWER(p.ongkos_karyawan) LIKE '%$cari%' OR LOWER(p.total) LIKE '%$cari%' OR LOWER(p.bayar) LIKE '%$cari%' OR LOWER(p.pelanggan) LIKE '%$cari%')";
+        }
+            
+        $sql .= " ORDER BY p.kode_jual DESC;";
+
+        $result = $this->db->query($sql)->result();
+
+        return $result;
     }
 
     public function insert($data)
@@ -176,6 +193,20 @@ class Penjualan_model extends CI_Model
         $tgl2 = explode('-', $tanggal2);
 
         return $this->db->query('select *, substr(tanggal_jual,4,2),substr(tanggal_jual,7,4) from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual left join barang on penjualan_detail.kode_barang =barang.kode_barang  where  (substr(tanggal_jual,1,2)>="'.$tgl1[0].'" and substr(tanggal_jual,4,2)>="'.$tgl1[1].'" and substr(tanggal_jual,7,4)>="'.$tgl1[2].'") and (substr(tanggal_jual,1,2)<="'.$tgl2[0].'" and substr(tanggal_jual,4,2)<="'.$tgl2[1].'" and substr(tanggal_jual,7,4)<="'.$tgl2[2].'") and barang.kode_barang="'.$kode.'"')->result();
+
+        $tanggal1=date('Y-m-d', strtotime($tanggal1));
+        $tanggal2=date('Y-m-d', strtotime($tanggal2));
+
+        $sql = "SELECT *
+            , SUBSTR(tanggal_jual,4,2)
+            , SUBSTR(tanggal_jual,7,4) 
+            FROM penjualan p
+            LEFT JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual 
+            LEFT JOIN barang b ON pd.kode_barang = b.kode_barang  
+            WHERE tanggal_jual_date BETWEEN '$tanggal1' and '$tanggal2' 
+            AND b.kode_barang = '$kode'"; 
+
+        return $this->db->query($sql)->result();
     }
 
     public function omsetAll()

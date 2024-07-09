@@ -4,40 +4,25 @@
 			<i class="fa fa-bell fa-fw"></i> Pembelian
 		</div>
 		<div class="panel-body">
-			<form method="post">
+			<form method="get">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="">Barang</label>
 							<select name="kode_barang" class="form-control selectpicker" data-live-search="true"
 								placeholder="kode_barang">
-								<?php foreach ($listbarang as $komp) {
-								    if ($kode_barang == $komp->kode_barang) {
-								        ?>
+								<?php foreach ($listbarang as $komp): ?>
 								<option
 									value="<?= $komp->kode_barang ?>"
 									data-merk="<?= $komp->merk ?>"
-									data-harga="<?= $komp->harga_jual ?>">
-									<?= $komp->nama_barang ?>
-								</option>
-								<?php
-								    }
-								}
-                            foreach ($listbarang as $komp) {
-                                if ($kode_barang <> $komp->kode_barang) {
-                                    ?>
-								<option
-									value="<?= $komp->kode_barang ?>"
-									data-merk="<?= $komp->merk ?>"
-									data-harga="<?= $komp->harga_jual ?>">
+									data-harga="<?= $komp->harga_jual ?>"
+									<?= ($kode_barang == $komp->kode_barang) ? 'selected' : ''; ?>>
 									<?= $komp->nama_barang ?> ||
 									<?= $komp->merk ?> || Rp.
 									<?= $this->CodeGenerator->rp($komp->harga_jual) ?>
 								</option>
 								<?php
-                                }
-                            }
-
+                            		endforeach;
 								?>
 							</select>
 						</div>
@@ -46,20 +31,20 @@
 						<div class="form-group">
 							<label for="tgl_awal">Tanggal Awal</label>
 							<input type="date" name="tgl_awal" id="tgl_awal" class="form-control"
-								value="<?= (isset($filter)) ? date('Y-m-d', strtotime($filter['tgl_awal'])) : date('Y-m-01'); ?>">
+								value="<?= (!empty($tgl_awal)) ? date('Y-m-d', strtotime($tgl_awal)) : date('Y-m-01'); ?>">
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="tgl_akhir">Tanggal Akhir</label>
 							<input type="date" name="tgl_akhir" id="tgl_akhir" class="form-control"
-								value="<?= (isset($filter)) ? date('Y-m-d', strtotime($filter['tgl_akhir'])) : date('Y-m-d'); ?>">
+								value="<?= (!empty($tgl_akhir)) ? date('Y-m-d', strtotime($tgl_akhir)) : date('Y-m-d'); ?>">
 						</div>
 					</div>
 
 				</div>
 				<div style="text-align: right;">
-					<?= (isset($filter)) ? '<button class="btn btn-secondary" type="submit" name="reset">Reset</button>' : ''; ?>
+					<?= (!empty($cari) || !empty($kode_barang)) ? "<a href=" . site_url('pembelian') . " class='btn btn-default'>Reset</a>" : ''; ?> 
 					<button class="btn btn-primary" type="submit" name="filter">Filter</button>
 				</div>
 			</form>

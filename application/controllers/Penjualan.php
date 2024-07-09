@@ -42,34 +42,34 @@ class Penjualan extends CI_Controller
 
         $cari = urldecode($this->input->get('cari'));
         $filterkaryawan = empty(urldecode($this->input->get('filterkaryawan'))) ? "ALL" : urldecode($this->input->get('filterkaryawan'));
+
+        $filter_barang = urldecode($this->input->get('kode_barang'));
+        $filter_tgl_awal = urldecode($this->input->get('tgl_awal'));
+        $filter_tgl_akhir = urldecode($this->input->get('tgl_akhir'));
+
         $start = intval($this->input->get('start'));
 
-        $is_filter = $this->input->post('filter');
-        if (isset($is_filter)) {
-            $filter_barang = $this->input->post('kode_barang');
-            $filter_tgl_awal = $this->input->post('tgl_awal');
-            $filter_tgl_akhir = $this->input->post('tgl_akhir');
+        $penjualan_all = $this->Penjualan_model->get_limit_data_filter($config['per_page'], $start, $filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $filterkaryawan, $cari);
 
-            $penjualan_all = $this->Penjualan_model->get_limit_data_filter($filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $config['per_page'], $start);
-        } else {
-            $penjualan_all = $this->Penjualan_model->get_limit_data($config['per_page'], $start, $cari);
-        }
-
+        $base_url_penjualan = base_url() . 'penjualan';
         if ($cari <> '') {
-            $config['base_url'] = base_url() . 'penjualan?cari=' . urlencode($cari);
-            $config['first_url'] = base_url() . 'penjualan?cari=' . urlencode($cari);
-            if ($filterkaryawan <> '') {
-                $config['base_url'] .= '&filterkaryawan=' . urlencode($filterkaryawan);
-                $config['first_url'] .= '&filterkaryawan=' . urlencode($filterkaryawan);
-            }
+            $config['base_url'] = $base_url_penjualan . '?cari=' . urlencode($cari);
+            $config['first_url'] = $base_url_penjualan . '?cari=' . urlencode($cari);
         } else {
-            $config['base_url'] = base_url() . 'penjualan';
-            $config['first_url'] = base_url() . 'penjualan';
-            if ($filterkaryawan <> '') {
-                $config['base_url'] .= '?filterkaryawan=' . urlencode($filterkaryawan);
-                $config['first_url'] .= '?filterkaryawan=' . urlencode($filterkaryawan);
-            }
+            $config['base_url'] = $base_url_penjualan . '?';
+            $config['first_url'] = $base_url_penjualan . '?';
         }
+
+        if ($filterkaryawan <> '') {
+            $config['base_url'] .= '&filterkaryawan=' . urlencode($filterkaryawan);
+            $config['first_url'] .= '&filterkaryawan=' . urlencode($filterkaryawan);
+        }
+
+        if (!empty($filter_barang)) { 
+            $config['base_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
+            $config['first_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
+        }
+
 
         $penjualan = array_slice($penjualan_all, $start, $config['per_page']);
         $config['total_rows'] = count($penjualan_all);
@@ -79,6 +79,9 @@ class Penjualan extends CI_Controller
         $data = array(
             'penjualan_data' => $penjualan,
             'cari' => $cari,
+            'kode_barang' => $filter_barang,
+            'tgl_awal' => $filter_tgl_awal,
+            'tgl_akhir' => $filter_tgl_akhir,
             'filterkaryawan' => $filterkaryawan,
             'karyawan' => $this->Karyawan_model->selectByAll(),
             'pagination' => $this->pagination->create_links(),
@@ -175,7 +178,9 @@ class Penjualan extends CI_Controller
 
         $this->_rule();
 
-        if (!$this->form_validation->run()) $this->return_redirect();
+        if (!$this->form_validation->run()) {
+            $this->return_redirect();
+        }
 
         $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
         $detail_penjualan = $_SESSION[$kode_user . 'detailbarang'];
@@ -224,7 +229,7 @@ class Penjualan extends CI_Controller
             if ($this->input->post('cetak') == "on") {
                 echo "<script type='text/javascript' language='javascript'>window.open('" . base_url() . 'penjualan/struk/' . $kode_jual . "')</script>";
             }
-            
+
             redirect(site_url('home'), 'refresh');
         } else {
             redirect(site_url('penjualan'), 'refresh');
@@ -357,8 +362,8 @@ class Penjualan extends CI_Controller
             return true;
         } else {
             echo "<script>alert('Stok kurang')</script>";
-            
-            if ($_SESSION['level'] != "admin") { 
+
+            if ($_SESSION['level'] != "admin") {
                 $this->Percobaan_karyawan_model->insert(array(
                     'id_barang' => $input->post('kode_barang'),
                     'id_karyawan' => $kode_user,

@@ -47,8 +47,31 @@ class Pembelian_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
-    public function get_limit_data_filter($kode_barang, $tgl_awal, $tgl_akhir, $limit, $start = 0)
+    public function get_limit_data_filter($limit, $start = 0,$kode_barang, $tgl_awal, $tgl_akhir, $cari = '')
     {
+        $sql = "SELECT p.*, s.*
+            FROM pembelian p
+            LEFT JOIN suplier s ON p.kode_suplier = s.kode_suplier
+            WHERE 1 = 1";
+
+        if (!empty($kode_barang)) {
+            $sql .= " AND EXISTS (
+                    SELECT 1 FROM pembelian_detail pd WHERE pd.kode_beli = p.kode_beli
+                    AND pd.kode_barang = '$kode_barang'
+                    )
+                    AND p.tanggal_beli_date BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+        }
+
+        if (!empty($cari)) {
+            $sql .= " AND (LOWER(p.kode_beli) LIKE '%$cari%' OR LOWER(p.tanggal_beli) LIKE '%$cari%' OR LOWER(p.kode_admin) LIKE '%$cari%' OR LOWER(p.no_faktur) LIKE '%$cari%' OR LOWER(p.total) LIKE '%$cari%' OR LOWER(s.nama_suplier) LIKE '%$cari%')";
+        }
+            
+        $sql .= " ORDER BY p.kode_beli DESC;";
+
+        $result = $this->db->query($sql)->result();
+
+        return $result;
+
         return $this->db->query("
             SELECT p.*, s.*
             FROM pembelian p
@@ -102,13 +125,19 @@ class Pembelian_model extends CI_Model
     }
     public function laporan2($tanggal1, $tanggal2, $kode)
     {
-        $tanggal1=date('d-m-Y', strtotime($tanggal1));
-        $tgl1=explode('-', $tanggal1);
+        $tanggal1=date('Y-m-d', strtotime($tanggal1));
+        $tanggal2=date('Y-m-d', strtotime($tanggal2));
 
-        $tanggal2=date('d-m-Y', strtotime($tanggal2));
-        $tgl2=explode('-', $tanggal2);
+        $sql = "SELECT *
+            , SUBSTR(tanggal_beli,4,2)
+            , SUBSTR(tanggal_beli,7,4) 
+            FROM pembelian p
+            LEFT JOIN pembelian_detail pd ON p.kode_beli = pd.kode_beli 
+            LEFT JOIN barang b ON pd.kode_barang = b.kode_barang  
+            WHERE tanggal_beli_date BETWEEN '$tanggal1' and '$tanggal2' 
+            AND b.kode_barang = '$kode'"; 
 
-        return $this->db->query('select *, substr(tanggal_beli,4,2),substr(tanggal_beli,7,4) from pembelian left join pembelian_detail on pembelian.kode_beli=pembelian_detail.kode_beli left join barang on pembelian_detail.kode_barang =barang.kode_barang  where  (substr(tanggal_beli,1,2)>="'.$tgl1[0].'" and substr(tanggal_beli,4,2)>="'.$tgl1[1].'" and substr(tanggal_beli,7,4)>="'.$tgl1[2].'") and (substr(tanggal_beli,1,2)<="'.$tgl2[0].'" and substr(tanggal_beli,4,2)<="'.$tgl2[1].'" and substr(tanggal_beli,7,4)<="'.$tgl2[2].'") and barang.kode_barang="'.$kode.'"')->result();
+        return $this->db->query($sql)->result();
     }
     public function beliByTgl($tanggal, $status)
     {

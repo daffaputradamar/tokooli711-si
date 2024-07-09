@@ -132,16 +132,17 @@ class Laporan extends CI_Controller
     {
         $data['listjual'] = $this->Penjualan_model->laporan2($this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5));
         // var_dump($data);
+        // return;
         $this->load->view('laporan/pjualprint_2', $data);
     }
 
     public function pbeli_2()
     {
-        $data['listjual'] = $this->Pembelian_model->laporan2($this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5));
+        $data['listbeli'] = $this->Pembelian_model->laporan2($this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5));
         // var_dump($data);
+        // return;
         $this->load->view('laporan/pbeliprint_2', $data);
     }
-
 
     public function laporan_barang()
     {
@@ -164,6 +165,31 @@ class Laporan extends CI_Controller
         }
         $data['listbarang'] = $this->Barang_model->getAll_by($cari);
         $this->load->view('laporan/barangprint', $data);
+    }
+
+    public function movement()
+    {
+        $this->load->view('nav');
+        $data['barang'] = $this->Barang_model->selectByAll();
+        $this->load->view('laporan/movementform', $data);
+
+        $this->load->view('foot');
+
+        if ($_POST) {
+            if ($this->input->post('kode_barang') <> "" && $this->input->post('tgl_awal') <> "" && $this->input->post('tgl_akhir') <> "") {
+
+                redirect('laporan/movementprint/'.$this->input->post('kode_barang')."/".date('d-m-Y', strtotime($this->input->post('tgl_awal')))."/".date('d-m-Y', strtotime($this->input->post('tgl_akhir'))), 'refresh');
+
+            }
+        }
+    }
+
+    public function movementprint()
+    {
+        $data['barang'] = $this->Barang_model->selectById($this->uri->segment(3)); 
+        $data['listbarang'] = $this->Barang_model->getMovementByBarang($this->uri->segment(3), date('Y-m-d', strtotime($this->uri->segment(4))), date('Y-m-d', strtotime($this->uri->segment(5))));
+
+        $this->load->view('laporan/movementprint', $data);
     }
 }
 

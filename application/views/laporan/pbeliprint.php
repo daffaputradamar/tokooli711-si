@@ -7,7 +7,15 @@
     }
 </style>
 <center><h4>Laporan Pembelian</h4></center>
-<center><h4><?= $this->uri->segment(3)?></h4></center>
+<center><h4>
+<?php
+if ($this->uri->segment(4) == 1) {
+    echo "Bulan " . date('m', strtotime($this->uri->segment(3))) .  " - " . date('Y', strtotime($this->uri->segment(3)));
+} else {
+	echo $this->uri->segment(3);
+}
+?>
+</h4></center>
 <table class="table table-bordered table-hover table-striped">
 <?php $no=0;foreach ($listbeli as $row) {
 	?>

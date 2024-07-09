@@ -189,6 +189,10 @@
                                     Laporan Barang</a>
                             </li>
                             <li>
+                                <a href="<?= base_url() ?>index.php/laporan/movement">
+                                    Laporan Movement Barang</a>
+                            </li>
+                            <li>
                                 <a href="<?= base_url() ?>index.php/laporan/beli">
                                     Laporan Pembelian</a>
                             </li>

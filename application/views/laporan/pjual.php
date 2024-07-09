@@ -15,7 +15,6 @@ if ($this->uri->segment(4) == 1) {
 } else {
 	echo $this->uri->segment(3);
 }
-	
 ?>
 </h4></center>
 <table class="table table-bordered table-hover table-striped">

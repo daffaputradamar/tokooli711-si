@@ -60,6 +60,38 @@ class Barang_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
+    function getMovementByBarang($kode_barang, $tgl_awal, $tgl_akhir)
+    {
+        $sql_penjualan = "
+            SELECT pd.kode_jual kode_trans, 'Penjualan' jenis_trans, p.tanggal_jual tanggal_trans, pd.jumlah
+            FROM penjualan p
+            JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
+            WHERE pd.kode_barang = '$kode_barang'
+            AND p.tanggal_jual_date BETWEEN '$tgl_awal' AND '$tgl_akhir'
+            ORDER BY p.tanggal_jual_date DESC
+        ";
+        $penjualan = $this->db->query($sql_penjualan)->result();
+
+        $sql_pembelian = "
+            SELECT bd.kode_beli kode_trans, 'Pembelian' jenis_trans, b.tanggal_beli tanggal_trans, bd.jumlah
+            FROM pembelian b
+            JOIN pembelian_detail bd ON b.kode_beli = bd.kode_beli
+            WHERE bd.kode_barang = '$kode_barang'
+            AND b.tanggal_beli_date BETWEEN '$tgl_awal' AND '$tgl_akhir'
+            ORDER BY b.tanggal_beli_date DESC
+        ";
+        $pembelian = $this->db->query($sql_pembelian)->result();
+
+        $merged = array_merge($penjualan, $pembelian);
+        usort($merged, function($a, $b) {
+            $dateA = DateTime::createFromFormat('d-m-Y', $a->tanggal_trans);
+            $dateB = DateTime::createFromFormat('d-m-Y', $b->tanggal_trans);
+        
+            return $dateA <=> $dateB;
+        });
+        return $merged;
+    }
+
     function insert($data)
     {
         $this->db->insert($this->table, $data);
