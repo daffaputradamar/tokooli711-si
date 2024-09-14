@@ -12,7 +12,7 @@ class Barang extends CI_Controller
         session_start();
         if (!isset($_SESSION['level'])) {
             redirect('login');
-        } elseif($_SESSION['level'] == 'karyawan') {
+        } elseif ($_SESSION['level'] == 'karyawan') {
             redirect('home');
         }
         $this->load->model('Barang_model');
@@ -71,15 +71,15 @@ class Barang extends CI_Controller
         $row = $this->Barang_model->selectById($id);
         if ($row) {
             $data = array(
-        'kode_barang' => $row->kode_barang,
-        'nama_barang' => $row->nama_barang,
-        'kode_merk' => $row->kode_merk,
-        'harga_beli' => $row->harga_beli,
-        'harga_jual' => $row->harga_jual,
-        'stok' => $row->stok,
-        'stok_before' => $row->stok_before,
-        'keterangan' => $row->keterangan,
-        );
+                'kode_barang' => $row->kode_barang,
+                'nama_barang' => $row->nama_barang,
+                'kode_merk' => $row->kode_merk,
+                'harga_beli' => $row->harga_beli,
+                'harga_jual' => $row->harga_jual,
+                'stok' => $row->stok,
+                'stok_before' => $row->stok_before,
+                'keterangan' => $row->keterangan,
+            );
             $this->load->view('barang/barang_read', $data);
         }
         $this->load->view('foot');
@@ -90,15 +90,15 @@ class Barang extends CI_Controller
         $this->load->view('nav');
         $data = array(
 
-        'kode_barang' => set_value('kode_barang', $this->CodeGenerator->buatkode('barang', 'kode_barang', 10, 'BRG')),
-        'nama_barang' => set_value('nama_barang'),
-        'kode_merk' => set_value('kode_merk'),
-        'harga_beli' => set_value('harga_beli'),
-        'harga_jual' => set_value('harga_jual'),
-        'stok' => set_value('stok'),
-        'stok_before' => set_value('stok_before'),
-        'keterangan' => set_value('keterangan'),
-    );
+            'kode_barang' => set_value('kode_barang', $this->CodeGenerator->buatkode('barang', 'kode_barang', 10, 'BRG')),
+            'nama_barang' => set_value('nama_barang'),
+            'kode_merk' => set_value('kode_merk'),
+            'harga_beli' => set_value('harga_beli'),
+            'harga_jual' => set_value('harga_jual'),
+            'stok' => set_value('stok'),
+            'stok_before' => set_value('stok_before'),
+            'keterangan' => set_value('keterangan'),
+        );
         $data['listmerk'] = $this->Merk_model->selectByAll();
         $this->load->view('barang/barang_form', $data);
         $this->load->view('foot');
@@ -112,15 +112,15 @@ class Barang extends CI_Controller
             $this->datainsert();
         } else {
             $data = array(
-        'kode_barang' => $this->input->post('kode_barang'),
-        'nama_barang' => $this->input->post('nama_barang'),
-        'kode_merk' => $this->input->post('kode_merk'),
-        'harga_beli' => $this->input->post('harga_beli'),
-        'harga_jual' => $this->input->post('harga_jual'),
-        'stok' => $this->input->post('stok'),
-        'stok_before' => $this->input->post('stok_before'),
-        'keterangan' => $this->input->post('keterangan'),
-        );
+                'kode_barang' => $this->input->post('kode_barang'),
+                'nama_barang' => $this->input->post('nama_barang'),
+                'kode_merk' => $this->input->post('kode_merk'),
+                'harga_beli' => $this->input->post('harga_beli'),
+                'harga_jual' => $this->input->post('harga_jual'),
+                'stok' => $this->input->post('stok'),
+                'stok_before' => $this->input->post('stok_before'),
+                'keterangan' => $this->input->post('keterangan'),
+            );
 
             $this->Barang_model->insert($data);
             redirect(site_url('barang'));
@@ -135,15 +135,15 @@ class Barang extends CI_Controller
         if ($row) {
             $data = array(
 
-        'kode_barang' => set_value('kode_barang', $row->kode_barang),
-        'nama_barang' => set_value('nama_barang', $row->nama_barang),
-        'kode_merk' => set_value('kode_merk', $row->kode_merk),
-        'harga_beli' => set_value('harga_beli', $row->harga_beli),
-        'harga_jual' => set_value('harga_jual', $row->harga_jual),
-        'stok' => set_value('stok', $row->stok),
-        'stok_before' => set_value('stok_before', $row->stok_before),
-        'keterangan' => set_value('keterangan', $row->keterangan),
-        );
+                'kode_barang' => set_value('kode_barang', $row->kode_barang),
+                'nama_barang' => set_value('nama_barang', $row->nama_barang),
+                'kode_merk' => set_value('kode_merk', $row->kode_merk),
+                'harga_beli' => set_value('harga_beli', $row->harga_beli),
+                'harga_jual' => set_value('harga_jual', $row->harga_jual),
+                'stok' => set_value('stok', $row->stok),
+                'stok_before' => set_value('stok_before', $row->stok_before),
+                'keterangan' => set_value('keterangan', $row->keterangan),
+            );
             $data['listmerk'] = $this->Merk_model->selectByAll();
             $this->load->view('barang/barang_form', $data);
         }
@@ -157,16 +157,19 @@ class Barang extends CI_Controller
         if ($this->form_validation->run() == false) {
             $this->dataupdate($this->uri->segment(3));
         } else {
+            $current_data = $this->Barang_model->selectById($this->uri->segment(3));
+            $stock = $current_data->stok;  // Save current stok value
+
             $data = array(
-        'kode_barang' => $this->input->post('kode_barang'),
-        'nama_barang' => $this->input->post('nama_barang'),
-        'kode_merk' => $this->input->post('kode_merk'),
-        'harga_beli' => $this->input->post('harga_beli'),
-        'harga_jual' => $this->input->post('harga_jual'),
-        'stok' => $this->input->post('stok'),
-        'stok_before' => $this->input->post('stok_before'),
-        'keterangan' => $this->input->post('keterangan'),
-        );
+                'kode_barang' => $this->input->post('kode_barang'),
+                'nama_barang' => $this->input->post('nama_barang'),
+                'kode_merk' => $this->input->post('kode_merk'),
+                'harga_beli' => $this->input->post('harga_beli'),
+                'harga_jual' => $this->input->post('harga_jual'),
+                'stok' => $this->input->post('stok'),
+                'stok_before' => $stock, //change update stok_before to stok
+                'keterangan' => $this->input->post('keterangan'),
+            );
 
             $this->Barang_model->update($this->uri->segment(3), $data);
 
@@ -184,7 +187,6 @@ class Barang extends CI_Controller
             redirect(site_url('barang'));
         }
     }
-
 }
 
 /* End of file Barang.php */

@@ -6,11 +6,11 @@
 
         <div class="panel-body">
 
-            <?php if ($this->uri->segment(2)=="insert") {
-    echo form_open('Barang/insert');
-} else {
-    echo form_open('Barang/update/'.$this->uri->segment(3));
-} ?>
+            <?php if ($this->uri->segment(2) == "insert") {
+                echo form_open('Barang/insert');
+            } else {
+                echo form_open('Barang/update/'.$this->uri->segment(3));
+            } ?>
 
 
             <div class="form-group">
@@ -30,23 +30,23 @@
                 <select name="kode_merk" class="form-control selectpicker" data-live-search="true"
                     placeholder="kode_merk">
                     <?php foreach ($listmerk as $komp) {
-    if ($kode_merk==$komp->kode_merk) {
-        ?>
+                        if ($kode_merk == $komp->kode_merk) {
+                            ?>
                     <option value="<?= $komp->kode_merk ?>"><?= $komp->kode_merk." ".$komp->merk ?>
                     </option>
                     <?php
-    }
-}
-             foreach ($listmerk as $komp) {
-                 if ($kode_merk<>$komp->kode_merk) {
-                     ?>
+                        }
+                    }
+            foreach ($listmerk as $komp) {
+                if ($kode_merk <> $komp->kode_merk) {
+                    ?>
                     <option value="<?= $komp->kode_merk ?>"><?= $komp->kode_merk." ".$komp->merk ?>
                     </option>
                     <?php
-                 }
-             }
-            
-             ?>
+                }
+            }
+
+            ?>
                 </select>
             </div>
             <div class="form-group">
@@ -67,7 +67,7 @@
             <div class="form-group">
                 <label for=>Stok Sebelum <?php echo form_error('stok_before') ?></label>
                 <input type="number" step="any" class="form-control" name="stok_before" id="stok_before" placeholder="Stok Sebelum"
-                    value="<?php echo $stok_before; ?>" />
+                    value="<?php echo $stok_before; ?>" readonly />
             </div>
             <div class="form-group">
                 <label for="keterangan">Keterangan <?php echo form_error('keterangan') ?></label>

@@ -11,10 +11,12 @@
         .danger {
             color: lightcoral !important;
             -webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
         }
         .success {
             color: lightgreen !important;
             -webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
         }
 	}
 </style>
@@ -37,9 +39,9 @@
 		<th>Jumlah</th>
 	</tr>
 	<?php
-	$no = 0;
-	foreach ($listbarang as $row):
-	?>
+    $no = 0;
+foreach ($listbarang as $row):
+    ?>
 
 
 		<tr>
@@ -50,6 +52,6 @@
 			<td class="<?= $row->jenis_trans == 'Penjualan' ? 'danger' : 'success'?>"><?= $row->jumlah ?></td>
 		</tr>
 	<?php
-	endforeach;
-    ?>
+endforeach;
+?>
 </table>
