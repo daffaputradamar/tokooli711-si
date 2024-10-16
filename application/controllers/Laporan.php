@@ -31,10 +31,10 @@ class Laporan extends CI_Controller
 
         if ($_POST) {
             if ($this->input->post('mulai') <> "") {
-                redirect('laporan/pbeli/'.date('d-m-Y', strtotime($this->input->post('mulai')))."/".$this->input->post('rad'), 'refresh');
+                redirect('laporan/pbeli/' . date('d-m-Y', strtotime($this->input->post('mulai'))) . "/" . $this->input->post('rad'), 'refresh');
             }
             if ($this->input->post('kode_barang') <> "" && $this->input->post('tgl_awal') <> "" && $this->input->post('tgl_akhir') <> "") {
-                redirect('laporan/pbeli_2/'.date('d-m-Y', strtotime($this->input->post('tgl_awal')))."/".date('d-m-Y', strtotime($this->input->post('tgl_akhir')))."/".$this->input->post('kode_barang'), 'refresh');
+                redirect('laporan/pbeli_2/' . date('d-m-Y', strtotime($this->input->post('tgl_awal'))) . "/" . date('d-m-Y', strtotime($this->input->post('tgl_akhir'))) . "/" . $this->input->post('kode_barang'), 'refresh');
             }
         }
     }
@@ -64,7 +64,7 @@ class Laporan extends CI_Controller
         foreach ($data['listjual'] as $val) {
             array_push($kode_jual, $val->kode_jual);
         }
-        if(!empty($kode_jual)){
+        if (!empty($kode_jual)) {
             $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
         }
         $data['byTgl'] = $this->Penjualan_model->omsetByTgl($this->uri->segment(3), $this->uri->segment(4));
@@ -85,7 +85,7 @@ class Laporan extends CI_Controller
         foreach ($data['listjual'] as $val) {
             array_push($kode_jual, $val->kode_jual);
         }
-        if(!empty($kode_jual)){
+        if (!empty($kode_jual)) {
             $data['listdetail'] = $this->Penjualan_detail_model->selectByKodeJual($kode_jual);
         }
         $data['byTgl'] = $this->Penjualan_model->omsetByTgl($this->uri->segment(3), $this->uri->segment(4));
@@ -101,10 +101,10 @@ class Laporan extends CI_Controller
             // print_r($this->input->post('tanggal_per_kasir'));
             // return;
             if ($this->input->post('mulai') <> "") {
-                redirect('laporan/pjual/'.date('d-m-Y', strtotime($this->input->post('mulai')))."/".$this->input->post('rad'), 'refresh');
+                redirect('laporan/pjual/' . date('d-m-Y', strtotime($this->input->post('mulai'))) . "/" . $this->input->post('rad'), 'refresh');
             }
             if ($this->input->post('kode_barang') <> "" && $this->input->post('tgl_awal') <> "" && $this->input->post('tgl_akhir') <> "") {
-                redirect('laporan/pjual_2/'.date('d-m-Y', strtotime($this->input->post('tgl_awal')))."/".date('d-m-Y', strtotime($this->input->post('tgl_akhir')))."/".$this->input->post('kode_barang'), 'refresh');
+                redirect('laporan/pjual_2/' . date('d-m-Y', strtotime($this->input->post('tgl_awal'))) . "/" . date('d-m-Y', strtotime($this->input->post('tgl_akhir'))) . "/" . $this->input->post('kode_barang'), 'refresh');
             }
         }
 
@@ -176,20 +176,154 @@ class Laporan extends CI_Controller
         $this->load->view('foot');
 
         if ($_POST) {
-            if ($this->input->post('kode_barang') <> "" && $this->input->post('tgl_awal') <> "" && $this->input->post('tgl_akhir') <> "") {
+            if ($this->input->post('kode_barang') <> ""
+                && $this->input->post('tgl_awal') <> "" && $this->input->post('wkt_awal') <> ""
+                && $this->input->post('tgl_akhir') <> "" && $this->input->post('wkt_akhir') <> "") {
 
-                redirect('laporan/movementprint/'.$this->input->post('kode_barang')."/".date('d-m-Y', strtotime($this->input->post('tgl_awal')))."/".date('d-m-Y', strtotime($this->input->post('tgl_akhir'))), 'refresh');
+                $kode_barang = $this->input->post('kode_barang');
+                $start_time = date('d-m-Y', strtotime($this->input->post('tgl_awal'))) . "/" . $this->input->post('wkt_awal');
+                $end_time = date('d-m-Y', strtotime($this->input->post('tgl_akhir'))) . "/" . $this->input->post('wkt_akhir');
 
+                redirect('laporan/movementprint/' . $kode_barang . "/" . $start_time . "/" . $end_time, 'refresh');
             }
         }
     }
 
     public function movementprint()
     {
-        $data['barang'] = $this->Barang_model->selectById($this->uri->segment(3)); 
-        $data['listbarang'] = $this->Barang_model->getMovementByBarang($this->uri->segment(3), date('Y-m-d', strtotime($this->uri->segment(4))), date('Y-m-d', strtotime($this->uri->segment(5))));
+        $kode_barang = $this->uri->segment(3);
+        $tgl_awal = $this->uri->segment(4); // Date start
+        $waktu_awal = $this->uri->segment(5); // Time start
+        $tgl_akhir = $this->uri->segment(6); // Date end
+        $waktu_akhir = $this->uri->segment(7); // Time end
+
+        // Combine date and time into a DateTime format
+        $datetime_awal = date('Y-m-d H:i:s', strtotime("$tgl_awal $waktu_awal"));
+        $datetime_akhir = date('Y-m-d H:i:s', strtotime("$tgl_akhir $waktu_akhir"));
+
+        // Update model call with the datetime format
+        $data['barang'] = $this->Barang_model->selectById($kode_barang);
+        $data_trans = $this->Barang_model->get_movement_by_barang($kode_barang, $datetime_awal, $datetime_akhir);
+
+        // New array to store the modified transactions
+        $modified_transactions = [];
+        $cumulative_sum = 0;
+
+        // Iterate over the transactions
+        foreach ($data_trans as $transaction) {
+            if ($transaction->jenis_trans === 'Penjualan') {
+                // Add the penjualan amount to the cumulative sum
+                $cumulative_sum += $transaction->jumlah;
+
+                // Add the penjualan transaction to the modified array
+                $modified_transactions[] = $transaction;
+
+            } elseif ($transaction->jenis_trans === 'Pembelian') {
+                // Insert a new row with the cumulative sum before the Pembelian
+                if ($cumulative_sum > 0) {
+                    $modified_transactions[] = (object) [
+                        "kode_trans" => null,
+                        "jenis_trans" => "Jumlah Kumulatif Penjualan",
+                        "tanggal_trans" => '',
+                        "jumlah" => $cumulative_sum
+                    ];
+                }
+
+                // Add the pembelian transaction to the modified array
+                $modified_transactions[] = $transaction;
+
+                // Reset the cumulative sum after each pembelian
+                $cumulative_sum = 0;
+            }
+        }
+
+        // After the loop, check if there are any remaining Penjualan
+        if ($cumulative_sum > 0) {
+            $modified_transactions[] = (object) [
+                "kode_trans" => null,
+                "jenis_trans" => "Jumlah Kumulatif Penjualan",
+                "tanggal_trans" => '',
+                "jumlah" => $cumulative_sum
+            ];
+        }
+
+        $data['listbarang'] = $modified_transactions;
 
         $this->load->view('laporan/movementprint', $data);
+    }
+
+    public function history_stok()
+    {
+        $this->load->library('pagination');
+
+        $start = intval($this->input->get('start'));
+        $config['per_page'] = 10;
+        $config['page_query_string'] = true;
+
+        $this->load->view('nav');
+
+        $data_trans = array(
+            'list' => [],
+            'total_count' => 0
+        );
+
+        if ($_POST) {
+            $kode_barang = $this->input->post('kode_barang');
+            $datetime_awal = date('Y-m-d H:i:s', strtotime("{$this->input->post('tgl_awal')} {$this->input->post('wkt_awal')}"));
+            $datetime_akhir = date('Y-m-d H:i:s', strtotime("{$this->input->post('tgl_akhir')} {$this->input->post('wkt_akhir')}"));
+
+            $data_trans_db = $this->Barang_model->get_list_history_by_barang($kode_barang, $datetime_awal, $datetime_akhir, $config['per_page'], $start);
+
+            $data_trans['list'] = $data_trans_db['list'];
+            $data_trans['total_count'] = $data_trans_db['total_count'];
+        
+            $data['kode_barang'] = $kode_barang;
+            $data['tgl_awal'] = $this->input->post('tgl_awal');
+            $data['wkt_awal'] = $this->input->post('wkt_awal');
+            $data['tgl_akhir'] = $this->input->post('tgl_akhir');
+            $data['wkt_akhir'] = $this->input->post('wkt_akhir');
+        }
+
+        $config['total_rows'] = $data_trans['total_count'];
+
+        $data['barang'] = $this->Barang_model->selectByAll();
+        $data['history'] = $data_trans['list'];
+        $data['pagination'] = $this->pagination->create_links();
+        $data['total_rows'] = $config['total_rows'];
+        $data['start'] = $start;
+
+        $this->load->view('laporan/historystokbarang', $data);
+        $this->load->view('foot');
+
+    }
+
+    public function update_history_stok($kode_barang)
+    {
+        $this->load->model('Barang_model');
+
+        if ($_POST) {
+            $history_id = $this->input->post('id');
+            $history_stok = $this->input->post('stok');
+
+            $this->Barang_model->update_history_by_id($history_id, $history_stok);
+            
+            redirect('laporan/history_stok/' . $history_id . '/update');
+        }
+        // Load the model if needed
+        $this->load->view('nav');
+
+        // Fetch the stock history based on the kode_barang
+        $data['history'] = $this->Barang_model->get_history_by_id($kode_barang);
+
+        // Check if the history exists for this kode_barang
+        if (empty($data['history'])) {
+            show_404(); // Or handle the case where there's no history
+        }
+
+        // Pass the data to the view for rendering the edit form
+        $this->load->view('laporan/historystokbarangedit', $data);
+        $this->load->view('foot');
+
     }
 }
 

@@ -34,18 +34,18 @@
             <div class="form-group ">
                 <label for="">Kode Suplier</label>
                 <select name="kode_suplier" class="form-control selectpicker" data-live-search="true" placeholder="kode_suplier">
-                    <?php 
+                    <?php
                     foreach ($listsuplier as $komp) {
                         if ($kode_suplier == $komp->kode_suplier) {
                     ?>
-                            <option value="<?= $komp->kode_suplier ?>" <?=isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : ""?>><?= $komp->nama_suplier ?></option>
+                            <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
                         <?php
                         }
                     }
                     foreach ($listsuplier as $komp) {
                         if ($kode_suplier <> $komp->kode_suplier) {
                         ?>
-                            <option value="<?= $komp->kode_suplier ?>" <?=isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : ""?>><?= $komp->nama_suplier ?></option>
+                            <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
                     <?php
                         }
                     }
@@ -62,21 +62,11 @@
                     <div class="form-group col-md-5 col-lg-5">
                         <label for="">Barang</label>
                         <select name="kode_barang" class="form-control selectpicker" data-live-search="true" placeholder="kode_barang">
-                            <?php foreach ($listbarang as $komp) {
-                                if ($kode_barang == $komp->kode_barang) {
+                            <?php foreach ($listbarang as $komp):
                             ?>
-                                    <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
-                                <?php
-                                }
-                            }
-                            foreach ($listbarang as $komp) {
-                                if ($kode_barang <> $komp->kode_barang) {
-                                ?>
-                                    <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
+                                <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
                             <?php
-                                }
-                            }
-
+                            endforeach;
                             ?>
                         </select>
                     </div>
@@ -93,11 +83,11 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Barang</th>
-                            <?php if($_SESSION['level'] == 'admin') { ?>
+                            <?php if ($_SESSION['level'] == 'admin') { ?>
                                 <th>Harga Beli</th>
                             <?php } ?>
                             <th>Jumlah</th>
-                            <?php if($_SESSION['level'] == 'admin') { ?>
+                            <?php if ($_SESSION['level'] == 'admin') { ?>
                                 <th>Subtotal</th>
                             <?php } ?>
                             <th></th>
@@ -107,11 +97,11 @@
                             <tr>
                                 <td width="80px"><?php echo ++$start ?></td>
                                 <td><?php echo $pembelian_detail['nama_barang'] ?></td>
-                                <?php if($_SESSION['level'] == 'admin') { ?>
+                                <?php if ($_SESSION['level'] == 'admin') { ?>
                                     <td><?php echo $pembelian_detail['harga_beli'] ?></td>
                                 <?php } ?>
                                 <td><?php echo $pembelian_detail['jumlah'] ?></td>
-                                <?php if($_SESSION['level'] == 'admin') { ?>
+                                <?php if ($_SESSION['level'] == 'admin') { ?>
                                     <td>Rp. <?php echo $this->CodeGenerator->rp($pembelian_detail['subtotal']) ?></td>
                                 <?php } ?>
                                 <td style="text-align:center" width="50px">
@@ -127,7 +117,7 @@
                     </table>
                 </div><!----pane body-->
             </div>
-            <?php if($_SESSION['level'] == 'admin') { ?>
+            <?php if ($_SESSION['level'] == 'admin') { ?>
                 <div class="form-group pull-right">
                     <?php if ($this->uri->segment(2) == "insert") { ?>
                         <label for="">

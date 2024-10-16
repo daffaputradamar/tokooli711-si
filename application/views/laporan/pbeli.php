@@ -4,7 +4,7 @@
                         <div class="panel-heading">
                             <i class="fa fa-bell fa-fw"></i> Laporan
                         </div>
-                        <a href="<?=base_url()?>index.php/laporan/pbeliprint/<?=$this->uri->segment(3)?>/<?=$this->uri->segment(4)?>" target='_blank' class="btn btn-primary" >
+                        <a href="<?=base_url()?>laporan/pbeliprint/<?=$this->uri->segment(3)?>/<?=$this->uri->segment(4)?>" target='_blank' class="btn btn-primary" >
                       	<img src="<?=base_url()?>/assets/print.png" width="60px;" > Print</a>
                         <div class="panel-body">
 <center><h4>Laporan Pembelian</h4></center>

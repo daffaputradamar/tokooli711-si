@@ -26,7 +26,6 @@ class Pembelian_detail_model extends CI_Model
         $this->db->join('barang', 'barang.kode_barang = pembelian_detail.kode_barang', 'left');
         $this->db->where($this->primary, $id);
         return $this->db->get($this->table)->result();
-
     }
     public function jumlahbyid($id, $barang)
     {
@@ -82,15 +81,25 @@ class Pembelian_detail_model extends CI_Model
         $this->db->where($this->primary, $id);
         $this->db->delete($this->table);
     }
-    public function updatestok($id)
+    public function updatestok($id, $user)
     {
         $this->db->where($this->primary, $id);
         $data = $this->db->get('pembelian_detail')->result();
         foreach ($data as $row) {
-            $this->db->query("update barang set stok=stok+".$row->jumlah." where kode_barang='$row->kode_barang' ");
+            $this->db->query("
+            INSERT INTO barang_stok_history (kode_barang, stok, createddate, createdby, modifieddate, modifiedby) 
+            VALUES (
+                '{$row->kode_barang}', 
+                {$row->jumlah}, 
+                NOW(), 
+                '{$user}',
+                NOW(), 
+                '{$user}'
+            )
+        ");
+            $this->db->query("update barang set stok=stok+" . $row->jumlah . " where kode_barang='$row->kode_barang' ");
         }
     }
-
 }
 
 /* End of file Pembelian_detail_model.php */

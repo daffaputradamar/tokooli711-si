@@ -115,7 +115,10 @@
                         <?php
                 echo anchor(site_url('penjualan/view/'.$penjualan->kode_jual), 'Lihat', 'class="btn btn-info"');
                 echo anchor(site_url('penjualan/struk/'.$penjualan->kode_jual), 'Struk', 'class="btn btn-success" target="_blank"');
-                echo anchor(site_url('penjualan/delete/'.$penjualan->kode_jual), 'Delete', 'class="btn btn-danger" onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
+
+                if($_SESSION['level'] == "admin") {
+                    echo anchor(site_url('penjualan/delete/'.$penjualan->kode_jual), 'Delete', 'class="btn btn-danger" onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
+                }
                 ?>
                     </td>
                 </tr>

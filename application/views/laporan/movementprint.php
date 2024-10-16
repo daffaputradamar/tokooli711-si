@@ -8,16 +8,24 @@
 		@page {
 			margin: 0;
 		}
-        .danger {
-            color: lightcoral !important;
-            -webkit-print-color-adjust: exact;
+
+		.danger {
+			color: lightcoral !important;
+			-webkit-print-color-adjust: exact;
 			print-color-adjust: exact;
-        }
-        .success {
-            color: lightgreen !important;
-            -webkit-print-color-adjust: exact;
+		}
+
+		.success {
+			color: lightgreen !important;
+			-webkit-print-color-adjust: exact;
 			print-color-adjust: exact;
-        }
+		}
+
+		.info {
+			color: darkblue !important;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
+		}
 	}
 </style>
 <script>
@@ -27,10 +35,9 @@
 	<h4>Laporan Movement <br><?= $barang->nama_barang ?></h4>
 </center>
 <center>
-	<h4><?= $this->uri->segment(4) ?> - <?= $this->uri->segment(5) ?></h4> <h4
+	<h4> <?= $this->uri->segment(4) ?> <?= $this->uri->segment(5) ?> sampai <?= $this->uri->segment(6) ?> <?= $this->uri->segment(7) ?></h4>
 </center>
 <table class="table table-bordered table-hover table-striped">
-
 	<tr>
 		<th>No</th>
 		<th>Kode Transaksi</th>
@@ -39,19 +46,33 @@
 		<th>Jumlah</th>
 	</tr>
 	<?php
-    $no = 0;
-foreach ($listbarang as $row):
-    ?>
+	$no = 0;
 
-
-		<tr>
-			<td><?= ++$no ?></td>
-			<td><?= $row->kode_trans ?></td>
-			<td><?= $row->jenis_trans ?></td>
-			<td><?= $row->tanggal_trans ?></td>
-			<td class="<?= $row->jenis_trans == 'Penjualan' ? 'danger' : 'success'?>"><?= $row->jumlah ?></td>
-		</tr>
+	foreach ($listbarang as $row):
+		if ($row->jenis_trans == 'Penjualan'):
+	?>
+			<tr>
+				<td><?= ++$no ?></td>
+				<td><?= $row->kode_trans ?></td>
+				<td><?= $row->jenis_trans ?></td>
+				<td><?= $row->tanggal_trans ?></td>
+				<td class="danger"><?= number_format($row->jumlah, 2) ?></td>
+			</tr>
+		<?php elseif ($row->jenis_trans == 'Pembelian') : ?>
+			<tr>
+				<td><?= ++$no ?></td>
+				<td><?= $row->kode_trans ?></td>
+				<td><?= $row->jenis_trans ?></td>
+				<td><?= $row->tanggal_trans ?></td>
+				<td class="success"><?= number_format($row->jumlah, 2) ?></td>
+			</tr>
+		<?php else:
+		?>
+			<tr>
+				<td colspan="4" class="text-center">Jumlah Kumulatif Penjualan</td>
+				<td class="info"><?= number_format($row->jumlah, 2) ?></td>
+			</tr>
 	<?php
-endforeach;
-?>
+		endif;
+	endforeach; ?>
 </table>

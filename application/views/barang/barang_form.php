@@ -65,11 +65,6 @@
                     value="<?php echo $stok; ?>" />
             </div>
             <div class="form-group">
-                <label for=>Stok Sebelum <?php echo form_error('stok_before') ?></label>
-                <input type="number" step="any" class="form-control" name="stok_before" id="stok_before" placeholder="Stok Sebelum"
-                    value="<?php echo $stok_before; ?>" readonly />
-            </div>
-            <div class="form-group">
                 <label for="keterangan">Keterangan <?php echo form_error('keterangan') ?></label>
                 <textarea class="form-control" rows="3" name="keterangan" id="keterangan"
                     placeholder="Keterangan"><?php echo $keterangan; ?></textarea>

@@ -207,7 +207,7 @@ class Pembelian extends CI_Controller
                 'total' => $this->Pembelian_detail_model->totalall($kode_beli),
                 'kode_suplier' => $this->input->post('kode_suplier'),
             );
-            $this->Pembelian_detail_model->updatestok($kode_beli);
+            $this->Pembelian_detail_model->updatestok($kode_beli, $_SESSION["username"]);
             $this->Pembelian_model->insert($data);
 
             unset($_SESSION[$kode_user . 'detailbarang_pembelian']);

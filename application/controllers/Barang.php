@@ -77,7 +77,6 @@ class Barang extends CI_Controller
                 'harga_beli' => $row->harga_beli,
                 'harga_jual' => $row->harga_jual,
                 'stok' => $row->stok,
-                'stok_before' => $row->stok_before,
                 'keterangan' => $row->keterangan,
             );
             $this->load->view('barang/barang_read', $data);
@@ -96,7 +95,6 @@ class Barang extends CI_Controller
             'harga_beli' => set_value('harga_beli'),
             'harga_jual' => set_value('harga_jual'),
             'stok' => set_value('stok'),
-            'stok_before' => set_value('stok_before'),
             'keterangan' => set_value('keterangan'),
         );
         $data['listmerk'] = $this->Merk_model->selectByAll();
@@ -118,7 +116,6 @@ class Barang extends CI_Controller
                 'harga_beli' => $this->input->post('harga_beli'),
                 'harga_jual' => $this->input->post('harga_jual'),
                 'stok' => $this->input->post('stok'),
-                'stok_before' => $this->input->post('stok_before'),
                 'keterangan' => $this->input->post('keterangan'),
             );
 
@@ -141,7 +138,6 @@ class Barang extends CI_Controller
                 'harga_beli' => set_value('harga_beli', $row->harga_beli),
                 'harga_jual' => set_value('harga_jual', $row->harga_jual),
                 'stok' => set_value('stok', $row->stok),
-                'stok_before' => set_value('stok_before', $row->stok_before),
                 'keterangan' => set_value('keterangan', $row->keterangan),
             );
             $data['listmerk'] = $this->Merk_model->selectByAll();
@@ -167,11 +163,10 @@ class Barang extends CI_Controller
                 'harga_beli' => $this->input->post('harga_beli'),
                 'harga_jual' => $this->input->post('harga_jual'),
                 'stok' => $this->input->post('stok'),
-                'stok_before' => $stock, //change update stok_before to stok
                 'keterangan' => $this->input->post('keterangan'),
             );
 
-            $this->Barang_model->update($this->uri->segment(3), $data);
+            $this->Barang_model->update($this->uri->segment(3), $data, $_SESSION["username"]);
 
             redirect(site_url('barang'));
         }

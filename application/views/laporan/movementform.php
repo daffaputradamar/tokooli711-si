@@ -21,35 +21,36 @@
 				<td>Nama Barang</td>
 				<td>:</td>
 				<td>
-					<select name="kode_barang" class="form-control selectpicker" data-live-search="true" style="width:300px" placeholder="kode_barang">
-						<?php foreach ($barang as $komp) {
-							if ($kode_barang == $komp->kode_barang) {
-						?>
-								<option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
-							<?php
-							}
-						}
-						foreach ($barang as $komp) {
-							if ($kode_barang <> $komp->kode_barang) {
-							?>
-								<option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?> [<?= $komp->merk ?>]</option>
+					<select name="kode_barang" class="form-control selectpicker" data-live-search="true" style="width:300px" placeholder="kode_barang" required>
 						<?php
-							}
-						}
-
-						?>
+                        foreach ($barang as $komp) {
+                            ?>
+							<option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?> [<?= $komp->merk ?>]</option>
+						<?php
+                        }
+		?>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<td>Tanggal Awal</td>
 				<td>:</td>
-				<td><input type="date" class="form-control" id='tgl_awal' name="tgl_awal"></td>
+				<td>
+					<div style="display: flex;">
+						<input type="date" class="form-control" id='tgl_awal' name="tgl_awal" required>
+						<input type="time" class="form-control" id='wkt_awal' name="wkt_awal" required>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td>Tanggal Akhir</td>
 				<td>:</td>
-				<td><input type="date" class="form-control" id='tgl_akhir' name="tgl_akhir"></td>
+				<td>
+					<div style="display: flex;">
+						<input type="date" class="form-control" id='tgl_akhir' name="tgl_akhir" required>
+						<input type="time" class="form-control" id='wkt_akhir' name="wkt_akhir" required>
+					</div>
+				</td>
 			</tr>
 		</table>
 		<button type="submit" class="btn btn-primary">Lihat</button>

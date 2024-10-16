@@ -7,20 +7,20 @@
 						<?php 
 						if(isset($_GET['cari'])){
 							?>
-							<a href="<?=base_url()?>index.php/laporan/laporan_barangprint?cari=<?=$_GET['cari']?>" target='_blank' class="btn btn-primary" >
+							<a href="<?=base_url()?>laporan/laporan_barangprint?cari=<?=$_GET['cari']?>" target='_blank' class="btn btn-primary" >
                       	<img src="<?=base_url()?>/assets/print.png" width="60px;" > Print</a>
 						  
 							<?php
 						}else{
 							?>
-							<a href="<?=base_url()?>index.php/laporan/laporan_barangprint" target='_blank' class="btn btn-primary" >
+							<a href="<?=base_url()?>laporan/laporan_barangprint" target='_blank' class="btn btn-primary" >
                       	<img src="<?=base_url()?>/assets/print.png" width="60px;" > Print</a>
 						  
 						<?php } ?>
 						
 
 						  
-                <form style="width:300px;" class="pull-right" action="<?=base_url()?>index.php/laporan/laporan_barang" class="form-inline" method="get">
+                <form style="width:300px;" class="pull-right" action="<?=base_url()?>laporan/laporan_barang" class="form-inline" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" name="cari" >
                         <span class="input-group-btn">

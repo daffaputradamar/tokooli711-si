@@ -7,12 +7,13 @@
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-    <div class="page-footer-inner" style="
+    <div class="page-footer-inner text-center" style="
         color:#fff;
+        width: 100%;
     ">
         <script>
         document.write(new Date().getFullYear())
-        </script> &copy;
+        </script> &copy; Toko Oli 711
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
