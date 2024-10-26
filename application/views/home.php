@@ -36,10 +36,10 @@
 
 			<div class="panel-body">
 				<?php
-				echo form_open('Penjualan/insert/1', array(
-					'id' => 'insertpenjualan'
-					// , "onsubmit" => "return submitForm()"
-				));
+                echo form_open('Penjualan/insert/1', array(
+                    'id' => 'insertpenjualan'
+                    // , "onsubmit" => "return submitForm()"
+                ));
 				?>
 				<div class="panel panel-info">
 					<div class="panel-heading" style="font-size:1.5rem">
@@ -80,8 +80,8 @@
 								<select id="kode_barang" name="kode_barang" class="form-control selectpicker"
 									data-live-search="true" placeholder="kode_barang">
 									<?php
-									foreach ($listbarang as $komp) {
-									?>
+				                    foreach ($listbarang as $komp) {
+				                        ?>
 										<option
 											value="<?= $komp->kode_barang ?>"
 											data-merk="<?= $komp->merk ?>"
@@ -90,13 +90,13 @@
 											<?= $komp->merk ?> || Rp.
 											<?= $this->CodeGenerator->rp($komp->harga_jual) ?>
 											<?php if ($_SESSION['level'] == "admin" || $_SESSION['can_see_stock'] == true) {
-												echo " || " . $komp->stok;
+											    echo " || " . $komp->stok;
 											} ?>
 										</option>
 									<?php
-									}
+				                    }
 
-									?>
+				?>
 								</select>
 							</div>
 							<div id="merk-kemasan">
@@ -134,8 +134,8 @@
 								<th>Subtotal</th>
 								<th></th>
 							</tr><?php $start = 0;
-									foreach ($listdetail as $penjualandetail) {
-									?>
+				foreach ($listdetail as $penjualandetail) {
+				    ?>
 								<tr>
 									<td width="80px"><?= ++$start ?>
 									</td>
@@ -153,8 +153,8 @@
 									</td>
 								</tr>
 							<?php
-									}
-							?>
+				}
+				?>
 						</table>
 					</div>
 					<!----pane body-->
@@ -176,24 +176,24 @@
 								/> -->
 								<select name="kode_karyawan" class="form-control" placeholder="kode_karyawan" readonly>
 									<?php
-									if ($_SESSION['level'] != "admin") {
-									?>
+				        if ($_SESSION['level'] != "admin") {
+				            ?>
 										<option
 											value="<?= $karyawan->kode_karyawan ?>"
 											selected>
 											<?= $karyawan->nama_karyawan ?>
 										</option>
 									<?php
-									} else {
-									?>
+				        } else {
+				            ?>
 										<option
 											value="<?= $admin->kode_admin ?>"
 											selected>
 											<?= $admin->nama_admin ?>
 										</option>
 									<?php
-									}
-									?>
+				        }
+				?>
 								</select>
 							</div>
 							<div class="form-group col-md-4">
@@ -239,10 +239,10 @@
 						<label for=>Total
 							<?php echo form_error('total') ?></label>
 						<input type="hidden" name="totalharga" id="totalharga" value="<?php if ($total == "") {
-																							echo 0;
-																						} else {
-																							echo $total;
-																						} ?>">
+						    echo 0;
+						} else {
+						    echo $total;
+						} ?>">
 						<input type="number" class="form-control col-md-6" name="total"
 							style="font-size:25px; height:50px; background:none;" id="total" placeholder="Total"
 							value="<?php echo $total; ?>" readonly />
@@ -386,111 +386,47 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-				<div class="dashboard-stat2">
-					<div class="display">
-						<div class="number">
-							<small><?= $kasir1["nama"] ?></small>
-							<h4 class="font-green-sharp">Total Rp.
-								<?= $this->CodeGenerator->rp($kasir1['total']); ?>
-							</h4>
-							<h4 class="font-red-haze">Penjualan Rp.
-								<?= $this->CodeGenerator->rp($kasir1['transaksi']); ?>
-							</h4>
-							<h4>Bea Rp.
-								<?= $this->CodeGenerator->rp($kasir1['bea']); ?>
-							</h4>
-						</div>
-						<div class="icon">
-							<i class="icon-like"></i>
-						</div>
-					</div>
-					<div class="progress-info">
-						<div class="progress">
-							<span style="width: 100%;" class="progress-bar progress-bar-success red-haze">
-
-						</div>
-						<div class="status">
-							<div class="status-title">
-								Tanggal
+			<?php
+            foreach ($kasir as $karyawan):
+                ?>
+				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+					<div class="dashboard-stat2">
+						<div class="display">
+							<div class="number">
+								<small><?= $karyawan["nama"] ?></small>
+								<h4 class="font-green-sharp">Total Rp.
+									<?= $this->CodeGenerator->rp($karyawan['total']); ?>
+								</h4>
+								<h4 class="font-red-haze">Penjualan Rp.
+									<?= $this->CodeGenerator->rp($karyawan['transaksi']); ?>
+								</h4>
+								<h4>Bea Rp.
+									<?= $this->CodeGenerator->rp($karyawan['bea']); ?>
+								</h4>
 							</div>
-							<div class="status-number">
-								<?= date('d-m-Y'); ?>
+							<div class="icon">
+								<i class="icon-like"></i>
+							</div>
+						</div>
+						<div class="progress-info">
+							<div class="progress">
+								<span style="width: 100%;" class="progress-bar progress-bar-success red-haze">
+
+							</div>
+							<div class="status">
+								<div class="status-title">
+									Tanggal
+								</div>
+								<div class="status-number">
+									<?= date('d-m-Y'); ?>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-				<div class="dashboard-stat2">
-					<div class="display">
-						<div class="number">
-							<small><?= $kasir2["nama"] ?></small>
-							<h4 class="font-green-sharp">Total Rp.
-								<?= $this->CodeGenerator->rp($kasir2['total']); ?>
-							</h4>
-							<h4 class="font-red-haze">Penjualan Rp.
-								<?= $this->CodeGenerator->rp($kasir2['transaksi']); ?>
-							</h4>
-							<h4>Bea Rp.
-								<?= $this->CodeGenerator->rp($kasir2['bea']); ?>
-							</h4>
-						</div>
-						<div class="icon">
-							<i class="icon-like"></i>
-						</div>
-					</div>
-					<div class="progress-info">
-						<div class="progress">
-							<span style="width: 100%;" class="progress-bar progress-bar-success red-haze">
-
-						</div>
-						<div class="status">
-							<div class="status-title">
-								Tanggal
-							</div>
-							<div class="status-number">
-								<?= date('d-m-Y'); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-				<div class="dashboard-stat2">
-					<div class="display">
-						<div class="number">
-							<small><?= $kasir3["nama"] ?></small>
-							<h4 class="font-green-sharp">Total Rp.
-								<?= $this->CodeGenerator->rp($kasir3['total']); ?>
-							</h4>
-							<h4 class="font-red-haze">Penjualan Rp.
-								<?= $this->CodeGenerator->rp($kasir3['transaksi']); ?>
-							</h4>
-							<h4>Bea Rp.
-								<?= $this->CodeGenerator->rp($kasir3['bea']); ?>
-							</h4>
-						</div>
-						<div class="icon">
-							<i class="icon-like"></i>
-						</div>
-					</div>
-					<div class="progress-info">
-						<div class="progress">
-							<span style="width: 100%;" class="progress-bar progress-bar-success red-haze">
-
-						</div>
-						<div class="status">
-							<div class="status-title">
-								Tanggal
-							</div>
-							<div class="status-number">
-								<?= date('d-m-Y'); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<?php
+            endforeach;
+    ?>
 		</div>
 
 

@@ -84,12 +84,9 @@ class Home extends CI_Controller
 
         $data['totalkr'] = $this->Karyawan_model->total_rows();
 
-        $data['kasir1'] = $this->Penjualan_model->kasir("KRY0000001");
-        $data['kasir2'] = $this->Penjualan_model->kasir("KRY0000002");
-        $data['kasir3'] = $this->Penjualan_model->kasir("KRY0000003");
-
-        // print_r($data);
-        // return;
+        foreach ($data['listkaryawan'] as $karyawan) {
+            $data['kasir'][$karyawan->kode_karyawan] = $this->Penjualan_model->kasir($karyawan->kode_karyawan);
+        }
 
         if ($this->uri->segment(3) == 1) {
             $data['pesan'] = "Isi data dengan lengkap";
