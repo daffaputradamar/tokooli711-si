@@ -9,6 +9,8 @@ class Login extends CI_Controller
         parent::__construct();
         $this->load->model('Admin_model');
         $this->load->model('Karyawan_model');
+        // $this->load->library('session');
+        date_default_timezone_set('Asia/Jakarta'); // Set timezone to GMT+7
         session_start();
         if (isset($_SESSION['level'])) {
             redirect('home');
@@ -46,17 +48,22 @@ class Login extends CI_Controller
                 
                 if(isset($karyawan)) {
                     if($karyawan->password == $psswd) {
-                        $is_valid_login = true;
-                        $kode = $karyawan->kode_karyawan;
-                        $can_see_stock = $karyawan->can_see_stock;
-                        $can_see_sales = $karyawan->can_see_sales;
+                        if ($this->Karyawan_model->isWithinWorkingHours($karyawan)) {
+                            $is_valid_login = true;
+                            $kode = $karyawan->kode_karyawan;
+                            $can_see_stock = $karyawan->can_see_stock;
+                            $can_see_sales = $karyawan->can_see_sales;
 
-                        if ($karyawan->level == 0) {
-                            $level = "karyawan";
+                            if ($karyawan->level == 0) {
+                                $level = "karyawan";
+                            } else {
+                                $level = "karyawan_admin";
+                            }
                         } else {
-                            $level = "karyawan_admin";
+                            $start_time = date('H:i', strtotime($karyawan->start_working_hour));
+                            $end_time = date('H:i', strtotime($karyawan->end_working_hour));
+                            echo "<script>alert('Karyawan ini hanya dapat login antara jam $start_time - $end_time');</script>";
                         }
-
                     }
                 }
             }

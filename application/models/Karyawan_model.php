@@ -42,11 +42,13 @@ class Karyawan_model extends CI_Model
     {
         return $this->db->query("
             SELECT 
-            k.kode_karyawan
-            , k.nama_karyawan
-            , k.alamat_karyawan
-            , k.telp_karyawan
-            , CASE WHEN pk.id_barang IS NOT NULL THEN 1 ELSE 0 END isblocked
+                k.kode_karyawan,
+                k.nama_karyawan,
+                k.alamat_karyawan,
+                k.telp_karyawan,
+                k.start_working_hour,
+                k.end_working_hour,
+                MAX(CASE WHEN pk.id_barang IS NOT NULL THEN 1 ELSE 0 END) as isblocked
             FROM karyawan k
             LEFT JOIN (
                 SELECT pk.id_karyawan, pk.id_barang, COUNT(1) jml_percobaan
@@ -54,7 +56,6 @@ class Karyawan_model extends CI_Model
                 WHERE pk.isactive = 1
                 GROUP BY pk.id_karyawan, pk.id_barang
                 HAVING COUNT(1) >= 2
-                ORDER BY jml_percobaan DESC
             ) pk ON k.kode_karyawan = pk.id_karyawan
             WHERE 
                 k.kode_karyawan LIKE '%$cari%'
@@ -65,7 +66,9 @@ class Karyawan_model extends CI_Model
                 k.kode_karyawan,
                 k.nama_karyawan,
                 k.alamat_karyawan,
-                k.telp_karyawan
+                k.telp_karyawan,
+                k.start_working_hour,
+                k.end_working_hour
             LIMIT $start, $limit;
         ")->result();
     }
@@ -94,6 +97,24 @@ class Karyawan_model extends CI_Model
             SET percobaan_stok = percobaan_stok + 1
             WHERE kode_karyawan = '$id' 
         ");
+    }
+
+    public function isWithinWorkingHours($karyawan)
+    {
+        if (!$karyawan) {
+            return false;
+        }
+
+        $current_time = date('H:i:s');
+        $start_time = $karyawan->start_working_hour;
+        $end_time = $karyawan->end_working_hour;
+
+        // If end time is next day (e.g., 02:00 AM)
+        if ($end_time < $start_time) {
+            return ($current_time >= $start_time || $current_time <= $end_time);
+        }
+
+        return ($current_time >= $start_time && $current_time <= $end_time);
     }
 
 }

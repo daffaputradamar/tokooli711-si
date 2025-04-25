@@ -28,6 +28,8 @@ class Karyawan extends CI_Controller
         $this->form_validation->set_rules('telp_karyawan', 'telp karyawan', 'trim|required');
         $this->form_validation->set_rules('username', 'username', 'trim|required');
         $this->form_validation->set_rules('password', 'password', 'trim|required');
+        $this->form_validation->set_rules('start_working_hour', 'Jam Mulai Kerja', 'trim|required');
+        $this->form_validation->set_rules('end_working_hour', 'Jam Selesai Kerja', 'trim|required');
     }
 
     public function index()
@@ -112,13 +114,14 @@ class Karyawan extends CI_Controller
     {
         $this->load->view('nav');
         $data = array(
-
             'kode_karyawan' => set_value('kode_karyawan', $this->CodeGenerator->buatkode('karyawan', 'kode_karyawan', 10, 'KRY')),
             'nama_karyawan' => set_value('nama_karyawan'),
             'alamat_karyawan' => set_value('alamat_karyawan'),
             'telp_karyawan' => set_value('telp_karyawan'),
             'username' => set_value('username'),
             'password' => set_value('password'),
+            'start_working_hour' => set_value('start_working_hour', '08:00:00'),
+            'end_working_hour' => set_value('end_working_hour', '17:00:00'),
         );
         $this->load->view('karyawan/karyawan_form', $data);
         $this->load->view('foot');
@@ -138,6 +141,8 @@ class Karyawan extends CI_Controller
                 'telp_karyawan' => $this->input->post('telp_karyawan'),
                 'username' => $this->input->post('username'),
                 'password' => $this->input->post('password'),
+                'start_working_hour' => $this->input->post('start_working_hour'),
+                'end_working_hour' => $this->input->post('end_working_hour'),
             );
 
             $this->Karyawan_model->insert($data);
@@ -152,13 +157,14 @@ class Karyawan extends CI_Controller
 
         if ($row) {
             $data = array(
-
                 'kode_karyawan' => set_value('kode_karyawan', $row->kode_karyawan),
                 'nama_karyawan' => set_value('nama_karyawan', $row->nama_karyawan),
                 'alamat_karyawan' => set_value('alamat_karyawan', $row->alamat_karyawan),
                 'telp_karyawan' => set_value('telp_karyawan', $row->telp_karyawan),
                 'username' => set_value('username', $row->username),
                 'password' => set_value('password', $row->password),
+                'start_working_hour' => set_value('start_working_hour', $row->start_working_hour),
+                'end_working_hour' => set_value('end_working_hour', $row->end_working_hour),
             );
             $this->load->view('karyawan/karyawan_form', $data);
         }
@@ -179,10 +185,11 @@ class Karyawan extends CI_Controller
                 'telp_karyawan' => $this->input->post('telp_karyawan'),
                 'username' => $this->input->post('username'),
                 'password' => $this->input->post('password'),
+                'start_working_hour' => $this->input->post('start_working_hour'),
+                'end_working_hour' => $this->input->post('end_working_hour'),
             );
 
             $this->Karyawan_model->update($this->uri->segment(3), $data);
-
             redirect(site_url('karyawan'));
         }
     }

@@ -39,6 +39,15 @@
             <label for=>Password <?php echo form_error('password') ?></label>
             <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="<?php echo $password; ?>" />
         </div>
+        <div class="form-group">
+            <label for="start_working_hour">Jam Mulai Kerja <?php echo form_error('start_working_hour') ?></label>
+            <input type="time" class="form-control" name="start_working_hour" id="start_working_hour" value="<?php echo $start_working_hour; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="end_working_hour">Jam Selesai Kerja <?php echo form_error('end_working_hour') ?></label>
+            <input type="time" class="form-control" name="end_working_hour" id="end_working_hour" value="<?php echo $end_working_hour; ?>" />
+        </div>
+	    <input type="hidden" name="kode_karyawan" value="<?php echo $kode_karyawan; ?>" />
 	    <button type="submit" class="btn btn-primary">Simpan</button> 
 	    <a href="<?php echo site_url('karyawan') ?>" class="btn btn-default">Cancel</a>
 	</form> </div>

@@ -34,9 +34,12 @@
 			<table class="table table-striped table-bordered table-hover" style="margin-bottom: 10px">
 				<tr>
 					<th>No</th>
+					<th>Kode Karyawan</th>
 					<th>Nama Karyawan</th>
 					<th>Alamat Karyawan</th>
 					<th>Telp Karyawan</th>
+					<th>Jam Mulai Kerja</th>
+					<th>Jam Selesai Kerja</th>
 					<th>Percobaan Stok</th>
 					<th>Action</th>
 				</tr>
@@ -45,9 +48,12 @@
 				?>
 					<tr>
 						<td width="80px"><?php echo ++$start ?></td>
-						<td><?= $karyawan->nama_karyawan ?></td>
-						<td><?= $karyawan->alamat_karyawan ?></td>
-						<td><?= $karyawan->telp_karyawan ?></td>
+						<td><?php echo $karyawan->kode_karyawan ?></td>
+						<td><?php echo $karyawan->nama_karyawan ?></td>
+						<td><?php echo $karyawan->alamat_karyawan ?></td>
+						<td><?php echo $karyawan->telp_karyawan ?></td>
+						<td><?php echo date('H:i', strtotime($karyawan->start_working_hour)) ?></td>
+						<td><?php echo date('H:i', strtotime($karyawan->end_working_hour)) ?></td>
 						<td style="text-align:center">
 							<?php
 							$class = '';
