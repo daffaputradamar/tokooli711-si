@@ -37,20 +37,20 @@
                     <?php
                     foreach ($listsuplier as $komp) {
                         if ($kode_suplier == $komp->kode_suplier) {
-                    ?>
+                            ?>
                             <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
                         <?php
                         }
                     }
-                    foreach ($listsuplier as $komp) {
-                        if ($kode_suplier <> $komp->kode_suplier) {
-                        ?>
+            foreach ($listsuplier as $komp) {
+                if ($kode_suplier <> $komp->kode_suplier) {
+                    ?>
                             <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
                     <?php
-                        }
-                    }
+                }
+            }
 
-                    ?>
+            ?>
                 </select>
             </div>
             <div class="panel panel-default">
@@ -63,11 +63,11 @@
                         <label for="">Barang</label>
                         <select name="kode_barang" class="form-control selectpicker" data-live-search="true" placeholder="kode_barang">
                             <?php foreach ($listbarang as $komp):
-                            ?>
+                                ?>
                                 <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
                             <?php
                             endforeach;
-                            ?>
+            ?>
                         </select>
                     </div>
                     <div class="form-group col-md-2 col-lg-2">
@@ -90,10 +90,11 @@
                             <?php if ($_SESSION['level'] == 'admin') { ?>
                                 <th>Subtotal</th>
                             <?php } ?>
+                            <th>Detail</th>
                             <th></th>
                         </tr><?php $start = 0;
-                                foreach ($listdetail as $pembelian_detail) {
-                                ?>
+            foreach ($listdetail as $pembelian_detail) {
+                ?>
                             <tr>
                                 <td width="80px"><?php echo ++$start ?></td>
                                 <td><?php echo $pembelian_detail['nama_barang'] ?></td>
@@ -105,14 +106,19 @@
                                     <td>Rp. <?php echo $this->CodeGenerator->rp($pembelian_detail['subtotal']) ?></td>
                                 <?php } ?>
                                 <td style="text-align:center" width="50px">
+                                    <button type="button" class="btn btn-info btn-sm" onclick="showProductDetail('<?php echo $pembelian_detail['kode_barang'] ?>')" title="Lihat Detail">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </td>
+                                <td style="text-align:center" width="50px">
                                     <?php
-                                    echo anchor(site_url('pembelian_detail/delete/' . $pembelian_detail['kode_barang'] . '/1'), 'Delete', 'class="btn btn-danger" onclick="javasciprt: return confirm(\'anda yakin ingin menghapus ?\')"');
-                                    ?>
+                    echo anchor(site_url('pembelian_detail/delete/' . $pembelian_detail['kode_barang'] . '/1'), 'Delete', 'class="btn btn-danger" onclick="javasciprt: return confirm(\'anda yakin ingin menghapus ?\')"');
+                ?>
                                 </td>
                             </tr>
                         <?php
-                                }
-                        ?>
+            }
+            ?>
 
                     </table>
                 </div><!----pane body-->
@@ -134,11 +140,11 @@
             <div class="form-group">
                 <label for=><?php echo form_error('total') ?></label>
                 <input type="hidden" class="form-control" name="total" id="total" placeholder="Total" value="<?php if ($this->uri->segment(2) == "insert") {
-                                                                                                                    echo $totalall;
-                                                                                                                } else {
-                                                                                                                    echo $this->Pembelian_detail_model->totalall($this->uri->segment(3));
-                                                                                                                }
-                                                                                                                ?>" />
+                    echo $totalall;
+                } else {
+                    echo $this->Pembelian_detail_model->totalall($this->uri->segment(3));
+                }
+            ?>" />
             </div>
             <input type="submit" class="btn btn-primary" name="simpan" value="Simpan" onclick="javascript: return confirm('Anda yakin mau menyimpan?')" />
             <a href="<?php echo site_url('pembelian') ?>" class="btn btn-default">Cancel</a>
@@ -147,3 +153,120 @@
 
     </div>
 </div>
+
+<!-- Modal for Product Details -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="productDetailModalLabel">Detail Produk</h4>
+            </div>
+            <div class="modal-body">
+                <div id="productDetailContent">
+                    <div class="text-center">
+                        <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        <p>Memuat data...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showProductDetail(kodeBarang) {
+    // Show the modal
+    $('#productDetailModal').modal('show');
+    
+    // Reset content to loading state
+    $('#productDetailContent').html(
+        '<div class="text-center">' +
+        '<i class="fa fa-spinner fa-spin fa-2x"></i>' +
+        '<p>Memuat data...</p>' +
+        '</div>'
+    );
+    
+    // Make AJAX request to get product details
+    $.ajax({
+        url: '<?php echo site_url("pembelian_detail/get_product_detail"); ?>',
+        type: 'POST',
+        data: {
+            kode_barang: kodeBarang
+        },
+        dataType: 'text', // Change to text first to handle BOM issues
+        success: function(responseText) {
+            console.log('Raw response:', responseText); // Debug log
+            
+            try {
+                // Clean BOM and other invisible characters
+                var cleanResponse = responseText.replace(/^\uFEFF/, '').trim();
+                console.log('Cleaned response:', cleanResponse); // Debug log
+                
+                var response = JSON.parse(cleanResponse);
+                console.log('Parsed response:', response); // Debug log
+                
+                if (response && response.success) {
+                var product = response.data;
+                var detailHtml = 
+                    '<table class="table table-bordered">' +
+                    '<tr><td><strong>Kode Barang</strong></td><td>' + (product.kode_barang || '-') + '</td></tr>' +
+                    '<tr><td><strong>Nama Barang</strong></td><td>' + (product.nama_barang || '-') + '</td></tr>' +
+                    '<tr><td><strong>Merk</strong></td><td>' + (product.nama_merk || '-') + '</td></tr>' +
+                    '<tr><td><strong>Stok</strong></td><td>' + (product.stok || '0') + '</td></tr>';
+                
+                <?php if ($_SESSION['level'] == 'admin') { ?>
+                detailHtml += 
+                    '<tr><td><strong>Harga Beli</strong></td><td>Rp. ' + formatRupiah(product.harga_beli || 0) + '</td></tr>' +
+                    '<tr><td><strong>Harga Jual</strong></td><td>Rp. ' + formatRupiah(product.harga_jual || 0) + '</td></tr>';
+                <?php } ?>
+                
+                detailHtml += '</table>';
+                
+                $('#productDetailContent').html(detailHtml);
+                } else {
+                    $('#productDetailContent').html(
+                        '<div class="alert alert-danger">' +
+                        '<i class="fa fa-exclamation-triangle"></i> ' +
+                        'Gagal memuat data produk: ' + (response.message || 'Response tidak valid') +
+                        '</div>'
+                    );
+                }
+            } catch (parseError) {
+                console.log('JSON Parse Error:', parseError);
+                $('#productDetailContent').html(
+                    '<div class="alert alert-danger">' +
+                    '<i class="fa fa-exclamation-triangle"></i> ' +
+                    'Error parsing response: ' + parseError.message +
+                    '</div>'
+                );
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('AJAX Error:', xhr, status, error); // Debug log
+            $('#productDetailContent').html(
+                '<div class="alert alert-danger">' +
+                '<i class="fa fa-exclamation-triangle"></i> ' +
+                'Terjadi kesalahan saat memuat data produk: ' + error +
+                '</div>'
+            );
+        }
+    });
+}
+
+function formatRupiah(amount) {
+    try {
+        // Convert to number if it's a string
+        var num = parseFloat(amount) || 0;
+        return new Intl.NumberFormat('id-ID').format(num);
+    } catch (e) {
+        console.log('Format Rupiah Error:', e);
+        return amount || '0';
+    }
+}
+</script>
