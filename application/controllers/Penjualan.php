@@ -65,7 +65,7 @@ class Penjualan extends CI_Controller
             $config['first_url'] .= '&filterkaryawan=' . urlencode($filterkaryawan);
         }
 
-        if (!empty($filter_barang)) { 
+        if (!empty($filter_barang)) {
             $config['base_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
             $config['first_url'] .= '&kode_barang=' . urlencode($filter_barang) . '&tgl_awal=' . urlencode($filter_tgl_awal) . '&tgl_akhir=' . urlencode($filter_tgl_akhir);
         }
@@ -161,16 +161,6 @@ class Penjualan extends CI_Controller
         $_SESSION[$kode_user . 'nomor_polisi'] = $nomor_polisi;
         $_SESSION[$kode_user . 'km_kendaraan'] = $km_kendaraan;
 
-        if ($this->input->post('jumlah') == "") {
-            echo "<script>alert('Jumlah harus diisi')</script>";
-
-            if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
-                redirect(site_url('home'), 'refresh');
-            } else {
-                redirect(site_url('penjualan/insert'), 'refresh');
-            }
-        }
-
         if ($this->input->post('submitlist') <> "") {
             $this->insert_detail_temp($this->input);
             return $this->return_redirect();
@@ -179,7 +169,7 @@ class Penjualan extends CI_Controller
         $this->_rule();
 
         if (!$this->form_validation->run()) {
-            $this->return_redirect();
+            return $this->return_redirect();
         }
 
         $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
@@ -225,14 +215,213 @@ class Penjualan extends CI_Controller
         unset($_SESSION[$kode_user . 'km_kendaraan']);
         unset($_SESSION[$kode_user . 'detailbarang']);
 
-        if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
-            if ($this->input->post('cetak') == "on") {
-                echo "<script type='text/javascript' language='javascript'>window.open('" . base_url() . 'penjualan/struk/' . $kode_jual . "')</script>";
+        $payload = array(
+            'kode_jual' => $data['kode_jual'],
+            'tanggal_jual' => $data['tanggal_jual'],
+            'kode_admin' => $data['kode_admin'],
+            'kode_karyawan' => $data['kode_karyawan'],
+            'keterangan' => $data['keterangan'],
+            'nomor_polisi' => $data['nomor_polisi'],
+            'km_kendaraan' => $data['km_kendaraan'],
+            'ongkos_karyawan' => $data['ongkos_karyawan'],
+            'bayar' => $data['bayar'],
+            'pelanggan' => $data['pelanggan'],
+            'details' => $detail_penjualan, // Include the detail data
+        );
+
+
+        header('Content-Type: application/json');
+        echo json_encode($payload);
+        exit;
+
+        // if ($this->uri->segment(3) <> "" and $this->uri->segment(3) == 1) {
+        //     if ($this->input->post('cetak') == "on") {
+        //         echo "<script type='text/javascript' language='javascript'>window.open('" . base_url() . 'penjualan/struk/' . $kode_jual . "')</script>";
+        //     }
+
+        //     redirect(site_url('home'), 'refresh');
+        // } else {
+        //     redirect(site_url('penjualan'), 'refresh');
+        // }
+    }
+
+    // private function insert_temp($input)
+    // {
+    //     $kode_user = $_SESSION['kode'];
+
+    //     $barang = $this->Barang_model->selectById($input->post('kode_barang'));
+    //     $this->checkStok($barang, $input);
+
+    //     $data = array(
+    //         'kode_barang' => $input->post('kode_barang'),
+    //         'nama_barang' => $barang->nama_barang,
+    //         'harga_jual' => $barang->harga_jual,
+    //         'harga_beli' => $barang->harga_beli,
+    //         'jumlah' => $input->post('jumlah'),
+    //         'subtotal' => ($input->post('rupiah') <> -1) ? $input->post('rupiah') : (float)$barang->harga_jual * (float)$input->post('jumlah'),
+    //         'is_using_rupiah' => ($input->post('rupiah') <> -1) ? true : false,
+    //     );
+
+    //     $_SESSION[$kode_user . 'detailbarang'][$input->post('kode_barang')] = $data;
+    // }
+
+    private function send_data_to_api($data, $detail_penjualan)
+    {
+        // Prepare the data payload for the API
+        $payload = array(
+            'kode_jual' => $data['kode_jual'],
+            'tanggal_jual' => $data['tanggal_jual'],
+            'kode_admin' => $data['kode_admin'],
+            'kode_karyawan' => $data['kode_karyawan'],
+            'keterangan' => $data['keterangan'],
+            'nomor_polisi' => $data['nomor_polisi'],
+            'km_kendaraan' => $data['km_kendaraan'],
+            'ongkos_karyawan' => $data['ongkos_karyawan'],
+            'bayar' => $data['bayar'],
+            'pelanggan' => $data['pelanggan'],
+            'details' => $detail_penjualan, // Include the detail data
+        );
+
+        // API endpoint URL
+        $api_url = "https://kurik.my.id/penjualan/save_penjualan"; // Replace with the actual API URL
+
+        // Initialize cURL
+        $ch = curl_init($api_url);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+        // Execute the cURL request
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        // Check for errors
+        if (curl_errno($ch)) {
+            log_message('error', 'API Call Error: ' . curl_error($ch));
+        } elseif ($http_code != 200) {
+            log_message('error', 'API Call Failed with HTTP Code ' . $http_code . ': ' . $response);
+        } else {
+            log_message('info', 'API Call Successful: ' . $response);
+        }
+
+        // Close cURL
+        curl_close($ch);
+    }
+
+    public function save_penjualan()
+    {
+        // Check if receiving sync is enabled
+        if (!$this->config->item('sync_receive_enabled')) {
+            $response = [
+                'status' => false,
+                'message' => 'This server is not configured to receive sync data',
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        }
+
+        // Get the JSON input from the request
+        $input = json_decode($this->input->raw_input_stream, true);
+
+        if (!$input) {
+            $response = [
+                'status' => false,
+                'message' => 'Invalid input data',
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        }
+
+        // Validate required fields in the input
+        if (empty($input['kode_jual']) || empty($input['tanggal_jual']) || empty($input['details'])) {
+            $response = [
+                'status' => false,
+                'message' => 'Missing required fields',
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        }
+
+        // Check if transaction already exists
+        $existing = $this->Penjualan_model->selectById($input['kode_jual']);
+        if ($existing) {
+            $response = [
+                'status' => true,
+                'message' => 'Transaction already exists, skipping',
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        }
+
+        // Insert the main penjualan data
+        $totalall = 0;
+        try {
+
+            // Insert the details
+            foreach ($input['details'] as $detail) {
+                $row = $this->Barang_model->selectById($detail['kode_barang']);
+                $harga_jual = $row->harga_jual;
+                $harga_beli = $row->harga_beli;
+
+                $detail_data = [
+                    'kode_jual' => $input['kode_jual'],
+                    'kode_barang' => $detail['kode_barang'],
+                    'harga_jual' => $harga_jual,
+                    'harga_beli' => $harga_beli,
+                    'jumlah' => $detail['jumlah'],
+                    'subtotal' => $detail['is_using_rupiah'] ? $detail['subtotal'] : (float)$harga_jual * (float)$detail['jumlah']
+                ];
+                $totalall += $detail_data['subtotal'];
+
+                $this->Penjualan_detail_model->insert($detail_data);
             }
 
-            redirect(site_url('home'), 'refresh');
-        } else {
-            redirect(site_url('penjualan'), 'refresh');
+            // Prepare the main penjualan data
+            $data = [
+                'kode_jual' => $input['kode_jual'],
+                'tanggal_jual' => $input['tanggal_jual'],
+                'tanggal_jual_date' => date('Y-m-d', strtotime($input['tanggal_jual'])),
+                'waktu_jual' => date("h:i:s a"),
+                'kode_admin' => $input['kode_admin'] ?? null,
+                'kode_karyawan' => $input['kode_karyawan'] ?? null,
+                'keterangan' => $input['keterangan'] ?? '',
+                'nomor_polisi' => $input['nomor_polisi'] ?? '',
+                'km_kendaraan' => $input['km_kendaraan'] ?? 0,
+                'ongkos_karyawan' => $input['ongkos_karyawan'] ?? 0,
+                'total' => $totalall ?? $input['total'] ?? 0,
+                'bayar' => $input['bayar'] ?? 0,
+                'pelanggan' => $input['pelanggan'] ?? '',
+            ];
+            $this->Penjualan_model->insert($data);
+
+            $this->Penjualan_detail_model->updatestok($input['kode_jual']);
+
+            // Send success response
+            $response = [
+                'status' => true,
+                'message' => 'Data saved successfully',
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        } catch (Exception $e) {
+            // Handle any exceptions and send error response
+            $response = [
+                'status' => false,
+                'message' => 'Failed to save data: ' . $e->getMessage(),
+            ];
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
         }
     }
 
@@ -333,7 +522,6 @@ class Penjualan extends CI_Controller
         }
     }
 
-
     private function insert_detail_temp($input)
     {
         $kode_user = $_SESSION['kode'];
@@ -382,6 +570,111 @@ class Penjualan extends CI_Controller
         } else {
             return redirect(site_url('penjualan/insert'), 'refresh');
         }
+    }
+
+    /**
+     * API endpoint to get penjualan by date
+     * Returns the latest transactions for a given date
+     */
+    public function get_by_date()
+    {
+        $date = $this->input->get('date');
+        $limitParam = $this->input->get('limit');
+        $limit = (is_numeric($limitParam) && intval($limitParam) > 0) ? intval($limitParam) : null;
+
+        if (empty($date)) {
+            $date = date('d-m-Y');
+        }
+
+        $date_formatted = date('d-m-Y', strtotime($date));
+
+        $this->db->where('tanggal_jual', $date_formatted);
+        $this->db->order_by('kode_jual', 'DESC');
+        if (!is_null($limit)) {
+            $this->db->limit($limit);
+        }
+        $penjualan_list = $this->db->get('penjualan')->result();
+
+        $result = array();
+        foreach ($penjualan_list as $penjualan) {
+            $details = $this->Penjualan_detail_model->selectById($penjualan->kode_jual);
+            $detail_array = array();
+            foreach ($details as $detail) {
+                $detail_array[] = array(
+                    'kode_barang' => $detail->kode_barang,
+                    'nama_barang' => $detail->nama_barang,
+                    'harga_jual' => $detail->harga_jual,
+                    'harga_beli' => $detail->harga_beli,
+                    'jumlah' => $detail->jumlah,
+                    'subtotal' => $detail->subtotal,
+                );
+            }
+
+            $result[] = array(
+                'kode_jual' => $penjualan->kode_jual,
+                'tanggal_jual' => $penjualan->tanggal_jual,
+                'waktu_jual' => $penjualan->waktu_jual,
+                'kode_admin' => $penjualan->kode_admin,
+                'kode_karyawan' => $penjualan->kode_karyawan,
+                'keterangan' => $penjualan->keterangan,
+                'nomor_polisi' => $penjualan->nomor_polisi,
+                'km_kendaraan' => $penjualan->km_kendaraan,
+                'ongkos_karyawan' => $penjualan->ongkos_karyawan,
+                'total' => $penjualan->total,
+                'bayar' => $penjualan->bayar,
+                'pelanggan' => $penjualan->pelanggan,
+                'details' => $detail_array
+            );
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status' => true,
+                'data' => $result
+            )));
+    }
+
+    /**
+     * API endpoint to check if a specific kode_jual exists
+     */
+    public function check_exists()
+    {
+        $kode_jual = $this->input->get('kode_jual');
+
+        if (empty($kode_jual)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status' => false,
+                    'message' => 'kode_jual is required'
+                )));
+        }
+
+        $exists = $this->Penjualan_model->selectById($kode_jual);
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status' => true,
+                'exists' => !empty($exists),
+                'kode_jual' => $kode_jual
+            )));
+    }
+
+    /**
+     * API endpoint to get sync config
+     */
+    public function get_sync_config()
+    {
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status' => true,
+                'sync_enabled' => $this->config->item('sync_enabled'),
+                'sync_target_url' => $this->config->item('sync_target_url'),
+                'sync_receive_enabled' => $this->config->item('sync_receive_enabled')
+            )));
     }
 }
 

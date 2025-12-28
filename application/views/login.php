@@ -67,7 +67,7 @@ License: You must have a valid license purchased only from themeforest(the above
     background: #fff;
 ">
     <!-- BEGIN LOGIN FORM -->
-    <?php echo form_open('login/index', 'class="login-form"'); ?>
+    <?php echo form_open('login/index','class="login-form"'); ?>
         <h3 class="form-title text-center" style="
             color: #000;
         ">Login to your account</h3>
@@ -92,7 +92,8 @@ License: You must have a valid license purchased only from themeforest(the above
             </div>
         </div>
         <div class="form-actions">
-            <button type="submit" name="login" value="login" class="btn blue pull-right">Login</button>
+            <input type="submit" name="login" value="Login " class="btn blue pull-right">
+
         </div>
         <br><br>
     </form>
@@ -102,9 +103,7 @@ License: You must have a valid license purchased only from themeforest(the above
 </div>
 <!-- END LOGIN -->
 <!-- BEGIN COPYRIGHT -->
-<div class="copyright">
-    2019 &copy; Made by Kemal & Team, Modified by Daffa
-</div>
+
 <!-- END COPYRIGHT -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
@@ -133,10 +132,20 @@ License: You must have a valid license purchased only from themeforest(the above
 <script>
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core components
-        // Layout.init(); // init current layout   
-        // Login.init();
-        // Demo.init();
+        Layout.init(); // init current layout
+        Login.init();
+        Demo.init();
         // init background slide images
+        $.backstretch([
+                "<?=base_url()?>assets/admin/pages/media/bg/1.jpg",
+                "<?=base_url()?>assets/admin/pages/media/bg/2.jpg",
+                "<?=base_url()?>assets/admin/pages/media/bg/3.jpg",
+                "<?=base_url()?>assets/admin/pages/media/bg/4.jpg"
+            ], {
+                fade: 1000,
+                duration: 8000
+            }
+        );
     });
 </script>
 <!-- END JAVASCRIPTS -->

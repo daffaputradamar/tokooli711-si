@@ -27,7 +27,7 @@
 		<td colspan="3">----------------------------------------------------------</td>
 	</tr>
 	<tr>
-		<td><?php echo $kode_jual; ?></td>
+		<td></td>
 		<td><?php echo $tanggal_jual; ?></td>
 		<td style="width: 120px;"><?php echo $waktu_jual ?></td>
 	</tr>

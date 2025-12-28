@@ -10,19 +10,8 @@
 				var txtSecondNumberValue = document.getElementById('totalharga').value;
 				var result = parseInt(ongkoskaryawan) + parseInt(txtSecondNumberValue);
 
-				console.log(result);
 				if (!isNaN(result)) {
 					document.getElementById('total').value = result;
-				}
-			}
-
-			function submitForm() {
-				const bayar = document.getElementById("bayar").value
-				const kembali = document.getElementById("kembali").value
-
-				if (bayar == kembali) {
-					alert("Harus ada transaksi yang dibayarkan")
-					return false
 				}
 			}
 		</script>
@@ -35,249 +24,250 @@
 			</div>
 
 			<div class="panel-body">
-				<?php
-                echo form_open('Penjualan/insert/1', array(
-                    'id' => 'insertpenjualan'
-                    // , "onsubmit" => "return submitForm()"
-                ));
-				?>
-				<div class="panel panel-info">
-					<div class="panel-heading" style="font-size:1.5rem">
-						<strong>
-							<i class="fa fa-book fa-fw"></i> List Barang
-						</strong>
-					</div>
-
-					<div class="panel-body">
-						<div class="row">
-							<div class="form-group col-lg-4">
-								<label for="int">Kode Jual
-									<?php echo form_error('kode_jual') ?></label>
-								<input type="text" class="form-control" name="kode_jual" id="kode_jual"
-									placeholder="Kode Jual"
-									value="<?php echo $kode_jual; ?>"
-									readonly />
-							</div>
-							<div class="form-group col-lg-4">
-								<label for=>Tanggal Jual
-									<?php echo form_error('tanggal_jual') ?></label>
-								<input type="text" class="form-control" name="tanggal_jual" id="tanggal_jual"
-									placeholder="Tanggal Jual"
-									value="<?php echo $tanggal_jual; ?>" />
-							</div>
-							<div class="form-group col-lg-4">
-								<label for=>Kode Admin
-									<?php echo form_error('kode_admin') ?></label>
-								<input type="text" class="form-control" name="kode_admin" id="kode_admin"
-									placeholder="Kode Admin"
-									value="<?php echo $kode_admin; ?>"
-									readonly />
-							</div>
+				<form id="formPenjualan">
+					<!--
+					 <?= form_open('Penjualan/insert/1', array(
+							'id' => 'insertpenjualan'
+						));
+						?> 
+					-->
+					<div class="panel panel-info">
+						<div class="panel-heading" style="font-size:1.5rem">
+							<strong>
+								<i class="fa fa-book fa-fw"></i> List Barang
+							</strong>
 						</div>
-						<div class="row">
-							<div class="form-group col-md-5 col-lg-8">
-								<label for="">Barang</label>
-								<select id="kode_barang" name="kode_barang" class="form-control selectpicker"
-									data-live-search="true" placeholder="kode_barang">
-									<?php
-				                    foreach ($listbarang as $komp) {
-				                        ?>
-										<option
-											value="<?= $komp->kode_barang ?>"
-											data-merk="<?= $komp->merk ?>"
-											data-harga="<?= $komp->harga_jual ?>">
-											<?= $komp->nama_barang ?> ||
-											<?= $komp->merk ?> || Rp.
-											<?= $this->CodeGenerator->rp($komp->harga_jual) ?>
-											<?php if ($_SESSION['level'] == "admin" || $_SESSION['can_see_stock'] == true) {
-											    echo " || " . $komp->stok;
-											} ?>
-										</option>
-									<?php
-				                    }
 
-				?>
-								</select>
-							</div>
-							<div id="merk-kemasan">
-								<div class="form-group col-md-2 col-lg-2">
-									<label
-										for=>Jumlah<?php echo form_error('jumlah') ?></label>
-									<input type="text" class="form-control" name="jumlah" id="jumlah"
-										placeholder="Jumlah" value="1" />
+						<div class="panel-body">
+							<div class="row">
+								<div class="form-group col-lg-4">
+									<label for="int">Kode Jual
+										<?php echo form_error('kode_jual') ?></label>
+									<input type="text" class="form-control" name="kode_jual" id="kode_jual"
+										placeholder="Kode Jual"
+										value="<?php echo $kode_jual; ?>"
+										readonly />
+								</div>
+								<div class="form-group col-lg-4">
+									<label for=>Tanggal Jual
+										<?php echo form_error('tanggal_jual') ?></label>
+									<input type="text" class="form-control" name="tanggal_jual" id="tanggal_jual"
+										placeholder="Tanggal Jual"
+										value="<?php echo $tanggal_jual; ?>" />
+								</div>
+								<div class="form-group col-lg-4">
+									<label for=>Kode Admin
+										<?php echo form_error('kode_admin') ?></label>
+									<input type="text" class="form-control" name="kode_admin" id="kode_admin"
+										placeholder="Kode Admin"
+										value="<?php echo $kode_admin; ?>"
+										readonly />
 								</div>
 							</div>
-							<div id="merk-drum" class="d-none">
-								<div class="form-group col-md-2 col-lg-2">
-									<label
-										for=>Rupiah<?php echo form_error('rupiah') ?></label>
-									<input type="text" class="form-control" name="rupiah" id="rupiah"
-										placeholder="Rupiah" value="-1" />
+							<div class="row">
+								<div class="form-group col-md-5 col-lg-8">
+									<label for="">Barang</label>
+									<select id="kode_barang" name="kode_barang" class="form-control selectpicker"
+										data-live-search="true" placeholder="kode_barang">
+										<?php
+										foreach ($listbarang as $komp) {
+										?>
+											<option
+												value="<?= $komp->kode_barang ?>"
+												data-merk="<?= $komp->merk ?>"
+												data-harga="<?= $komp->harga_jual ?>">
+												<?= $komp->nama_barang ?> ||
+												<?= $komp->merk ?> || Rp.
+												<?= $this->CodeGenerator->rp($komp->harga_jual) ?>
+												<?php if ($_SESSION['level'] == "admin" || $_SESSION['can_see_stock'] == true) {
+													echo " || " . $komp->stok;
+												} ?>
+											</option>
+										<?php
+										}
+
+										?>
+									</select>
 								</div>
-							</div>
-							<div class="form-group col text-right" style="margin-right: 2rem; margin-top: 2.5rem">
-								<div id="btnValidasiPercobaan">
-									<!-- <span class="text-danger">Input data sudah lebih dari 2x, <br> Hubungi admin agar
+								<div id="merk-kemasan">
+									<div class="form-group col-md-2 col-lg-2">
+										<label
+											for=>Jumlah<?php echo form_error('jumlah') ?></label>
+										<input type="text" class="form-control" name="jumlah" id="jumlah"
+											placeholder="Jumlah" value="1" />
+									</div>
+								</div>
+								<div id="merk-drum" class="d-none">
+									<div class="form-group col-md-2 col-lg-2">
+										<label
+											for=>Rupiah<?php echo form_error('rupiah') ?></label>
+										<input type="text" class="form-control" name="rupiah" id="rupiah"
+											placeholder="Rupiah" value="-1" />
+									</div>
+								</div>
+								<div class="form-group col text-right" style="margin-right: 2rem; margin-top: 2.5rem">
+									<div id="btnValidasiPercobaan">
+										<!-- <span class="text-danger">Input data sudah lebih dari 2x, <br> Hubungi admin agar
 										bisa membuat transaksi</span> -->
 
-									<input type="submit" class="btn btn-primary" name="submitlist" value="Tambah" />
+										<input type="submit" class="btn btn-primary" name="submitlist" value="Tambah" />
+									</div>
+
 								</div>
-
 							</div>
-						</div>
-						<table class="table table-bordered table-hover table-striped">
-							<tr>
-								<th>No</th>
-								<th>Nama Barang</th>
-								<th>Harga</th>
-								<th>Jumlah</th>
-								<th>Subtotal</th>
-								<th></th>
-							</tr><?php $start = 0;
-				foreach ($listdetail as $penjualandetail) {
-				    ?>
+							<table class="table table-bordered table-hover table-striped">
 								<tr>
-									<td width="80px"><?= ++$start ?>
-									</td>
-									<td><?= $penjualandetail['nama_barang'] ?>
-									</td>
-									<td><?= $penjualandetail['harga_jual'] ?>
-									</td>
-									<td><?= $penjualandetail['jumlah'] ?>
-									</td>
-									<td>Rp.
-										<?= $this->CodeGenerator->rp($penjualandetail['subtotal']) ?>
-									</td>
-									<td style="text-align:center" width="50px">
-										<?= anchor(site_url('penjualan_detail/delete/' . $penjualandetail['kode_barang'] . '/1'), 'Delete', 'class="btn btn-danger" onclick="javascript: return confirm(\'anda yakin ingin menghapus ?\')"'); ?>
-									</td>
-								</tr>
-							<?php
-				}
-				?>
-						</table>
+									<th>No</th>
+									<th>Nama Barang</th>
+									<th>Harga</th>
+									<th>Jumlah</th>
+									<th>Subtotal</th>
+									<th></th>
+								</tr><?php $start = 0;
+										foreach ($listdetail as $penjualandetail) {
+										?>
+									<tr>
+										<td width="80px"><?= ++$start ?>
+										</td>
+										<td><?= $penjualandetail['nama_barang'] ?>
+										</td>
+										<td><?= $penjualandetail['harga_jual'] ?>
+										</td>
+										<td><?= $penjualandetail['jumlah'] ?>
+										</td>
+										<td>Rp.
+											<?= $this->CodeGenerator->rp($penjualandetail['subtotal']) ?>
+										</td>
+										<td style="text-align:center" width="50px">
+											<?= anchor(site_url('penjualan_detail/delete/' . $penjualandetail['kode_barang'] . '/1'), 'Delete', 'class="btn btn-danger" onclick="javascript: return confirm(\'anda yakin ingin menghapus ?\')"'); ?>
+										</td>
+									</tr>
+								<?php
+										}
+								?>
+							</table>
+						</div>
+						<!----pane body-->
 					</div>
-					<!----pane body-->
-				</div>
 
-				<div class="panel panel-info">
-					<div class="panel-heading" style="font-size:1.5rem">
-						<strong>
-							<i class="fa fa-book fa-fw"></i> Penggantion oli berikutnya
-						</strong>
-					</div>
+					<div class="panel panel-info">
+						<div class="panel-heading" style="font-size:1.5rem">
+							<strong>
+								<i class="fa fa-book fa-fw"></i> Penggantion oli berikutnya
+							</strong>
+						</div>
 
-					<div class="panel-body">
-						<div class="row">
-							<div class="form-group col-md-4">
-								<label for=>Kasir
-									<?php echo form_error('kode_karyawan') ?></label>
-								<!-- <input type="text" class="form-control" name="kode_karyawan" id="kode_karyawan" placeholder="Kode Karyawan" value="<?php echo $kode_karyawan; ?>"
+						<div class="panel-body">
+							<div class="row">
+								<div class="form-group col-md-4">
+									<label for=>Kasir
+										<?php echo form_error('kode_karyawan') ?></label>
+									<!-- <input type="text" class="form-control" name="kode_karyawan" id="kode_karyawan" placeholder="Kode Karyawan" value="<?php echo $kode_karyawan; ?>"
 								/> -->
-								<select name="kode_karyawan" class="form-control" placeholder="kode_karyawan" readonly>
-									<?php
-				        if ($_SESSION['level'] != "admin") {
-				            ?>
-										<option
-											value="<?= $karyawan->kode_karyawan ?>"
-											selected>
-											<?= $karyawan->nama_karyawan ?>
-										</option>
-									<?php
-				        } else {
-				            ?>
-										<option
-											value="<?= $admin->kode_admin ?>"
-											selected>
-											<?= $admin->nama_admin ?>
-										</option>
-									<?php
-				        }
-				?>
-								</select>
-							</div>
-							<div class="form-group col-md-4">
-								<label for="keterangan">Keterangan
-									<?php echo form_error('keterangan') ?></label>
-								<input class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan"
-									value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'keterangan']) ? $_SESSION[$_SESSION['kode'] . 'keterangan'] : ' '; ?>">
-							</div>
-							<div class="form-group col-md-4">
-								<label for=>Bea Servis
-									<?php echo form_error('ongkos_karyawan') ?></label>
-								<input type="number" class="form-control" name="ongkos_karyawan" id="ongkos_karyawan"
-									placeholder="Bea Lain-lain"
-									value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'ongkos_karyawan']) ? $_SESSION[$_SESSION['kode'] . 'ongkos_karyawan'] : '0'; ?>"
-									onkeyup="sum();" />
-							</div>
-							<div class="form-group col-md-4">
-								<label for=>Klien / Kendaraan
-									<?php echo form_error('pelanggan') ?></label>
-								<input type="text" class="form-control" name="pelanggan" id="pelanggan"
-									placeholder="Nama Pelanggan"
-									value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'pelanggan']) ? $_SESSION[$_SESSION['kode'] . 'pelanggan'] : ' '; ?>" />
-							</div>
-							<div class="form-group col-md-4">
-								<label for=>Nomor Polisi
-									<?php echo form_error('nomor_polisi') ?></label>
-								<input type="text" class="form-control" name="nomor_polisi" id="nomor_polisi"
-									placeholder="Nomor Polisi"
-									value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'nomor_polisi']) ? $_SESSION[$_SESSION['kode'] . 'nomor_polisi'] : ' '; ?>" />
-							</div>
-							<div class="form-group col-md-4">
-								<label for=>Kilo Meter Kendaraan
-									<?php echo form_error('km_kendaraan') ?></label>
-								<input type="text" class="form-control" name="km_kendaraan" id="km_kendaraan"
-									placeholder="Kilometer kendaraan"
-									value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'km_kendaraan']) ? $_SESSION[$_SESSION['kode'] . 'km_kendaraan'] : ' '; ?>" />
+									<select name="kode_karyawan" class="form-control" placeholder="kode_karyawan" readonly>
+										<?php
+										if ($_SESSION['level'] != "admin") {
+										?>
+											<option
+												value="<?= $karyawan->kode_karyawan ?>"
+												selected>
+												<?= $karyawan->nama_karyawan ?>
+											</option>
+										<?php
+										} else {
+										?>
+											<option
+												value="<?= $admin->kode_admin ?>"
+												selected>
+												<?= $admin->nama_admin ?>
+											</option>
+										<?php
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-group col-md-4">
+									<label for="keterangan">Keterangan
+										<?php echo form_error('keterangan') ?></label>
+									<input class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan"
+										value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'keterangan']) ? $_SESSION[$_SESSION['kode'] . 'keterangan'] : ' '; ?>">
+								</div>
+								<div class="form-group col-md-4">
+									<label for=>Bea Servis
+										<?php echo form_error('ongkos_karyawan') ?></label>
+									<input type="number" class="form-control" name="ongkos_karyawan" id="ongkos_karyawan"
+										placeholder="Bea Lain-lain"
+										value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'ongkos_karyawan']) ? $_SESSION[$_SESSION['kode'] . 'ongkos_karyawan'] : '0'; ?>"
+										onkeyup="sum();" />
+								</div>
+								<div class="form-group col-md-4">
+									<label for=>Klien / Kendaraan
+										<?php echo form_error('pelanggan') ?></label>
+									<input type="text" class="form-control" name="pelanggan" id="pelanggan"
+										placeholder="Nama Pelanggan"
+										value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'pelanggan']) ? $_SESSION[$_SESSION['kode'] . 'pelanggan'] : ' '; ?>" />
+								</div>
+								<div class="form-group col-md-4">
+									<label for=>Nomor Polisi
+										<?php echo form_error('nomor_polisi') ?></label>
+									<input type="text" class="form-control" name="nomor_polisi" id="nomor_polisi"
+										placeholder="Nomor Polisi"
+										value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'nomor_polisi']) ? $_SESSION[$_SESSION['kode'] . 'nomor_polisi'] : ' '; ?>" />
+								</div>
+								<div class="form-group col-md-4">
+									<label for=>Kilo Meter Kendaraan
+										<?php echo form_error('km_kendaraan') ?></label>
+									<input type="text" class="form-control" name="km_kendaraan" id="km_kendaraan"
+										placeholder="Kilometer kendaraan"
+										value="<?php echo isset($_SESSION[$_SESSION['kode'] . 'km_kendaraan']) ? $_SESSION[$_SESSION['kode'] . 'km_kendaraan'] : ' '; ?>" />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6 pull-right">
-						<label for=>Total
-							<?php echo form_error('total') ?></label>
-						<input type="hidden" name="totalharga" id="totalharga" value="<?php if ($total == "") {
-						    echo 0;
-						} else {
-						    echo $total;
-						} ?>">
-						<input type="number" class="form-control col-md-6" name="total"
-							style="font-size:25px; height:50px; background:none;" id="total" placeholder="Total"
-							value="<?php echo $total; ?>" readonly />
-						<!-- <h2 id="total">Total : Rp. <?php echo $this->CodeGenerator->rp($total); ?>
+					<div class="row">
+						<div class="form-group col-md-6 pull-right">
+							<label for=>Total
+								<?php echo form_error('total') ?></label>
+							<input type="hidden" name="totalharga" id="totalharga" value="<?php if ($total == "") {
+																								echo 0;
+																							} else {
+																								echo $total;
+																							} ?>">
+							<input type="number" class="form-control col-md-6" name="total"
+								style="font-size:25px; height:50px; background:none;" id="total" placeholder="Total"
+								value="<?php echo $total; ?>" readonly />
+							<!-- <h2 id="total">Total : Rp. <?php echo $this->CodeGenerator->rp($total); ?>
 						</h2> -->
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6 pull-right">
-						<label for=>Bayar </label>
-						<input type="number" onkeyup="kembalian()" class="form-control col-md-6" name="bayar"
-							style="font-size:25px; height:50px; background:none;" id="bayar" placeholder="Bayar"
-							value="0" />
+					<div class="row">
+						<div class="form-group col-md-6 pull-right">
+							<label for=>Bayar </label>
+							<input type="number" onkeyup="kembalian()" class="form-control col-md-6" name="bayar"
+								style="font-size:25px; height:50px; background:none;" id="bayar" placeholder="Bayar"
+								value="0" />
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6 pull-right">
-						<label for=>Kembali</label>
-						<input type="number" class="form-control col-md-6" name="kembali"
-							style="font-size:25px; height:50px; background:none;" id="kembali" placeholder="kembali"
-							value="0" readonly />
+					<div class="row">
+						<div class="form-group col-md-6 pull-right">
+							<label for=>Kembali</label>
+							<input type="number" class="form-control col-md-6" name="kembali"
+								style="font-size:25px; height:50px; background:none;" id="kembali" placeholder="kembali"
+								value="0" readonly />
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6 pull-right">
-						<label for=><input type="checkbox" class="form-control col-md-6" name="cetak" /> Cetak Struk
-						</label>
+					<div class="row">
+						<div class="form-group col-md-6 pull-right">
+							<label for=><input type="checkbox" class="form-control col-md-6" name="cetak" /> Cetak Struk
+							</label>
+						</div>
 					</div>
-				</div>
 
-				<div class="text-center">
-					<a href="<?php echo site_url('penjualan') ?>"
-						class="btn btn-lg" style="margin-right:30px;">Cancel</a>
-					<button type="submit" class="btn btn-primary btn-lg">Simpan</button>
-				</div>
+					<div class="text-center">
+						<a href="<?php echo site_url('penjualan') ?>"
+							class="btn btn-lg" style="margin-right:30px;">Cancel</a>
+						<button type="submit" class="btn btn-primary btn-lg">Simpan</button>
+					</div>
 				</form>
 			</div>
 
@@ -387,8 +377,8 @@
 		</div>
 		<div class="row">
 			<?php
-            foreach ($kasir as $karyawan):
-                ?>
+			foreach ($kasir as $karyawan):
+			?>
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 					<div class="dashboard-stat2">
 						<div class="display">
@@ -425,8 +415,8 @@
 					</div>
 				</div>
 			<?php
-            endforeach;
-    ?>
+			endforeach;
+			?>
 		</div>
 
 
@@ -463,6 +453,100 @@
 
 				selectBarang.dispatchEvent(new Event('change'))
 			})
+
+		document.getElementById("formPenjualan").addEventListener("submit", function(e) {
+			e.preventDefault()
+
+			const formData = new FormData(this);
+			const _values = Object.fromEntries(formData.entries());
+
+			let origTextContent = "";
+			const submitter = e.submitter;
+
+			const isTambahDetail = submitter.name === "submitlist"
+
+
+			submitter.disabled = true;
+			origTextContent = submitter.textContent;
+
+			// Change button text
+			let btnText = submitter[isTambahDetail ? "value" : "textContent"];
+			origTextContent = btnText;
+
+			submitter[isTambahDetail ? "value" : "textContent"] = "Proses...";
+
+
+
+			//validate
+			if (isTambahDetail) {
+				if (_values.jumlah == 0) {
+					alert("Jumlah tidak boleh kosong");
+					return;
+				}
+			}
+
+			const values = new URLSearchParams(formData) // Convert to URL-encoded string
+
+			if (isTambahDetail) {
+				values.append(submitter.name, submitter.value);
+			}
+
+
+			fetch("<?= base_url('Penjualan/insert/1') ?>", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded", // Mimic normal form submission
+					},
+					body: values.toString(), // Send data as URL-encoded
+				})
+				.then(response => {
+					if (!isTambahDetail) {
+						return response.text(); // Get the response as JSON
+					}
+
+					return new Promise((resolve, reject) => {
+						resolve("Sukses Tambah Detail");
+					});
+				}) // Get the response as text
+				.then(data => {
+					if (isTambahDetail) {
+						location.reload();
+						return;
+					}
+					const result = JSON.parse(data.trim())
+					
+					if(_values.cetak == "on"){
+						window.open(`<?= base_url("penjualan/struk") ?>/${result.kode_jual}`, '_blank')
+					}
+
+					// Check if sync is enabled before syncing
+					<?php if ($this->config->item('sync_enabled')): ?>
+					const syncTargetUrl = "<?= $this->config->item('sync_target_url') ?>";
+					fetch(`${syncTargetUrl}/penjualan/save_penjualan`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(result),
+					}).then(syncResponse => {
+						console.log('Sync response:', syncResponse);
+					}).catch(syncError => {
+						console.error('Sync error:', syncError);
+					}).finally(() => {
+						location.reload();
+					})
+					<?php else: ?>
+					// Sync is disabled, just reload
+					location.reload();
+					<?php endif; ?>
+
+				})
+				.catch(error => console.error("Error:", error))
+				.finally(() => {
+					submitter.disabled = false;
+					submitter.textContent = origTextContent;
+				})
+		})
 	});
 
 	function roundToTwo(num) {

@@ -7,7 +7,7 @@
         <div class="panel-body">
 
             <?php if ($this->uri->segment(2) == "insert") {
-                echo form_open('Pembelian/insert');
+                echo "<form id=formPembelian>";
             } else {
                 echo form_open('Pembelian/update/' . $this->uri->segment(3));
             } ?>
@@ -146,7 +146,7 @@
                 }
             ?>" />
             </div>
-            <input type="submit" class="btn btn-primary" name="simpan" value="Simpan" onclick="javascript: return confirm('Anda yakin mau menyimpan?')" />
+            <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="<?php echo site_url('pembelian') ?>" class="btn btn-default">Cancel</a>
             </form>
         </div>
@@ -180,93 +180,190 @@
 </div>
 
 <script>
-function showProductDetail(kodeBarang) {
-    // Show the modal
-    $('#productDetailModal').modal('show');
+    document.addEventListener("DOMContentLoaded", function() {
+        const formPembelian = document.getElementById("formPembelian")
+
+        if (!formPembelian) {
+            return;
+        }
+        formPembelian.addEventListener("submit", function(e) {
+            e.preventDefault()
+
+            const formData = new FormData(this);
+            const _values = Object.fromEntries(formData.entries());
+
+            let origTextContent = "";
+            const submitter = e.submitter;
+
+            const isTambahDetail = submitter.name === "submitlist"
+
+
+            submitter.disabled = true;
+            origTextContent = submitter.textContent;
+
+            // Change button text
+            let btnText = submitter[isTambahDetail ? "value" : "textContent"];
+            origTextContent = btnText;
+
+            submitter[isTambahDetail ? "value" : "textContent"] = "Proses...";
+
+
+
+            //validate
+            if (isTambahDetail) {
+                if (_values.jumlah == 0) {
+                    alert("Jumlah tidak boleh kosong");
+                    return;
+                }
+            }
+
+            const values = new URLSearchParams(formData) // Convert to URL-encoded string
+
+            if (isTambahDetail) {
+                values.append(submitter.name, submitter.value);
+            }
+
+
+            fetch("<?= base_url('Pembelian/insert') ?>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded", // Mimic normal form submission
+                    },
+                    body: values.toString(), // Send data as URL-encoded
+                })
+                .then(response => {
+                    if (!isTambahDetail) {
+                        return response.text(); // Get the response as JSON
+                    }
+
+                    return new Promise((resolve, reject) => {
+                        resolve("Sukses Tambah Detail");
+                    });
+                }) // Get the response as text
+                .then(data => {
+                    if (isTambahDetail) {
+                        location.reload();
+                        return;
+                    }
+                    const result = JSON.parse(data.trim())
+
+                    // Check if sync is enabled before syncing
+                    <?php if ($this->config->item('sync_enabled')): ?>
+                    const syncTargetUrl = "<?= $this->config->item('sync_target_url') ?>";
+                    fetch(`${syncTargetUrl}/pembelian/save_pembelian`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(result),
+                    }).then(syncResponse => {
+                        console.log('Sync response:', syncResponse);
+                    }).catch(syncError => {
+                        console.error('Sync error:', syncError);
+                    }).finally(() => {
+                        location.reload();
+                    })
+                    <?php else: ?>
+                    // Sync is disabled, just reload
+                    location.reload();
+                    <?php endif; ?>
+
+                })
+                .catch(error => console.error("Error:", error))
+                .finally(() => {
+                    submitter.disabled = false;
+                    submitter.textContent = origTextContent;
+                })
+        })
+    })
     
-    // Reset content to loading state
-    $('#productDetailContent').html(
-        '<div class="text-center">' +
-        '<i class="fa fa-spinner fa-spin fa-2x"></i>' +
-        '<p>Memuat data...</p>' +
-        '</div>'
-    );
-    
-    // Make AJAX request to get product details
-    $.ajax({
-        url: '<?php echo site_url("pembelian_detail/get_product_detail"); ?>',
-        type: 'POST',
-        data: {
-            kode_barang: kodeBarang
-        },
-        dataType: 'text', // Change to text first to handle BOM issues
-        success: function(responseText) {
-            console.log('Raw response:', responseText); // Debug log
-            
-            try {
-                // Clean BOM and other invisible characters
-                var cleanResponse = responseText.replace(/^\uFEFF/, '').trim();
-                console.log('Cleaned response:', cleanResponse); // Debug log
-                
-                var response = JSON.parse(cleanResponse);
-                console.log('Parsed response:', response); // Debug log
-                
-                if (response && response.success) {
-                var product = response.data;
-                var detailHtml = 
-                    '<table class="table table-bordered">' +
-                    '<tr><td><strong>Kode Barang</strong></td><td>' + (product.kode_barang || '-') + '</td></tr>' +
-                    '<tr><td><strong>Nama Barang</strong></td><td>' + (product.nama_barang || '-') + '</td></tr>' +
-                    '<tr><td><strong>Merk</strong></td><td>' + (product.nama_merk || '-') + '</td></tr>' +
-                    '<tr><td><strong>Stok</strong></td><td>' + (product.stok || '0') + '</td></tr>';
-                
-                <?php if ($_SESSION['level'] == 'admin') { ?>
-                detailHtml += 
-                    '<tr><td><strong>Harga Beli</strong></td><td>Rp. ' + formatRupiah(product.harga_beli || 0) + '</td></tr>' +
-                    '<tr><td><strong>Harga Jual</strong></td><td>Rp. ' + formatRupiah(product.harga_jual || 0) + '</td></tr>';
-                <?php } ?>
-                
-                detailHtml += '</table>';
-                
-                $('#productDetailContent').html(detailHtml);
-                } else {
+    function showProductDetail(kodeBarang) {
+            // Show the modal
+            $('#productDetailModal').modal('show');
+
+            // Reset content to loading state
+            $('#productDetailContent').html(
+                '<div class="text-center">' +
+                '<i class="fa fa-spinner fa-spin fa-2x"></i>' +
+                '<p>Memuat data...</p>' +
+                '</div>'
+            );
+
+            // Make AJAX request to get product details
+            $.ajax({
+                url: '<?php echo site_url("pembelian_detail/get_product_detail"); ?>',
+                type: 'POST',
+                data: {
+                    kode_barang: kodeBarang
+                },
+                dataType: 'text', // Change to text first to handle BOM issues
+                success: function(responseText) {
+                    console.log('Raw response:', responseText); // Debug log
+
+                    try {
+                        // Clean BOM and other invisible characters
+                        var cleanResponse = responseText.replace(/^\uFEFF/, '').trim();
+                        console.log('Cleaned response:', cleanResponse); // Debug log
+
+                        var response = JSON.parse(cleanResponse);
+                        console.log('Parsed response:', response); // Debug log
+
+                        if (response && response.success) {
+                            var product = response.data;
+                            var detailHtml =
+                                '<table class="table table-bordered">' +
+                                '<tr><td><strong>Kode Barang</strong></td><td>' + (product.kode_barang || '-') + '</td></tr>' +
+                                '<tr><td><strong>Nama Barang</strong></td><td>' + (product.nama_barang || '-') + '</td></tr>' +
+                                '<tr><td><strong>Merk</strong></td><td>' + (product.nama_merk || '-') + '</td></tr>' +
+                                '<tr><td><strong>Stok</strong></td><td>' + (product.stok || '0') + '</td></tr>';
+
+                            <?php if ($_SESSION['level'] == 'admin') { ?>
+                                detailHtml +=
+                                    '<tr><td><strong>Harga Beli</strong></td><td>Rp. ' + formatRupiah(product.harga_beli || 0) + '</td></tr>' +
+                                    '<tr><td><strong>Harga Jual</strong></td><td>Rp. ' + formatRupiah(product.harga_jual || 0) + '</td></tr>';
+                            <?php } ?>
+
+                            detailHtml += '</table>';
+
+                            $('#productDetailContent').html(detailHtml);
+                        } else {
+                            $('#productDetailContent').html(
+                                '<div class="alert alert-danger">' +
+                                '<i class="fa fa-exclamation-triangle"></i> ' +
+                                'Gagal memuat data produk: ' + (response.message || 'Response tidak valid') +
+                                '</div>'
+                            );
+                        }
+                    } catch (parseError) {
+                        console.log('JSON Parse Error:', parseError);
+                        $('#productDetailContent').html(
+                            '<div class="alert alert-danger">' +
+                            '<i class="fa fa-exclamation-triangle"></i> ' +
+                            'Error parsing response: ' + parseError.message +
+                            '</div>'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('AJAX Error:', xhr, status, error); // Debug log
                     $('#productDetailContent').html(
                         '<div class="alert alert-danger">' +
                         '<i class="fa fa-exclamation-triangle"></i> ' +
-                        'Gagal memuat data produk: ' + (response.message || 'Response tidak valid') +
+                        'Terjadi kesalahan saat memuat data produk: ' + error +
                         '</div>'
                     );
                 }
-            } catch (parseError) {
-                console.log('JSON Parse Error:', parseError);
-                $('#productDetailContent').html(
-                    '<div class="alert alert-danger">' +
-                    '<i class="fa fa-exclamation-triangle"></i> ' +
-                    'Error parsing response: ' + parseError.message +
-                    '</div>'
-                );
-            }
-        },
-        error: function(xhr, status, error) {
-            console.log('AJAX Error:', xhr, status, error); // Debug log
-            $('#productDetailContent').html(
-                '<div class="alert alert-danger">' +
-                '<i class="fa fa-exclamation-triangle"></i> ' +
-                'Terjadi kesalahan saat memuat data produk: ' + error +
-                '</div>'
-            );
+            });
         }
-    });
-}
 
-function formatRupiah(amount) {
-    try {
-        // Convert to number if it's a string
-        var num = parseFloat(amount) || 0;
-        return new Intl.NumberFormat('id-ID').format(num);
-    } catch (e) {
-        console.log('Format Rupiah Error:', e);
-        return amount || '0';
-    }
-}
+        function formatRupiah(amount) {
+            try {
+                // Convert to number if it's a string
+                var num = parseFloat(amount) || 0;
+                return new Intl.NumberFormat('id-ID').format(num);
+            } catch (e) {
+                console.log('Format Rupiah Error:', e);
+                return amount || '0';
+            }
+        }
 </script>

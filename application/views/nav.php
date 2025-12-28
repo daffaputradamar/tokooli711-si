@@ -231,6 +231,12 @@
                             <span class="title">Pengujian Ramal Harga</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?= base_url() ?>sync">
+                            <i class="icon-refresh"></i>
+                            <span class="title">Sync Dashboard</span>
+                        </a>
+                    </li>
                 <?php } ?>
 
             </ul>

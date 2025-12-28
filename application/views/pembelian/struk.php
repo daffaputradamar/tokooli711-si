@@ -8,10 +8,7 @@
     }
 </style>
 <table class="table" style="width:500px;">
-    <tr>
-        <td>Kode Beli</td>
-        <td><?php echo $kode_beli; ?></td>
-    </tr>
+    
     <tr>
         <td>Tanggal Beli</td>
         <td><?php echo $tanggal_beli . ' ' . $waktu_beli; ?></td>
