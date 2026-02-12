@@ -104,7 +104,10 @@
 					<td><?php echo $pembelian->nama_suplier ?></td>
 					<?php if($_SESSION['level'] == 'admin') { ?>
 					<td>Rp.
-						<?php echo $this->CodeGenerator->rp($pembelian->total) ?>
+						<?php
+							$total_beli = $this->config->item('display_round_500') ? floor($pembelian->total / 500) * 500 : $pembelian->total;
+							echo $this->CodeGenerator->rp($total_beli);
+						?>
 					</td>
 					<?php } ?>
 					<td style="text-align:center" width="250px">

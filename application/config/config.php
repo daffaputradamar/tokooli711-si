@@ -531,3 +531,14 @@ $config['proxy_ips'] = '';
 $config['sync_enabled'] = TRUE; // Set to FALSE to disable syncing from this app
 $config['sync_target_url'] = 'https://kurik.my.id'; // Target server URL for syncing
 $config['sync_receive_enabled'] = TRUE; // Set to TRUE to allow this app to receive sync data
+
+/*
+|--------------------------------------------------------------------------
+| Display Rounding
+|--------------------------------------------------------------------------
+|
+| When enabled, totals displayed in penjualan and pembelian lists
+| will be rounded down to the nearest 500 using FLOOR(total/500)*500.
+|
+*/
+$config['display_round_500'] = TRUE;

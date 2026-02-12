@@ -25,6 +25,7 @@ class Laporan extends CI_Controller
     {
         $this->load->view('nav');
         $data['barang'] = $this->Barang_model->selectByAll();
+        $data['tahun_beli_list'] = $this->Pembelian_model->get_tahun_list();
         $this->load->view('laporan/beliform', $data);
 
         $this->load->view('foot');
@@ -117,6 +118,7 @@ class Laporan extends CI_Controller
         $data['barang'] = $this->Barang_model->selectByAll();
         $data['totalkr'] = $this->Karyawan_model->total_rows();
         $data['penjualan_per_kasir'] = $this->Penjualan_model->get_all_sum_penjualan_by_kasir(date('d-m-Y'));
+        $data['tahun_jual_list'] = $this->Penjualan_model->get_tahun_list();
         if ($this->uri->segment(3) == 1) {
             $data['pesan'] = "Isi data dengan lengkap";
         } else {
@@ -142,6 +144,87 @@ class Laporan extends CI_Controller
         // var_dump($data);
         // return;
         $this->load->view('laporan/pbeliprint_2', $data);
+    }
+
+    public function export_jual_tahunan()
+    {
+        $tahun = $this->input->post('tahun');
+        if (empty($tahun)) {
+            redirect('laporan/jual');
+            return;
+        }
+
+        $query = $this->Penjualan_model->laporan_tahunan($tahun);
+        $data = $query->result();
+
+        if (empty($data)) {
+            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            redirect('laporan/jual');
+            return;
+        }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="Laporan_Penjualan_' . $tahun . '.csv"');
+        $output = fopen('php://output', 'w');
+        
+        // Header
+        fputcsv($output, array('Periode', 'Total Penjualan'));
+        
+        // Data
+        foreach ($data as $row) {
+            fputcsv($output, array($row->periode, $row->total_penjualan));
+        }
+        
+        fclose($output);
+        exit;
+    }
+
+    public function export_beli_tahunan()
+    {
+        $tahun = $this->input->post('tahun');
+        $tampilkan_supplier = $this->input->post('tampilkan_supplier');
+
+        if (empty($tahun)) {
+            redirect('laporan/beli');
+            return;
+        }
+
+        // Choose query based on supplier toggle
+        if ($tampilkan_supplier) {
+            $query = $this->Pembelian_model->laporan_tahunan($tahun);
+        } else {
+            $query = $this->Pembelian_model->laporan_tahunan_no_supplier($tahun);
+        }
+
+        $data = $query->result();
+
+        if (empty($data)) {
+            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            redirect('laporan/beli');
+            return;
+        }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="Laporan_Pembelian_' . $tahun . '.csv"');
+        $output = fopen('php://output', 'w');
+
+        // Write header based on supplier toggle
+        if ($tampilkan_supplier) {
+            fputcsv($output, array('Periode', 'Nama Supplier', 'Total Pembelian'));
+            // Data with supplier
+            foreach ($data as $row) {
+                fputcsv($output, array($row->periode, $row->nama_suplier, $row->total_pembelian));
+            }
+        } else {
+            fputcsv($output, array('Periode', 'Total Pembelian'));
+            // Data without supplier
+            foreach ($data as $row) {
+                fputcsv($output, array($row->periode, $row->total_pembelian));
+            }
+        }
+
+        fclose($output);
+        exit;
     }
 
     public function laporan_barang()

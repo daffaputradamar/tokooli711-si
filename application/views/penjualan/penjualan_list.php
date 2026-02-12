@@ -109,7 +109,10 @@
                     <td><?php echo $penjualan->tanggal_jual ?></td>
                     <td><?php echo $penjualan->nomor_polisi ?></td>
                     <td><?php echo $penjualan->kode_karyawan ?></td>
-                    <td><?php echo $penjualan->total ?></td>
+                    <td>Rp. <?php
+                        $total_jual = $this->config->item('display_round_500') ? floor($penjualan->total / 500) * 500 : $penjualan->total;
+                        echo $this->CodeGenerator->rp($total_jual);
+                    ?></td>
 
                     <td style="text-align:center">
                         <?php

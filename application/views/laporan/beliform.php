@@ -127,6 +127,69 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-md-6">
+		<!-- BEGIN EXPORT TAHUNAN PORTLET-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-file-excel-o"></i> Export Laporan Pembelian Tahunan
+				</div>
+				<div class="tools">
+					<a href="" class="collapse" data-original-title="" title=""></a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<br>
+				<?= form_open('laporan/export_beli_tahunan', 'class="form-inline" role="form"'); ?>
+				<div class="row">
+					<div class="col-md-3">
+						<label>Pilih Tahun :</label>
+					</div>
+					<div class="col-md-5">
+						<select name="tahun" class="form-control" required>
+							<option value="">-- Pilih Tahun --</option>
+							<?php foreach ($tahun_beli_list as $t) { ?>
+								<option value="<?= $t->tahun ?>"><?= $t->tahun ?></option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="col-md-4">
+						<button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-12">
+						<label style="font-weight: normal;">
+							<input type="checkbox" name="tampilkan_supplier" value="1" checked> Tampilkan Supplier Terpisah
+						</label>
+					</div>
+				</div>
+				<br>
+				<p class="text-muted" id="desc_supplier">Data akan dikelompokkan per bulan (periode) dan per supplier dengan total dibulatkan ke kelipatan 500.</p>
+				<p class="text-muted" id="desc_no_supplier" style="display:none;">Data akan dikelompokkan per bulan (periode) dengan total dari semua supplier dibulatkan ke kelipatan 500.</p>
+				</form>
+
+				<script>
+					$(document).ready(function() {
+						$('input[name=tampilkan_supplier]').change(function() {
+							if (this.checked) {
+								$('#desc_supplier').show();
+								$('#desc_no_supplier').hide();
+							} else {
+								$('#desc_supplier').hide();
+								$('#desc_no_supplier').show();
+							}
+						});
+					});
+				</script>
+			</div>
+		</div>
+		<!-- END EXPORT TAHUNAN PORTLET-->
+	</div>
+</div>
+
 <script>
     $(document).ready(function() {
 

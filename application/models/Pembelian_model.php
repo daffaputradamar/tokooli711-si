@@ -150,6 +150,37 @@ class Pembelian_model extends CI_Model
         }
         return $data->hbeli;
     }
+
+    public function laporan_tahunan($tahun)
+    {
+        $tahun = intval($tahun);
+        $sql = "SELECT DATE_FORMAT(p.tanggal_beli_date, '%Y-%m') AS periode,
+                       s.nama_suplier,
+                       FLOOR(SUM(p.total) / 500) * 500 AS total_pembelian
+                FROM pembelian p
+                LEFT JOIN suplier s ON p.kode_suplier = s.kode_suplier
+                WHERE YEAR(p.tanggal_beli_date) = " . $tahun . "
+                GROUP BY periode, s.kode_suplier, s.nama_suplier
+                ORDER BY periode, s.nama_suplier";
+        return $this->db->query($sql);
+    }
+
+    public function laporan_tahunan_no_supplier($tahun)
+    {
+        $tahun = intval($tahun);
+        $sql = "SELECT DATE_FORMAT(p.tanggal_beli_date, '%Y-%m') AS periode,
+                       FLOOR(SUM(p.total) / 500) * 500 AS total_pembelian
+                FROM pembelian p
+                WHERE YEAR(p.tanggal_beli_date) = " . $tahun . "
+                GROUP BY periode
+                ORDER BY periode";
+        return $this->db->query($sql);
+    }
+
+    public function get_tahun_list()
+    {
+        return $this->db->query("SELECT DISTINCT YEAR(tanggal_beli_date) AS tahun FROM pembelian WHERE tanggal_beli_date IS NOT NULL ORDER BY tahun DESC")->result();
+    }
 }
 
 /* End of file Pembelian_model.php */

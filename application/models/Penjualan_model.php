@@ -301,6 +301,23 @@ class Penjualan_model extends CI_Model
 
         return $data;
     }
+
+    public function laporan_tahunan($tahun)
+    {
+        $tahun = intval($tahun);
+        $sql = "SELECT DATE_FORMAT(tanggal_jual_date, '%Y-%m') AS periode,
+                       FLOOR(SUM(total) / 500) * 500 AS total_penjualan
+                FROM penjualan
+                WHERE YEAR(tanggal_jual_date) = " . $tahun . "
+                GROUP BY periode
+                ORDER BY periode";
+        return $this->db->query($sql);
+    }
+
+    public function get_tahun_list()
+    {
+        return $this->db->query("SELECT DISTINCT YEAR(tanggal_jual_date) AS tahun FROM penjualan WHERE tanggal_jual_date IS NOT NULL ORDER BY tahun DESC")->result();
+    }
 }
 
 /* End of file Penjualan_model.php */

@@ -133,6 +133,44 @@
         <!-- END SAMPLE FORM PORTLET-->
     </div>
 
+    <div class="col-md-6">
+        <!-- BEGIN EXPORT TAHUNAN PORTLET-->
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-file-excel-o"></i> Export Laporan Penjualan Tahunan
+                </div>
+                <div class="tools">
+                    <a href="" class="collapse" data-original-title="" title=""></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br>
+                <?= form_open('laporan/export_jual_tahunan', 'class="form-inline" role="form"'); ?>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Pilih Tahun :</label>
+                    </div>
+                    <div class="col-md-5">
+                        <select name="tahun" class="form-control" required>
+                            <option value="">-- Pilih Tahun --</option>
+                            <?php foreach ($tahun_jual_list as $t) { ?>
+                                <option value="<?= $t->tahun ?>"><?= $t->tahun ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
+                    </div>
+                </div>
+                <br>
+                <p class="text-muted">Data akan dikelompokkan per bulan (periode) dengan total dibulatkan ke kelipatan 500.</p>
+                </form>
+            </div>
+        </div>
+        <!-- END EXPORT TAHUNAN PORTLET-->
+    </div>
+
     <div class="col-md-6 col-sm-12">
         <!-- BEGIN PORTLET-->
         <div class="portlet light ">
