@@ -146,13 +146,12 @@
             </div>
             <div class="portlet-body">
                 <br>
-                <?= form_open('laporan/export_jual_tahunan', 'class="form-inline" role="form"'); ?>
                 <div class="row">
                     <div class="col-md-3">
                         <label>Pilih Tahun :</label>
                     </div>
                     <div class="col-md-5">
-                        <select name="tahun" class="form-control" required>
+                        <select name="tahun" class="form-control select-tahun-jual" required>
                             <option value="">-- Pilih Tahun --</option>
                             <?php foreach ($tahun_jual_list as $t) { ?>
                                 <option value="<?= $t->tahun ?>"><?= $t->tahun ?></option>
@@ -160,12 +159,28 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
+                        <?= form_open('laporan/export_jual_tahunan', 'class="form-inline" role="form" style="display:inline;"'); ?>
+                            <input type="hidden" name="tahun" class="export-tahun-jual">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Excel</button>
+                        </form>
+                        <?= form_open('laporan/export_jual_tahunan_pdf', 'class="form-inline" role="form" style="display:inline;"'); ?>
+                            <input type="hidden" name="tahun" class="export-tahun-jual">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf-o"></i> PDF</button>
+                        </form>
                     </div>
                 </div>
                 <br>
                 <p class="text-muted">Data akan dikelompokkan per bulan (periode) dengan total dibulatkan ke kelipatan 500.</p>
-                </form>
+
+                <script>
+                    $(document).ready(function() {
+                        // Handle year selection for penjualan
+                        $('.select-tahun-jual').change(function() {
+                            var tahun = $(this).val();
+                            $('.export-tahun-jual').val(tahun);
+                        });
+                    });
+                </script>
             </div>
         </div>
         <!-- END EXPORT TAHUNAN PORTLET-->

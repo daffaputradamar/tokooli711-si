@@ -141,13 +141,12 @@
 			</div>
 			<div class="portlet-body">
 				<br>
-				<?= form_open('laporan/export_beli_tahunan', 'class="form-inline" role="form"'); ?>
 				<div class="row">
 					<div class="col-md-3">
 						<label>Pilih Tahun :</label>
 					</div>
 					<div class="col-md-5">
-						<select name="tahun" class="form-control" required>
+						<select name="tahun" class="form-control select-tahun" required>
 							<option value="">-- Pilih Tahun --</option>
 							<?php foreach ($tahun_beli_list as $t) { ?>
 								<option value="<?= $t->tahun ?>"><?= $t->tahun ?></option>
@@ -155,29 +154,46 @@
 						</select>
 					</div>
 					<div class="col-md-4">
-						<button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
+						<?= form_open('laporan/export_beli_tahunan', 'class="form-inline" role="form" style="display:inline;"'); ?>
+							<input type="hidden" name="tahun" class="export-tahun">
+							<input type="hidden" name="tampilkan_supplier" class="export-supplier" value="1">
+							<button type="submit" class="btn btn-success btn-export-csv"><i class="fa fa-download"></i> Excel</button>
+						</form>
+						<?= form_open('laporan/export_beli_tahunan_pdf', 'class="form-inline" role="form" style="display:inline;"'); ?>
+							<input type="hidden" name="tahun" class="export-tahun">
+							<input type="hidden" name="tampilkan_supplier" class="export-supplier" value="1">
+							<button type="submit" class="btn btn-danger btn-export-pdf"><i class="fa fa-file-pdf-o"></i> PDF</button>
+						</form>
 					</div>
 				</div>
 				<br>
 				<div class="row">
 					<div class="col-md-12">
 						<label style="font-weight: normal;">
-							<input type="checkbox" name="tampilkan_supplier" value="1" checked> Tampilkan Supplier Terpisah
+							<input type="checkbox" name="tampilkan_supplier" class="supplier-checkbox" value="1" checked> Tampilkan Supplier Terpisah
 						</label>
 					</div>
 				</div>
 				<br>
 				<p class="text-muted" id="desc_supplier">Data akan dikelompokkan per bulan (periode) dan per supplier dengan total dibulatkan ke kelipatan 500.</p>
 				<p class="text-muted" id="desc_no_supplier" style="display:none;">Data akan dikelompokkan per bulan (periode) dengan total dari semua supplier dibulatkan ke kelipatan 500.</p>
-				</form>
 
 				<script>
 					$(document).ready(function() {
-						$('input[name=tampilkan_supplier]').change(function() {
+						// Handle year selection
+						$('.select-tahun').change(function() {
+							var tahun = $(this).val();
+							$('.export-tahun').val(tahun);
+						});
+
+						// Handle supplier checkbox
+						$('.supplier-checkbox').change(function() {
 							if (this.checked) {
+								$('.export-supplier').val(1);
 								$('#desc_supplier').show();
 								$('#desc_no_supplier').hide();
 							} else {
+								$('.export-supplier').val(0);
 								$('#desc_supplier').hide();
 								$('#desc_no_supplier').show();
 							}

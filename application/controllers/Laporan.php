@@ -227,6 +227,61 @@ class Laporan extends CI_Controller
         exit;
     }
 
+    public function export_jual_tahunan_pdf()
+    {
+        $tahun = $this->input->post('tahun');
+        if (empty($tahun)) {
+            redirect('laporan/jual');
+            return;
+        }
+
+        $query = $this->Penjualan_model->laporan_tahunan($tahun);
+        $data_report = $query->result();
+
+        if (empty($data_report)) {
+            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            redirect('laporan/jual');
+            return;
+        }
+
+        $data['data_report'] = $data_report;
+        $data['tahun'] = $tahun;
+        $data['filename'] = 'Laporan_Penjualan_' . $tahun;
+        $this->load->view('laporan/pjual_tahunan_pdf', $data);
+    }
+
+    public function export_beli_tahunan_pdf()
+    {
+        $tahun = $this->input->post('tahun');
+        $tampilkan_supplier = $this->input->post('tampilkan_supplier');
+
+        if (empty($tahun)) {
+            redirect('laporan/beli');
+            return;
+        }
+
+        // Choose query based on supplier toggle
+        if ($tampilkan_supplier) {
+            $query = $this->Pembelian_model->laporan_tahunan($tahun);
+        } else {
+            $query = $this->Pembelian_model->laporan_tahunan_no_supplier($tahun);
+        }
+
+        $data_report = $query->result();
+
+        if (empty($data_report)) {
+            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            redirect('laporan/beli');
+            return;
+        }
+
+        $data['data_report'] = $data_report;
+        $data['tahun'] = $tahun;
+        $data['tampilkan_supplier'] = $tampilkan_supplier;
+        $data['filename'] = 'Laporan_Pembelian_' . $tahun;
+        $this->load->view('laporan/pbeli_tahunan_pdf', $data);
+    }
+
     public function laporan_barang()
     {
         if (isset($_GET['cari'])) {
