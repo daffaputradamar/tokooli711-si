@@ -378,7 +378,7 @@ class Penjualan extends CI_Controller
                     'harga_jual' => $harga_jual,
                     'harga_beli' => $harga_beli,
                     'jumlah' => $detail['jumlah'],
-                    'subtotal' => $detail['is_using_rupiah'] ? $detail['subtotal'] : (float)$harga_jual * (float)$detail['jumlah']
+                    'subtotal' => (float)$harga_jual * (float)$detail['jumlah']
                 ];
                 $totalall += $detail_data['subtotal'];
 
