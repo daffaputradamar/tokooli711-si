@@ -89,4 +89,20 @@ function kembalian() {
 </body>
 <!-- END BODY -->
 
+<script>
+    // Update server time in real-time
+    function updateServerTime() {
+        var now = new Date();
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+        var seconds = String(now.getSeconds()).padStart(2, '0');
+        var timeString = hours + ':' + minutes + ':' + seconds;
+        
+        document.getElementById('server-time').textContent = timeString;
+    }
+    
+    // Update time immediately and then every second
+    updateServerTime();
+    setInterval(updateServerTime, 1000);
+</script>
 </html>

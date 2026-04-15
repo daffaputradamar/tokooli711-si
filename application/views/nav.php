@@ -40,6 +40,27 @@
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
     <script src="<?=base_url();?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <style>
+        .server-time-item {
+            height: 100% !important;
+            display: flex !important;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: 600;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            margin-right: 15px;
+        }
+        .server-time-item i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        #server-time {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
@@ -72,6 +93,12 @@
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN SERVER TIME DISPLAY -->
+                    <li class="server-time-item">
+                        <i class="fa fa-clock-o"></i>
+                        <span id="server-time"><?php echo date('H:i:s'); ?></span>
+                    </li>
+                    <!-- END SERVER TIME DISPLAY -->
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                     <li class="dropdown dropdown-user dropdown-dark">
