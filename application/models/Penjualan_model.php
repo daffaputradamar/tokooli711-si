@@ -314,6 +314,35 @@ class Penjualan_model extends CI_Model
         return $this->db->query($sql);
     }
 
+    public function laporan_tahunan_with_option($tahun, $tipe = 'jual')
+    {
+        $tahun = intval($tahun);
+        // Use a date range to allow the DB to use an index on tanggal_jual_date
+        $start = $tahun . '-01-01';
+        $end = ($tahun + 1) . '-01-01';
+
+        if ($tipe == 'hpp') {
+            // Get total HPP (harga beli) — aggregate from detail table
+            $sql = "SELECT DATE_FORMAT(p.tanggal_jual_date, '%Y-%m') AS periode,
+                           FLOOR(SUM(pd.harga_beli * pd.jumlah) / 500) * 500 AS total_harga
+                    FROM penjualan p
+                    INNER JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
+                    WHERE p.tanggal_jual_date >= '" . $start . "' AND p.tanggal_jual_date < '" . $end . "'
+                    GROUP BY periode
+                    ORDER BY periode";
+        } else {
+            // Get total harga jual (default)
+            $sql = "SELECT DATE_FORMAT(tanggal_jual_date, '%Y-%m') AS periode,
+                           FLOOR(SUM(total) / 500) * 500 AS total_harga
+                    FROM penjualan
+                    WHERE tanggal_jual_date >= '" . $start . "' AND tanggal_jual_date < '" . $end . "'
+                    GROUP BY periode
+                    ORDER BY periode";
+        }
+
+        return $this->db->query($sql);
+    }
+
     public function get_tahun_list()
     {
         return $this->db->query("SELECT DISTINCT YEAR(tanggal_jual_date) AS tahun FROM penjualan WHERE tanggal_jual_date IS NOT NULL ORDER BY tahun DESC")->result();

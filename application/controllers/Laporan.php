@@ -20,6 +20,7 @@ class Laporan extends CI_Controller
         $this->load->model('Penjualan_detail_model');
         $this->load->model('Pembelian_detail_model');
         $this->load->model('CodeGenerator');
+        $this->load->model('Stok_cutoff_model');
     }
     public function beli()
     {
@@ -149,12 +150,17 @@ class Laporan extends CI_Controller
     public function export_jual_tahunan()
     {
         $tahun = $this->input->post('tahun');
+        $tipe = $this->input->post('tipe_harga');
+        if (empty($tipe)) {
+            $tipe = 'jual'; // default to harga jual
+        }
+        
         if (empty($tahun)) {
             redirect('laporan/jual');
             return;
         }
 
-        $query = $this->Penjualan_model->laporan_tahunan($tahun);
+        $query = $this->Penjualan_model->laporan_tahunan_with_option($tahun, $tipe);
         $data = $query->result();
 
         if (empty($data)) {
@@ -163,16 +169,20 @@ class Laporan extends CI_Controller
             return;
         }
 
+        // Determine header and filename based on tipe
+        $label_tipe = ($tipe == 'hpp') ? 'HPP (Harga Beli)' : 'Harga Jual';
+        $nama_file = ($tipe == 'hpp') ? 'Laporan_Penjualan_HPP_' . $tahun . '.csv' : 'Laporan_Penjualan_' . $tahun . '.csv';
+        
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="Laporan_Penjualan_' . $tahun . '.csv"');
+        header('Content-Disposition: attachment; filename="' . $nama_file . '"');
         $output = fopen('php://output', 'w');
         
         // Header
-        fputcsv($output, array('Periode', 'Total Penjualan'));
+        fputcsv($output, array('Periode', $label_tipe));
         
         // Data
         foreach ($data as $row) {
-            fputcsv($output, array($row->periode, $row->total_penjualan));
+            fputcsv($output, array($row->periode, $row->total_harga));
         }
         
         fclose($output);
@@ -230,12 +240,17 @@ class Laporan extends CI_Controller
     public function export_jual_tahunan_pdf()
     {
         $tahun = $this->input->post('tahun');
+        $tipe = $this->input->post('tipe_harga');
+        if (empty($tipe)) {
+            $tipe = 'jual'; // default to harga jual
+        }
+        
         if (empty($tahun)) {
             redirect('laporan/jual');
             return;
         }
 
-        $query = $this->Penjualan_model->laporan_tahunan($tahun);
+        $query = $this->Penjualan_model->laporan_tahunan_with_option($tahun, $tipe);
         $data_report = $query->result();
 
         if (empty($data_report)) {
@@ -246,7 +261,10 @@ class Laporan extends CI_Controller
 
         $data['data_report'] = $data_report;
         $data['tahun'] = $tahun;
-        $data['filename'] = 'Laporan_Penjualan_' . $tahun;
+        $data['tipe_harga'] = $tipe;
+        $label_tipe = ($tipe == 'hpp') ? 'HPP (Harga Beli)' : 'Harga Jual';
+        $data['label_tipe'] = $label_tipe;
+        $data['filename'] = ($tipe == 'hpp') ? 'Laporan_Penjualan_HPP_' . $tahun : 'Laporan_Penjualan_' . $tahun;
         $this->load->view('laporan/pjual_tahunan_pdf', $data);
     }
 
@@ -462,6 +480,101 @@ class Laporan extends CI_Controller
         $this->load->view('laporan/historystokbarangedit', $data);
         $this->load->view('foot');
 
+    }
+    /**
+     * Stock cut-off page: shows past cut-offs and lets admin create a new one.
+     */
+    public function stok_cutoff()
+    {
+        $this->load->view('nav');
+
+        $message = '';
+        $error   = '';
+
+        if ($_POST) {
+            $action  = $this->input->post('action');
+            $periode = $this->input->post('periode'); // YYYY-MM
+
+            if (empty($periode)) {
+                $error = 'Pilih periode terlebih dahulu.';
+            }
+            elseif ($action === 'cutoff')
+            {
+                if ($this->Stok_cutoff_model->is_cutoff_done($periode)) {
+                    $error = 'Cut-off untuk periode <strong>' . htmlspecialchars($periode) . '</strong> sudah pernah dilakukan. Hapus dulu jika ingin mengulang.';
+                }
+                else {
+                    $user = isset($_SESSION['nama_admin']) ? $_SESSION['nama_admin'] : 'admin';
+                    $this->Stok_cutoff_model->do_cutoff($periode, $user);
+                    $message = 'Cut-off stok untuk periode <strong>' . htmlspecialchars($periode) . '</strong> berhasil disimpan.';
+                }
+            }
+            elseif ($action === 'delete')
+            {
+                $this->Stok_cutoff_model->delete_cutoff($periode);
+                $message = 'Data cut-off periode <strong>' . htmlspecialchars($periode) . '</strong> berhasil dihapus.';
+            }
+        }
+
+        $data['cutoff_list'] = $this->Stok_cutoff_model->get_periode_list();
+        $data['message']     = $message;
+        $data['error']       = $error;
+
+        $this->load->view('laporan/stok_cutoff', $data);
+        $this->load->view('foot');
+    }
+
+    /**
+     * Export a single period's cut-off as a printable PDF-style view.
+     */
+    public function export_cutoff_pdf($periode)
+    {
+        $periode = urldecode($periode);
+
+        $rows = $this->Stok_cutoff_model->get_cutoff_detail($periode);
+
+        if (empty($rows)) {
+            show_404();
+        }
+
+        $data['rows']    = $rows;
+        $data['periode'] = $periode;
+        $this->load->view('laporan/stok_cutoff_pdf', $data);
+    }
+
+    /**
+     * Export a single period's cut-off as CSV.
+     */
+    public function export_cutoff_csv($periode)
+    {
+        $periode = urldecode($periode);
+
+        $rows = $this->Stok_cutoff_model->get_cutoff_detail($periode);
+
+        if (empty($rows)) {
+            show_404();
+        }
+
+        $filename = 'Cutoff_Stok_' . $periode . '.csv';
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $out = fopen('php://output', 'w');
+
+        fputcsv($out, array('Kode Barang', 'Nama Barang', 'Merk', 'Stok', 'Harga Beli', 'Harga Jual', 'Nilai Stok (Beli)', 'Nilai Stok (Jual)'));
+        foreach ($rows as $row) {
+            fputcsv($out, array(
+                $row->kode_barang,
+                $row->nama_barang,
+                $row->merk,
+                $row->stok,
+                $row->harga_beli,
+                $row->harga_jual,
+                $row->nilai_stok_beli,
+                $row->nilai_stok_jual
+            ));
+        }
+        fclose($out);
+        exit;
     }
 }
 

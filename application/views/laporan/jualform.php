@@ -132,7 +132,8 @@
         </div>
         <!-- END SAMPLE FORM PORTLET-->
     </div>
-
+</div>
+<div class="row">
     <div class="col-md-6">
         <!-- BEGIN EXPORT TAHUNAN PORTLET-->
         <div class="portlet box green">
@@ -158,13 +159,34 @@
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                  </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Jenis Harga :</label>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group" style="display: inline-block; margin-right: 20px;">
+                            <input type="radio" id="tipe_harga_jual" name="tipe_harga_option" value="jual" checked>
+                            <label for="tipe_harga_jual" style="display: inline; margin-left: 5px; cursor: pointer;"> Harga Jual </label>
+                        </div>
+                        <div class="form-group" style="display: inline-block;">
+                            <input type="radio" id="tipe_harga_hpp" name="tipe_harga_option" value="hpp">
+                            <label for="tipe_harga_hpp" style="display: inline; margin-left: 5px; cursor: pointer;"> HPP (Harga Beli) </label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-8">
                         <?= form_open('laporan/export_jual_tahunan', 'class="form-inline" role="form" style="display:inline;"'); ?>
                             <input type="hidden" name="tahun" class="export-tahun-jual">
+                            <input type="hidden" name="tipe_harga" class="export-tipe-harga" value="jual">
                             <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Excel</button>
                         </form>
                         <?= form_open('laporan/export_jual_tahunan_pdf', 'class="form-inline" role="form" style="display:inline;"'); ?>
                             <input type="hidden" name="tahun" class="export-tahun-jual">
+                            <input type="hidden" name="tipe_harga" class="export-tipe-harga" value="jual">
                             <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf-o"></i> PDF</button>
                         </form>
                     </div>
@@ -178,6 +200,12 @@
                         $('.select-tahun-jual').change(function() {
                             var tahun = $(this).val();
                             $('.export-tahun-jual').val(tahun);
+                        });
+                        
+                        // Handle tipe harga selection
+                        $('input[name="tipe_harga_option"]').change(function() {
+                            var tipe = $(this).val();
+                            $('.export-tipe-harga').val(tipe);
                         });
                     });
                 </script>
@@ -253,7 +281,6 @@
         </div>
         <!-- END PORTLET-->
     </div>
-
 </div>
 <script>
     $(document).ready(function() {

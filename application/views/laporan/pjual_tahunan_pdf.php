@@ -146,7 +146,7 @@
 
 	<div id="printContent">
 		<div class="report-header">
-			<h1>LAPORAN PENJUALAN TAHUNAN <?= $tahun ?></h1>
+			<h1>LAPORAN PENJUALAN TAHUNAN <?= $tahun ?> - <?= isset($label_tipe) ? $label_tipe : 'Harga Jual' ?></h1>
 			<p>Data Penjualan per Periode</p>
 		</div>
 
@@ -154,18 +154,20 @@
 			<thead>
 				<tr>
 					<th>Periode</th>
-					<th class="text-right">Total Penjualan</th>
+					<th class="text-right"><?= isset($label_tipe) ? $label_tipe : 'Total Penjualan' ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 				$total = 0;
 				foreach ($data_report as $row):
-					$total += $row->total_penjualan;
+					// Support both old format (total_penjualan) and new format (total_harga)
+					$nilai = isset($row->total_harga) ? $row->total_harga : $row->total_penjualan;
+					$total += $nilai;
 				?>
 					<tr>
 						<td><?= $row->periode ?></td>
-						<td class="text-right"><?= number_format($row->total_penjualan, 0, ',', '.') ?></td>
+						<td class="text-right"><?= number_format($nilai, 0, ',', '.') ?></td>
 					</tr>
 				<?php endforeach; ?>
 				<tr class="total-row">

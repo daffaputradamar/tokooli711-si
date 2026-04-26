@@ -224,6 +224,10 @@
                                     Laporan History Stok Barang</a>
                             </li>
                             <li>
+                                <a href="<?= base_url() ?>laporan/stok_cutoff">
+                                    Cut-off Stok Bulanan</a>
+                            </li>
+                            <li>
                                 <a href="<?= base_url() ?>laporan/beli">
                                     Laporan Pembelian</a>
                             </li>
