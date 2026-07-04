@@ -22,6 +22,16 @@ class Sync extends CI_Controller
         $this->load->model('Barang_model');
         $this->load->model('CodeGenerator');
         session_start();
+        
+        // Set CORS headers once in constructor
+        // $this->output->set_header('Access-Control-Allow-Origin: *');
+        // $this->output->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        // $this->output->set_header('Access-Control-Allow-Headers: Content-Type');
+        
+        // Handle preflight requests
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit;
+        }
     }
 
     /**
@@ -53,7 +63,6 @@ class Sync extends CI_Controller
     {
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'sync_enabled' => $this->config->item('sync_enabled'),
@@ -89,7 +98,6 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'date' => $date_formatted,
@@ -125,7 +133,6 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'date' => $date_formatted,
@@ -144,7 +151,6 @@ class Sync extends CI_Controller
         if (empty($kode_jual)) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'kode_jual is required'
@@ -156,7 +162,6 @@ class Sync extends CI_Controller
         if (!$penjualan) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'Transaction not found'
@@ -196,7 +201,6 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'data' => $result
@@ -213,7 +217,6 @@ class Sync extends CI_Controller
         if (empty($kode_beli)) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'kode_beli is required'
@@ -225,7 +228,6 @@ class Sync extends CI_Controller
         if (!$pembelian) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'Transaction not found'
@@ -257,7 +259,6 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'data' => $result
@@ -275,7 +276,6 @@ class Sync extends CI_Controller
         if (empty($codes)) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'codes array is required'
@@ -296,7 +296,6 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'existing' => $existing,
@@ -315,7 +314,6 @@ class Sync extends CI_Controller
         if (empty($codes)) {
             return $this->output
                 ->set_content_type('application/json')
-                ->set_header('Access-Control-Allow-Origin: *')
                 ->set_output(json_encode(array(
                     'status' => false,
                     'message' => 'codes array is required'
@@ -336,14 +334,108 @@ class Sync extends CI_Controller
         
         return $this->output
             ->set_content_type('application/json')
-            ->set_header('Access-Control-Allow-Origin: *')
             ->set_output(json_encode(array(
                 'status' => true,
                 'existing' => $existing,
                 'missing' => $missing
             )));
     }
-}
 
-/* End of file Sync.php */
-/* Location: ./application/controllers/Sync.php */
+    /**
+     * API endpoint to get all barang stock data for syncing
+     * Returns kode_barang, nama_barang, stok for every item
+     */
+    public function get_all_barang_stock()
+    {
+        // if (!$this->config->item('sync_receive_enabled')) {
+        //     return $this->output
+        //         ->set_content_type('application/json')
+        //         ->set_output(json_encode(array(
+        //             'status' => false,
+        //             'message' => 'Sync receive is disabled on this server'
+        //         )));
+        // }
+
+        $barang_list = $this->Barang_model->selectByAll();
+        $result = array();
+
+        foreach ($barang_list as $barang) {
+            $result[] = array(
+                'kode_barang'  => $barang->kode_barang,
+                'nama_barang'  => $barang->nama_barang,
+                'stok'         => (int) $barang->stok,
+            );
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status' => true,
+                'data'   => $result,
+                'count'  => count($result)
+            )));
+    }
+
+    /**
+     * API endpoint to receive and apply stock data from another server.
+     * Expects JSON body: { "items": [ { kode_barang, stok }, ... ] }
+     * Only updates stock field.
+     */
+    public function receive_barang_stock()
+    {
+        if (!$this->config->item('sync_receive_enabled')) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status'  => false,
+                    'message' => 'Sync receive is disabled on this server'
+                )));
+        }
+
+        $input = json_decode($this->input->raw_input_stream, true);
+        $items = isset($input['items']) ? $input['items'] : array();
+
+        if (empty($items) || !is_array($items)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status'  => false,
+                    'message' => 'items array is required'
+                )));
+        }
+
+        $updated = 0;
+        $skipped = 0;
+        $errors  = array();
+
+        foreach ($items as $item) {
+            $kode_barang = isset($item['kode_barang']) ? trim($item['kode_barang']) : null;
+            $stok        = isset($item['stok'])        ? intval($item['stok'])        : null;
+
+            if (empty($kode_barang) || $stok === null) {
+                $skipped++;
+                continue;
+            }
+
+            $existing = $this->Barang_model->selectById($kode_barang);
+            if (!$existing) {
+                $errors[] = $kode_barang . ' tidak ditemukan';
+                $skipped++;
+                continue;
+            }
+
+            $update_data = array('stok' => $stok);
+            $this->Barang_model->update($kode_barang, $update_data, 'sync');
+            $updated++;
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status'  => true,
+                'updated' => $updated,
+                'skipped' => $skipped,
+                'errors'  => $errors
+            )));
+    }
+}

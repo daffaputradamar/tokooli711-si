@@ -149,6 +149,73 @@
                 </div>
             </div>
 
+            <!-- Sinkronisasi Stok Barang -->
+            <hr>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-12">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading" style="font-size: 14px;">
+                            <i class="fa fa-cubes"></i> <strong>Sinkronisasi Stok Barang</strong>
+                            <span class="label label-default pull-right" style="margin-top: 2px; font-size: 12px;">Perbandingan Stok Barang</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="margin-bottom: 15px;">
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-warning btn-lg" onclick="checkStokSync()" id="btn_check_stok" style="padding: 10px 25px; font-size: 15px;">
+                                        <i class="fa fa-search"></i> Cek Perbedaan Stok
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="stok_status" class="text-center" style="padding: 15px;">
+                                <p class="text-muted" style="font-size: 14px;">
+                                    <i class="fa fa-hand-pointer-o"></i> Klik tombol di atas untuk membandingkan stok antar server
+                                </p>
+                            </div>
+
+                            <div id="stok_result" style="display: none;">
+                                <div id="stok_summary" style="font-size: 14px; padding: 12px; background: #f9f9f9; border-radius: 5px; margin-bottom: 10px;"></div>
+
+                                <div id="stok_ok" style="display: none;">
+                                    <div class="alert alert-success text-center" style="font-size: 16px; padding: 15px;">
+                                        <i class="fa fa-check-circle fa-2x"></i><br><br>
+                                        <strong>Stok semua barang sudah sama di kedua server!</strong>
+                                    </div>
+                                </div>
+
+                                <div id="stok_diff" style="display: none;">
+                                    <div class="alert alert-warning" style="font-size: 13px; margin-bottom: 10px;">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                    <strong id="stok_diff_count"></strong> barang memiliki perbedaan stok.
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered table-condensed" style="font-size: 13px;" id="stok_diff_table">
+                                            <thead style="background: #f5f5f5;">
+                                                <tr>
+                                                    <th>Kode Barang</th>
+                                                    <th>Nama Barang</th>
+                                                    <th class="text-center">Stok (Sini)</th>
+                                                    <th class="text-center">Stok (Tujuan)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="stok_diff_tbody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-center" style="margin-top: 10px;">
+                                        <button class="btn btn-danger btn-lg" onclick="pushStokToRemote()" id="btn_push_stok" style="font-size: 14px; margin-right: 10px;">
+                                            <i class="fa fa-upload"></i> Kirim Stok Server Ini ke Server Tujuan
+                                        </button>
+                                        <button class="btn btn-info btn-lg" onclick="pullStokFromRemote()" id="btn_pull_stok" style="font-size: 14px;">
+                                            <i class="fa fa-download"></i> Ambil Stok dari Server Tujuan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Pengaturan Lanjutan (Tersembunyi secara default) -->
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-12">
@@ -513,5 +580,182 @@
         if (successCount > 0) {
             setTimeout(function() { checkPembelianSync(); }, 1000);
         }
+    }
+
+    // ── Stok Sync ──────────────────────────────────────────────────────────────
+
+    let localStokData  = [];
+    let remoteStokData = [];
+    let stokDiffItems  = [];
+
+    function formatRupiah(val) {
+        return 'Rp ' + parseInt(val).toLocaleString('id-ID');
+    }
+
+    async function checkStokSync() {
+        const btn = document.getElementById('btn_check_stok');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sedang Memeriksa...';
+
+        document.getElementById('stok_status').style.display    = 'none';
+        document.getElementById('stok_result').style.display    = 'none';
+        document.getElementById('stok_ok').style.display        = 'none';
+        document.getElementById('stok_diff').style.display      = 'none';
+
+        logMessage('Memeriksa perbedaan stok barang...', 'info');
+
+        try {
+            const localRes  = await fetch(BASE_URL + 'sync/get_all_barang_stock');
+            const localData = await parseJsonSafe(localRes);
+
+            const remoteRes  = await fetch(SYNC_TARGET_URL + '/sync/get_all_barang_stock');
+            const remoteData = await parseJsonSafe(remoteRes);
+
+            if (!localData.status || !remoteData.status) {
+                throw new Error('Gagal mengambil data stok: ' + (!localData.status ? 'server lokal' : 'server tujuan'));
+            }
+
+            localStokData  = localData.data;
+            remoteStokData = remoteData.data;
+
+            const remoteMap = {};
+            remoteData.data.forEach(function(item) { remoteMap[item.kode_barang] = item; });
+
+            stokDiffItems = [];
+            localData.data.forEach(function(local) {
+                const remote = remoteMap[local.kode_barang];
+                const stokDiff  = !remote || parseInt(local.stok) !== parseInt(remote.stok);
+                if (stokDiff) {
+                    stokDiffItems.push({
+                        kode_barang:  local.kode_barang,
+                        nama_barang:  local.nama_barang,
+                        local_stok:   local.stok,
+                        remote_stok:  remote ? remote.stok : 'N/A',
+                    });
+                }
+            });
+
+            document.getElementById('stok_result').style.display = 'block';
+            document.getElementById('stok_summary').innerHTML =
+                '<p><i class="fa fa-database"></i> <strong>Server Ini:</strong> '   + localData.count  + ' barang</p>' +
+                '<p><i class="fa fa-cloud"></i> <strong>Server Tujuan:</strong> ' + remoteData.count + ' barang</p>';
+
+            if (stokDiffItems.length === 0) {
+                document.getElementById('stok_ok').style.display   = 'block';
+                logMessage('✓ Stok semua barang sudah sama di kedua server', 'success');
+            } else {
+                document.getElementById('stok_diff').style.display = 'block';
+                document.getElementById('stok_diff_count').textContent = stokDiffItems.length;
+
+                const tbody = document.getElementById('stok_diff_tbody');
+                tbody.innerHTML = '';
+                stokDiffItems.forEach(function(item) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =
+                        '<td><code>' + item.kode_barang + '</code></td>' +
+                        '<td>' + item.nama_barang + '</td>' +
+                        '<td class="text-center bg-danger text-white">' + item.local_stok  + '</td>' +
+                        '<td class="text-center bg-danger text-white">' + item.remote_stok + '</td>';
+                    tbody.appendChild(tr);
+                });
+                logMessage('⚠️ Ditemukan ' + stokDiffItems.length + ' barang dengan perbedaan stok', 'warning');
+            }
+
+        } catch (error) {
+            document.getElementById('stok_result').style.display = 'block';
+            document.getElementById('stok_summary').innerHTML =
+                '<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> ' + error.message + '</div>';
+            logMessage('Error saat cek stok: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-search"></i> Cek Perbedaan Stok &amp; Harga';
+    }
+
+    async function pushStokToRemote() {
+        if (!SYNC_ENABLED) {
+            alert('Maaf, fitur kirim data tidak aktif untuk aplikasi ini.\nHubungi administrator untuk mengaktifkan.');
+            return;
+        }
+
+        if (localStokData.length === 0) {
+            alert('Lakukan pengecekan terlebih dahulu.');
+            return;
+        }
+
+        if (!confirm('Anda akan mengirim data stok dari server ini ke server tujuan (' + SYNC_TARGET_URL + ').\n\nStok di server tujuan akan ditimpa.\n\nLanjutkan?')) {
+            return;
+        }
+
+        const btn = document.getElementById('btn_push_stok');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mengirim...';
+        logMessage('Mengirim stok ke server tujuan...', 'info');
+
+        try {
+            const res    = await fetch(SYNC_TARGET_URL + '/sync/receive_barang_stock', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ items: localStokData }),
+            });
+            const result = await parseJsonSafe(res);
+
+            if (result.status) {
+                const msg = 'Berhasil update ' + result.updated + ' barang, lewati ' + result.skipped + ' barang';
+                alert('Selesai!\n\n' + msg + (result.errors.length ? '\n\nItem tidak ditemukan di server tujuan:\n' + result.errors.join(', ') : ''));
+                logMessage('✓ Push stok selesai: ' + msg, 'success');
+                setTimeout(checkStokSync, 800);
+            } else {
+                alert('Gagal: ' + result.message);
+                logMessage('✗ Push stok gagal: ' + result.message, 'error');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            logMessage('✗ Error push stok: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-upload"></i> Kirim Stok Server Ini ke Server Tujuan';
+    }
+
+    async function pullStokFromRemote() {
+        if (remoteStokData.length === 0) {
+            alert('Lakukan pengecekan terlebih dahulu.');
+            return;
+        }
+
+        if (!confirm('Anda akan mengambil data stok dari server tujuan (' + SYNC_TARGET_URL + ') ke server ini.\n\nStok di server ini akan ditimpa.\n\nLanjutkan?')) {
+            return;
+        }
+
+        const btn = document.getElementById('btn_pull_stok');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mengambil...';
+        logMessage('Mengambil stok dari server tujuan...', 'info');
+
+        try {
+            const res    = await fetch(BASE_URL + 'sync/receive_barang_stock', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ items: remoteStokData }),
+            });
+            const result = await parseJsonSafe(res);
+
+            if (result.status) {
+                const msg = 'Berhasil update ' + result.updated + ' barang, lewati ' + result.skipped + ' barang';
+                alert('Selesai!\n\n' + msg + (result.errors.length ? '\n\nItem tidak ditemukan:\n' + result.errors.join(', ') : ''));
+                logMessage('✓ Pull stok selesai: ' + msg, 'success');
+                setTimeout(checkStokSync, 800);
+            } else {
+                alert('Gagal: ' + result.message);
+                logMessage('✗ Pull stok gagal: ' + result.message, 'error');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            logMessage('✗ Error pull stok: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-download"></i> Ambil Stok dari Server Tujuan';
     }
 </script>
