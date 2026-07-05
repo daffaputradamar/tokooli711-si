@@ -6,10 +6,11 @@
 
         <div class="panel-body">
 
-            <?php if ($this->uri->segment(2) == "insert") {
+            <?php $is_insert = ($this->uri->segment(2) == "insert"); ?>
+            <?php if ($is_insert) {
                 echo form_open('Barang/insert');
             } else {
-                echo form_open('Barang/update/'.$this->uri->segment(3));
+                echo form_open('Barang/update/'.$this->uri->segment(3), array('id' => 'formBarangUpdate'));
             } ?>
 
 
@@ -52,7 +53,7 @@
             <div class="form-group">
                 <label for=>Harga Beli <?php echo form_error('harga_beli') ?></label>
                 <input type="number" class="form-control" name="harga_beli" id="harga_beli" placeholder="Harga Beli"
-                    value="<?php echo $harga_beli; ?>" />
+                    value="<?php echo $harga_beli; ?>" data-original="<?php echo $harga_beli; ?>" />
             </div>
             <div class="form-group">
                 <label for=>Harga Jual <?php echo form_error('harga_jual') ?></label>
@@ -76,3 +77,69 @@
 
     </div>
 </div>
+
+<?php if (!$is_insert): ?>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("formBarangUpdate");
+    const hargaBeliInput = document.getElementById("harga_beli");
+    const originalHargaBeli = parseInt(hargaBeliInput.getAttribute("data-original"));
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const submitter = e.submitter || form.querySelector('button[type="submit"]');
+        submitter.disabled = true;
+        const origText = submitter.textContent;
+        submitter.textContent = "Proses...";
+
+        const formData = new FormData(form);
+        const values = new URLSearchParams(formData);
+
+        fetch("<?= base_url('Barang/update/'.$this->uri->segment(3)) ?>", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            body: values.toString(),
+        })
+        .then(response => response.text())
+        .then(data => {
+            const result = JSON.parse(data.trim());
+
+            if (!result.status) {
+                alert("Gagal menyimpan data");
+                submitter.disabled = false;
+                submitter.textContent = origText;
+                return;
+            }
+
+            const hargaBeliChanged = parseInt(hargaBeliInput.value) !== originalHargaBeli;
+
+            if (hargaBeliChanged && result.sync_enabled) {
+                return fetch(result.sync_target_url + "/sync/receive_barang_harga", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        items: [{
+                            kode_barang: result.kode_barang,
+                            harga_beli: result.harga_beli,
+                        }]
+                    }),
+                });
+            }
+        })
+        .then(() => {
+            location.href = "<?= site_url('barang') ?>";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            location.href = "<?= site_url('barang') ?>";
+        });
+    });
+});
+</script>
+<?php endif; ?>

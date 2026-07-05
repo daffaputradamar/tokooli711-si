@@ -216,6 +216,80 @@
                 </div>
             </div>
 
+            <!-- Sinkronisasi Harga Barang -->
+            <hr>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading" style="font-size: 14px;">
+                            <i class="fa fa-money"></i> <strong>Sinkronisasi Harga Barang</strong>
+                            <span class="label label-default pull-right" style="margin-top: 2px; font-size: 12px;">Harga Beli &amp; Harga Jual</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="alert alert-info" style="font-size: 13px;">
+                                <i class="fa fa-info-circle"></i>
+                                Saat menerima update <strong>harga_beli</strong>, sistem otomatis menghitung <strong>harga_jual</strong>
+                                = (harga_beli + 10%) dan dibulatkan ke ratusan terdekat.
+                            </div>
+                            <div class="row" style="margin-bottom: 15px;">
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-danger btn-lg" onclick="checkHargaSync()" id="btn_check_harga" style="padding: 10px 25px; font-size: 15px;">
+                                        <i class="fa fa-search"></i> Cek Perbedaan Harga
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="harga_status" class="text-center" style="padding: 15px;">
+                                <p class="text-muted" style="font-size: 14px;">
+                                    <i class="fa fa-hand-pointer-o"></i> Klik tombol di atas untuk membandingkan harga antar server
+                                </p>
+                            </div>
+
+                            <div id="harga_result" style="display: none;">
+                                <div id="harga_summary" style="font-size: 14px; padding: 12px; background: #f9f9f9; border-radius: 5px; margin-bottom: 10px;"></div>
+
+                                <div id="harga_ok" style="display: none;">
+                                    <div class="alert alert-success text-center" style="font-size: 16px; padding: 15px;">
+                                        <i class="fa fa-check-circle fa-2x"></i><br><br>
+                                        <strong>Harga semua barang sudah sama di kedua server!</strong>
+                                    </div>
+                                </div>
+
+                                <div id="harga_diff" style="display: none;">
+                                    <div class="alert alert-warning" style="font-size: 13px; margin-bottom: 10px;">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                    <strong id="harga_diff_count"></strong> barang memiliki perbedaan harga.
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered table-condensed" style="font-size: 13px;" id="harga_diff_table">
+                                            <thead style="background: #f5f5f5;">
+                                                <tr>
+                                                    <th>Kode Barang</th>
+                                                    <th>Nama Barang</th>
+                                                    <th class="text-center">Harga Beli (Sini)</th>
+                                                    <th class="text-center">Harga Beli (Tujuan)</th>
+                                                    <th class="text-center">Harga Jual (Sini)</th>
+                                                    <th class="text-center">Harga Jual (Tujuan)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="harga_diff_tbody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-center" style="margin-top: 10px;">
+                                        <button class="btn btn-danger btn-lg" onclick="pushHargaToRemote()" id="btn_push_harga" style="font-size: 14px; margin-right: 10px;">
+                                            <i class="fa fa-upload"></i> Kirim Harga Server Ini ke Server Tujuan
+                                        </button>
+                                        <button class="btn btn-info btn-lg" onclick="pullHargaFromRemote()" id="btn_pull_harga" style="font-size: 14px;">
+                                            <i class="fa fa-download"></i> Ambil Harga dari Server Tujuan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Pengaturan Lanjutan (Tersembunyi secara default) -->
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-12">
@@ -669,7 +743,7 @@
         }
 
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa fa-search"></i> Cek Perbedaan Stok &amp; Harga';
+        btn.innerHTML = '<i class="fa fa-search"></i> Cek Perbedaan Stok';
     }
 
     async function pushStokToRemote() {
@@ -757,5 +831,184 @@
 
         btn.disabled = false;
         btn.innerHTML = '<i class="fa fa-download"></i> Ambil Stok dari Server Tujuan';
+    }
+
+    // ── Harga Sync ─────────────────────────────────────────────────────────────
+
+    let localHargaData  = [];
+    let remoteHargaData = [];
+    let hargaDiffItems  = [];
+
+    async function checkHargaSync() {
+        const btn = document.getElementById('btn_check_harga');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sedang Memeriksa...';
+
+        document.getElementById('harga_status').style.display   = 'none';
+        document.getElementById('harga_result').style.display   = 'none';
+        document.getElementById('harga_ok').style.display       = 'none';
+        document.getElementById('harga_diff').style.display     = 'none';
+
+        logMessage('Memeriksa perbedaan harga barang...', 'info');
+
+        try {
+            const localRes  = await fetch(BASE_URL + 'sync/get_all_barang_harga');
+            const localData = await parseJsonSafe(localRes);
+
+            const remoteRes  = await fetch(SYNC_TARGET_URL + '/sync/get_all_barang_harga');
+            const remoteData = await parseJsonSafe(remoteRes);
+
+            if (!localData.status || !remoteData.status) {
+                throw new Error('Gagal mengambil data harga: ' + (!localData.status ? 'server lokal' : 'server tujuan'));
+            }
+
+            localHargaData  = localData.data;
+            remoteHargaData = remoteData.data;
+
+            const remoteMap = {};
+            remoteData.data.forEach(function(item) { remoteMap[item.kode_barang] = item; });
+
+            hargaDiffItems = [];
+            localData.data.forEach(function(local) {
+                const remote = remoteMap[local.kode_barang];
+                const hargaDiff = !remote ||
+                    parseInt(local.harga_beli) !== parseInt(remote.harga_beli) ||
+                    parseInt(local.harga_jual) !== parseInt(remote.harga_jual);
+                if (hargaDiff) {
+                    hargaDiffItems.push({
+                        kode_barang:      local.kode_barang,
+                        nama_barang:      local.nama_barang,
+                        local_harga_beli:  local.harga_beli,
+                        remote_harga_beli: remote ? remote.harga_beli : 'N/A',
+                        local_harga_jual:  local.harga_jual,
+                        remote_harga_jual: remote ? remote.harga_jual : 'N/A',
+                    });
+                }
+            });
+
+            document.getElementById('harga_result').style.display = 'block';
+            document.getElementById('harga_summary').innerHTML =
+                '<p><i class="fa fa-database"></i> <strong>Server Ini:</strong> '   + localData.count  + ' barang</p>' +
+                '<p><i class="fa fa-cloud"></i> <strong>Server Tujuan:</strong> ' + remoteData.count + ' barang</p>';
+
+            if (hargaDiffItems.length === 0) {
+                document.getElementById('harga_ok').style.display  = 'block';
+                logMessage('✓ Harga semua barang sudah sama di kedua server', 'success');
+            } else {
+                document.getElementById('harga_diff').style.display = 'block';
+                document.getElementById('harga_diff_count').textContent = hargaDiffItems.length;
+
+                const tbody = document.getElementById('harga_diff_tbody');
+                tbody.innerHTML = '';
+                hargaDiffItems.forEach(function(item) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =
+                        '<td><code>' + item.kode_barang + '</code></td>' +
+                        '<td>' + item.nama_barang + '</td>' +
+                        '<td class="text-right bg-danger text-white">' + formatRupiah(item.local_harga_beli)  + '</td>' +
+                        '<td class="text-right bg-danger text-white">' + formatRupiah(item.remote_harga_beli) + '</td>' +
+                        '<td class="text-right bg-danger text-white">' + formatRupiah(item.local_harga_jual)  + '</td>' +
+                        '<td class="text-right bg-danger text-white">' + formatRupiah(item.remote_harga_jual) + '</td>';
+                    tbody.appendChild(tr);
+                });
+                logMessage('⚠️ Ditemukan ' + hargaDiffItems.length + ' barang dengan perbedaan harga', 'warning');
+            }
+
+        } catch (error) {
+            document.getElementById('harga_result').style.display = 'block';
+            document.getElementById('harga_summary').innerHTML =
+                '<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> ' + error.message + '</div>';
+            logMessage('Error saat cek harga: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-search"></i> Cek Perbedaan Harga';
+    }
+
+    async function pushHargaToRemote() {
+        if (!SYNC_ENABLED) {
+            alert('Maaf, fitur kirim data tidak aktif untuk aplikasi ini.\nHubungi administrator untuk mengaktifkan.');
+            return;
+        }
+
+        if (localHargaData.length === 0) {
+            alert('Lakukan pengecekan terlebih dahulu.');
+            return;
+        }
+
+        if (!confirm('Anda akan mengirim data harga dari server ini ke server tujuan (' + SYNC_TARGET_URL + ').\n\nHarga di server tujuan akan ditimpa dan harga_jual akan dihitung otomatis (+10%, dibulatkan).\n\nLanjutkan?')) {
+            return;
+        }
+
+        const btn = document.getElementById('btn_push_harga');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mengirim...';
+        logMessage('Mengirim harga ke server tujuan...', 'info');
+
+        try {
+            const res    = await fetch(SYNC_TARGET_URL + '/sync/receive_barang_harga', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ items: localHargaData }),
+            });
+            const result = await parseJsonSafe(res);
+
+            if (result.status) {
+                const msg = 'Berhasil update ' + result.updated + ' barang, lewati ' + result.skipped + ' barang';
+                alert('Selesai!\n\n' + msg + (result.errors.length ? '\n\nItem tidak ditemukan di server tujuan:\n' + result.errors.join(', ') : ''));
+                logMessage('✓ Push harga selesai: ' + msg, 'success');
+                setTimeout(checkHargaSync, 800);
+            } else {
+                alert('Gagal: ' + result.message);
+                logMessage('✗ Push harga gagal: ' + result.message, 'error');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            logMessage('✗ Error push harga: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-upload"></i> Kirim Harga Server Ini ke Server Tujuan';
+    }
+
+    async function pullHargaFromRemote() {
+        if (remoteHargaData.length === 0) {
+            alert('Lakukan pengecekan terlebih dahulu.');
+            return;
+        }
+
+        if (!confirm('Anda akan mengambil data harga dari server tujuan (' + SYNC_TARGET_URL + ') ke server ini.\n\nHarga di server ini akan ditimpa dan harga_jual akan dihitung otomatis (+10%, dibulatkan).\n\nLanjutkan?')) {
+            return;
+        }
+
+        const btn = document.getElementById('btn_pull_harga');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mengambil...';
+        logMessage('Mengambil harga dari server tujuan...', 'info');
+
+        try {
+            const res    = await fetch(BASE_URL + 'sync/receive_barang_harga', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ items: remoteHargaData }),
+            });
+            const result = await parseJsonSafe(res);
+
+            if (result.status) {
+                const msg = 'Berhasil update ' + result.updated + ' barang, lewati ' + result.skipped + ' barang';
+                alert('Selesai!\n\n' + msg + (result.errors.length ? '\n\nItem tidak ditemukan:\n' + result.errors.join(', ') : ''));
+                logMessage('✓ Pull harga selesai: ' + msg, 'success');
+                setTimeout(checkHargaSync, 800);
+            } else {
+                alert('Gagal: ' + result.message);
+                logMessage('✗ Pull harga gagal: ' + result.message, 'error');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            logMessage('✗ Error pull harga: ' + error.message, 'error');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-download"></i> Ambil Harga dari Server Tujuan';
     }
 </script>

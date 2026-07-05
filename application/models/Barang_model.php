@@ -200,6 +200,9 @@ class Barang_model extends CI_Model
 
         $this->db->where($this->primary, $id);
         $this->db->update($this->table, $data);
+
+        // Return true if harga_beli changed (for sync trigger)
+        return isset($data['harga_beli']) && $data['harga_beli'] != $current_data->harga_beli;
     }
 
     public function delete($id)

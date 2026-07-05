@@ -342,6 +342,103 @@ class Sync extends CI_Controller
     }
 
     /**
+     * API endpoint to get all barang price data for syncing
+     * Returns kode_barang, nama_barang, harga_beli, harga_jual for every item
+     */
+    public function get_all_barang_harga()
+    {
+        $barang_list = $this->Barang_model->selectByAll();
+        $result = array();
+
+        foreach ($barang_list as $barang) {
+            $result[] = array(
+                'kode_barang'  => $barang->kode_barang,
+                'nama_barang'  => $barang->nama_barang,
+                'harga_beli'   => (int) $barang->harga_beli,
+                'harga_jual'   => (int) $barang->harga_jual,
+            );
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status' => true,
+                'data'   => $result,
+                'count'  => count($result)
+            )));
+    }
+
+    /**
+     * API endpoint to receive and apply harga data from another server.
+     * When harga_beli is updated, automatically calculates harga_jual
+     * as (harga_beli * 1.1) rounded to nearest 100.
+     * Expects JSON body: { "items": [ { kode_barang, harga_beli }, ... ] }
+     */
+    public function receive_barang_harga()
+    {
+        if (!$this->config->item('sync_receive_enabled')) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status'  => false,
+                    'message' => 'Sync receive is disabled on this server'
+                )));
+        }
+
+        $input = json_decode($this->input->raw_input_stream, true);
+        $items = isset($input['items']) ? $input['items'] : array();
+
+        if (empty($items) || !is_array($items)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status'  => false,
+                    'message' => 'items array is required'
+                )));
+        }
+
+        $updated = 0;
+        $skipped = 0;
+        $errors  = array();
+
+        foreach ($items as $item) {
+            $kode_barang = isset($item['kode_barang']) ? trim($item['kode_barang']) : null;
+            $harga_beli  = isset($item['harga_beli'])  ? intval($item['harga_beli']) : null;
+
+            if (empty($kode_barang) || $harga_beli === null) {
+                $skipped++;
+                continue;
+            }
+
+            $existing = $this->Barang_model->selectById($kode_barang);
+            if (!$existing) {
+                $errors[] = $kode_barang . ' tidak ditemukan';
+                $skipped++;
+                continue;
+            }
+
+            // Auto-calculate harga_jual: +10% of harga_beli, rounded to nearest 100
+            $harga_jual = round(($harga_beli * 1.1) / 100) * 100;
+
+            $update_data = array(
+                'harga_beli' => $harga_beli,
+                'harga_jual' => $harga_jual,
+            );
+            $this->Barang_model->update($kode_barang, $update_data, 'sync');
+            $updated++;
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'status'  => true,
+                'updated' => $updated,
+                'skipped' => $skipped,
+                'errors'  => $errors
+            )));
+    }
+
+    /**
      * API endpoint to get all barang stock data for syncing
      * Returns kode_barang, nama_barang, stok for every item
      */
@@ -439,3 +536,6 @@ class Sync extends CI_Controller
             )));
     }
 }
+
+/* End of file Sync.php */
+/* Location: ./application/controllers/Sync.php */

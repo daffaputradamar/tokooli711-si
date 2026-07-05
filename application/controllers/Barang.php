@@ -154,7 +154,6 @@ class Barang extends CI_Controller
             $this->dataupdate($this->uri->segment(3));
         } else {
             $current_data = $this->Barang_model->selectById($this->uri->segment(3));
-            $stock = $current_data->stok;  // Save current stok value
 
             $data = array(
                 'kode_barang' => $this->input->post('kode_barang'),
@@ -166,7 +165,20 @@ class Barang extends CI_Controller
                 'keterangan' => $this->input->post('keterangan'),
             );
 
-            $this->Barang_model->update($this->uri->segment(3), $data, $_SESSION["username"]);
+            $harga_beli_changed = $this->Barang_model->update($this->uri->segment(3), $data, $_SESSION["username"]);
+
+            if ($this->input->is_ajax_request()) {
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode(array(
+                        'status' => true,
+                        'harga_beli_changed' => $harga_beli_changed,
+                        'kode_barang' => $data['kode_barang'],
+                        'harga_beli'  => $data['harga_beli'],
+                        'sync_enabled' => $this->config->item('sync_enabled'),
+                        'sync_target_url' => $this->config->item('sync_target_url'),
+                    )));
+            }
 
             redirect(site_url('barang'));
         }
