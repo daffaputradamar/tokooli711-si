@@ -92,6 +92,18 @@ switch (ENVIRONMENT)
 
 /*
  *---------------------------------------------------------------
+ * DEFAULT TIMEZONE
+ *---------------------------------------------------------------
+ *
+ * Set once per request so every date()/time() call in the application
+ * agrees. Without this PHP falls back to php.ini's date.timezone (UTC
+ * when unset), which made stored transaction times drift from the
+ * wall clock.
+ */
+	date_default_timezone_set('Asia/Jakarta'); // GMT+7 (WIB)
+
+/*
+ *---------------------------------------------------------------
  * SYSTEM FOLDER NAME
  *---------------------------------------------------------------
  *

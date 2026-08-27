@@ -23,6 +23,21 @@ class Home extends CI_Controller
             redirect('login', 'refresh');
         }
     }
+    /**
+     * Current server clock, polled by the header clock so it keeps showing
+     * the server's time even when the workstation clock or timezone is off.
+     */
+    public function server_time()
+    {
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array(
+                'epoch' => time(),          // seconds since epoch, UTC
+                'utc_offset' => (int) date('Z'), // server offset in seconds
+                'formatted' => date('H:i:s'),
+            )));
+    }
+
     public function _rule()
     {
         $this->form_validation->set_rules('kode_jual', 'kode jual', 'trim|required');

@@ -10,7 +10,6 @@ class Login extends CI_Controller
         $this->load->model('Admin_model');
         $this->load->model('Karyawan_model');
         // $this->load->library('session');
-        date_default_timezone_set('Asia/Jakarta'); // Set timezone to GMT+7
         session_start();
         if (isset($_SESSION['level'])) {
             redirect('home');

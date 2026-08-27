@@ -90,19 +90,64 @@ function kembalian() {
 <!-- END BODY -->
 
 <script>
-    // Update server time in real-time
-    function updateServerTime() {
-        var now = new Date();
-        var hours = String(now.getHours()).padStart(2, '0');
-        var minutes = String(now.getMinutes()).padStart(2, '0');
-        var seconds = String(now.getSeconds()).padStart(2, '0');
-        var timeString = hours + ':' + minutes + ':' + seconds;
-        
-        document.getElementById('server-time').textContent = timeString;
-    }
-    
-    // Update time immediately and then every second
-    updateServerTime();
-    setInterval(updateServerTime, 1000);
+    // Header clock. The workstation only contributes elapsed time via the
+    // monotonic performance.now(); both the absolute reading and the UTC
+    // offset come from the server, so a PC with a wrong clock or timezone
+    // still shows server time -- the same clock that stamps waktu_jual.
+    (function () {
+        var el = document.getElementById('server-time');
+        if (!el) {
+            return;
+        }
+
+        var epoch = parseInt(el.getAttribute('data-epoch'), 10);          // seconds, UTC
+        var utcOffset = parseInt(el.getAttribute('data-utc-offset'), 10); // seconds
+        var syncUrl = el.getAttribute('data-sync-url');
+        var syncedAt = performance.now();
+
+        if (isNaN(epoch) || isNaN(utcOffset)) {
+            return;
+        }
+
+        function pad(n) {
+            return n < 10 ? '0' + n : String(n);
+        }
+
+        function render() {
+            var elapsed = Math.floor((performance.now() - syncedAt) / 1000);
+            var secondsToday = (epoch + elapsed + utcOffset) % 86400;
+            if (secondsToday < 0) {
+                secondsToday += 86400;
+            }
+            el.textContent = pad(Math.floor(secondsToday / 3600)) + ':' +
+                pad(Math.floor(secondsToday / 60) % 60) + ':' +
+                pad(secondsToday % 60);
+        }
+
+        // Re-read the server periodically so a page left open all day cannot
+        // drift, and so a machine waking from sleep corrects itself.
+        function resync() {
+            if (!syncUrl) {
+                return;
+            }
+            var sentAt = performance.now();
+            fetch(syncUrl, { credentials: 'same-origin' })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (!data || typeof data.epoch !== 'number') {
+                        return;
+                    }
+                    epoch = data.epoch;
+                    utcOffset = data.utc_offset;
+                    syncedAt = sentAt + (performance.now() - sentAt) / 2; // half the round trip
+                    render();
+                })
+                .catch(function () { /* keep ticking from the last good reading */ });
+        }
+
+        render();
+        setInterval(render, 1000);
+        setInterval(resync, 60000);
+    })();
 </script>
 </html>

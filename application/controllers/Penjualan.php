@@ -218,6 +218,7 @@ class Penjualan extends CI_Controller
         $payload = array(
             'kode_jual' => $data['kode_jual'],
             'tanggal_jual' => $data['tanggal_jual'],
+            'waktu_jual' => $data['waktu_jual'],
             'kode_admin' => $data['kode_admin'],
             'kode_karyawan' => $data['kode_karyawan'],
             'keterangan' => $data['keterangan'],
@@ -271,6 +272,7 @@ class Penjualan extends CI_Controller
         $payload = array(
             'kode_jual' => $data['kode_jual'],
             'tanggal_jual' => $data['tanggal_jual'],
+            'waktu_jual' => $data['waktu_jual'],
             'kode_admin' => $data['kode_admin'],
             'kode_karyawan' => $data['kode_karyawan'],
             'keterangan' => $data['keterangan'],
@@ -390,7 +392,9 @@ class Penjualan extends CI_Controller
                 'kode_jual' => $input['kode_jual'],
                 'tanggal_jual' => $input['tanggal_jual'],
                 'tanggal_jual_date' => date('Y-m-d', strtotime($input['tanggal_jual'])),
-                'waktu_jual' => date("h:i:s a"),
+                // Keep the time recorded by the originating server; only fall
+                // back to now for payloads sent before waktu_jual was synced.
+                'waktu_jual' => !empty($input['waktu_jual']) ? $input['waktu_jual'] : date("h:i:s a"),
                 'kode_admin' => $input['kode_admin'] ?? null,
                 'kode_karyawan' => $input['kode_karyawan'] ?? null,
                 'keterangan' => $input['keterangan'] ?? '',

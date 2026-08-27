@@ -96,7 +96,10 @@
                     <!-- BEGIN SERVER TIME DISPLAY -->
                     <li class="server-time-item">
                         <i class="fa fa-clock-o"></i>
-                        <span id="server-time"><?php echo date('H:i:s'); ?></span>
+                        <span id="server-time"
+                              data-epoch="<?php echo time(); ?>"
+                              data-utc-offset="<?php echo (int) date('Z'); ?>"
+                              data-sync-url="<?php echo base_url('home/server_time'); ?>"><?php echo date('H:i:s'); ?></span>
                     </li>
                     <!-- END SERVER TIME DISPLAY -->
                     <!-- BEGIN USER LOGIN DROPDOWN -->
