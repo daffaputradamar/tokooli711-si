@@ -38,7 +38,7 @@
        
          <div class="panel panel-default">
           <div class="panel-heading">
-                            <i class="fa fa-book fa-fw"></i> Ongkos Karyawan
+                            <i class="fa fa-book fa-fw"></i>  Bea Service atau Lain-lain
                         </div>
                       
                         <div class="panel-body">
@@ -50,7 +50,7 @@
            
         </div>
 	    <div class="form-group col-md-4">
-            <label for=>Ongkos Karyawan <?php echo $ongkos_karyawan; ?></label>
+            <label for=> Bea Service atau Lain-lain <?php echo $ongkos_karyawan; ?></label>
         </div>
         
         </div>

@@ -106,7 +106,7 @@ function sum() {
        
          <div class="panel panel-default">
           <div class="panel-heading">
-                            <i class="fa fa-book fa-fw"></i> Ongkos Karyawan
+                            <i class="fa fa-book fa-fw"></i>  Bea Service atau Lain-lain
                         </div>
                       
                         <div class="panel-body">
@@ -137,8 +137,8 @@ function sum() {
             <textarea class="form-control" rows="3" name="keterangan" id="keterangan" placeholder="Keterangan"><?php echo $keterangan; ?></textarea>
         </div>
 	    <div class="form-group col-md-4">
-            <label for=>Ongkos Karyawan <?php echo form_error('ongkos_karyawan') ?></label>
-            <input type="number" class="form-control" name="ongkos_karyawan" id="ongkos_karyawan" placeholder="Ongkos Karyawan" value="<?php echo $ongkos_karyawan; ?>" onkeyup="sum();" />
+            <label for=> Bea Service atau Lain-lain <?php echo form_error('ongkos_karyawan') ?></label>
+            <input type="number" class="form-control" name="ongkos_karyawan" id="ongkos_karyawan" placeholder=" Bea Service atau Lain-lain" value="<?php echo $ongkos_karyawan; ?>" onkeyup="sum();" />
         </div>
         <div class="form-group col-md-4">
             <label for=>Pelanggan <?php echo form_error('pelanggan') ?></label>
