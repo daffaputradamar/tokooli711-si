@@ -83,7 +83,7 @@
 			<label style="margin-left :0; width:280px; font-size: 14px; display:inline-block" for=>Keterangan :
 				(<?php echo $keterangan; ?>)</label><br>
 			<div class="row" style="margin-right:35px;">
-				<div class="col-md-10 pull-right" align="right">Bea Servis =
+				<div class="col-md-10 pull-right" align="right">Lain - lain =
 					Rp.
 					<?php echo $this->CodeGenerator->rp($ongkos_karyawan); ?>
 				</div>
