@@ -11,6 +11,7 @@ class Penjualan_detail extends CI_Controller
         $this->load->model('Penjualan_detail_model');
         $this->load->library('form_validation');
         session_start();
+        require_login();
     }
      public function _rule() 
     {
@@ -159,7 +160,11 @@ class Penjualan_detail extends CI_Controller
 
         // if ($row) {
             // $this->Penjualan_detail_model->delete($id,$barang);
-        unset($_SESSION[$_SESSION['kode'] . 'detailbarang'][$barang]);
+        $cart_key = $_SESSION['kode'] . 'detailbarang';
+        if (isset($_SESSION[$cart_key][$barang])) {
+            set_toast('info', trim($_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari keranjang.');
+        }
+        unset($_SESSION[$cart_key][$barang]);
         if($this->uri->segment(4)<>"" and $this->uri->segment(4)==1){
             redirect(site_url('home'));    
         }else{

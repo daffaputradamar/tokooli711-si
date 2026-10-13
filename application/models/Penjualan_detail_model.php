@@ -45,7 +45,7 @@ class Penjualan_detail_model extends CI_Model
     public function totalall($id)
     {
         //$jumlah1=$this->db->query("select ongkos_karyawan from penjualan where kode_jual='$id'")->row();
-        $jumlah = $this->db->query("select sum(subtotal) as total from penjualan_detail where kode_jual='$id'")->row();
+        $jumlah = $this->db->query("select sum(subtotal) as total from penjualan_detail where kode_jual=?", array((string) $id))->row();
         //echo $jumlah1->ongkos_karyawan;
         return $jumlah->total;
     }

@@ -11,6 +11,7 @@ class Logout extends CI_Controller {
 	}
 	public function logout(){
 		// $this->session->sess_destroy();
+		$_SESSION = array();
 		session_destroy();
 		redirect('login','refresh');
 	}

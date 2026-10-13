@@ -32,6 +32,12 @@ class Sync extends CI_Controller
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             exit;
         }
+
+        // The data endpoints serve the other server; without a session they
+        // need the shared sync key (no-op while sync_api_key is empty)
+        if ($this->router->fetch_method() !== 'index' && !isset($_SESSION['level'])) {
+            require_sync_key();
+        }
     }
 
     /**

@@ -27,13 +27,13 @@ foreach ($listbarang as $row) {
 	
 	<tr>
 		<td><?= ++$no ?></td>
-		<td><?= $row->kode_barang ?></td>
-		<td><?= $row->nama_barang ?></td>
-		<td><?= $row->merk ?></td>
+		<td><?= html_escape((string) $row->kode_barang) ?></td>
+		<td><?= html_escape((string) $row->nama_barang) ?></td>
+		<td><?= html_escape((string) $row->merk) ?></td>
 		<td>Rp. <?=$this->CodeGenerator->rp($row->harga_beli) ?></td>
 		<td>Rp. <?=$this->CodeGenerator->rp($row->harga_jual) ?></td>
 		<td>Rp. <?=$this->CodeGenerator->rp($row->harga_jual-$row->harga_beli) ?></td>
-		<td><?= $row->stok ?></td>
+		<td><?= html_escape((string) $row->stok) ?></td>
 		
 	</tr>
 	

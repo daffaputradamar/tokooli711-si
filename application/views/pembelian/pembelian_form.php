@@ -38,14 +38,14 @@
                     foreach ($listsuplier as $komp) {
                         if ($kode_suplier == $komp->kode_suplier) {
                             ?>
-                            <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
+                            <option value="<?= html_escape((string) $komp->kode_suplier) ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= html_escape((string) $komp->nama_suplier) ?></option>
                         <?php
                         }
                     }
             foreach ($listsuplier as $komp) {
                 if ($kode_suplier <> $komp->kode_suplier) {
                     ?>
-                            <option value="<?= $komp->kode_suplier ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= $komp->nama_suplier ?></option>
+                            <option value="<?= html_escape((string) $komp->kode_suplier) ?>" <?= isset($_SESSION[$_SESSION['kode'] . 'kode_suplier']) && $komp->kode_suplier == $_SESSION[$_SESSION['kode'] . 'kode_suplier'] ? "selected" : "" ?>><?= html_escape((string) $komp->nama_suplier) ?></option>
                     <?php
                 }
             }
@@ -64,7 +64,7 @@
                         <select name="kode_barang" class="form-control selectpicker" data-live-search="true" placeholder="kode_barang">
                             <?php foreach ($listbarang as $komp):
                                 ?>
-                                <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
+                                <option value="<?= html_escape((string) $komp->kode_barang) ?>"><?= html_escape((string) $komp->nama_barang) ?></option>
                             <?php
                             endforeach;
             ?>
@@ -209,10 +209,17 @@
 
 
 
+            const restore = () => {
+                submitter.disabled = false;
+                submitter[isTambahDetail ? "value" : "textContent"] = origTextContent;
+            };
+
             //validate
             if (isTambahDetail) {
-                if (_values.jumlah == 0) {
-                    alert("Jumlah tidak boleh kosong");
+                const qty = parseFloat(String(_values.jumlah || '').replace(',', '.'));
+                if (!qty || qty <= 0) {
+                    AppToast.show('warning', 'Jumlah harus lebih dari 0.');
+                    restore();
                     return;
                 }
             }
@@ -223,56 +230,43 @@
                 values.append(submitter.name, submitter.value);
             }
 
-
-            fetch("<?= base_url('Pembelian/insert') ?>", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded", // Mimic normal form submission
-                    },
-                    body: values.toString(), // Send data as URL-encoded
-                })
-                .then(response => {
-                    if (!isTambahDetail) {
-                        return response.text(); // Get the response as JSON
-                    }
-
-                    return new Promise((resolve, reject) => {
-                        resolve("Sukses Tambah Detail");
-                    });
-                }) // Get the response as text
-                .then(data => {
+            AppHttp.postForm("<?= base_url('Pembelian/insert') ?>", values)
+                .then(result => {
                     if (isTambahDetail) {
+                        AppToast.next('success', result.message);
                         location.reload();
                         return;
                     }
-                    const result = JSON.parse(data.trim())
+
+                    AppToast.next('success', 'Pembelian ' + result.kode_beli + ' tersimpan dan stok diperbarui.', { title: 'Pembelian selesai' });
 
                     // Check if sync is enabled before syncing
                     <?php if ($this->config->item('sync_enabled')): ?>
-                    const syncTargetUrl = "<?= $this->config->item('sync_target_url') ?>";
-                    fetch(`${syncTargetUrl}/pembelian/save_pembelian`, {
+                    return fetch(<?= json_encode(sync_target('pembelian/save_pembelian')) ?>, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify(result),
                     }).then(syncResponse => {
-                        console.log('Sync response:', syncResponse);
+                        if (!syncResponse.ok) {
+                            throw new Error('HTTP ' + syncResponse.status);
+                        }
                     }).catch(syncError => {
                         console.error('Sync error:', syncError);
-                    }).finally(() => {
+                        AppToast.next('warning', 'Pembelian tersimpan di toko, tapi gagal dikirim ke server pusat. Kirim ulang dari Sync Dashboard.', { title: 'Sinkronisasi gagal' });
+                    }).then(() => {
                         location.reload();
                     })
                     <?php else: ?>
                     // Sync is disabled, just reload
                     location.reload();
                     <?php endif; ?>
-
                 })
-                .catch(error => console.error("Error:", error))
-                .finally(() => {
-                    submitter.disabled = false;
-                    submitter.textContent = origTextContent;
+                .catch(error => {
+                    console.error("Error:", error);
+                    restore();
+                    AppToast.show('error', error.message, { title: isTambahDetail ? 'Barang tidak ditambahkan' : 'Pembelian belum tersimpan' });
                 })
         })
     })

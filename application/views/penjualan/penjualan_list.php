@@ -15,12 +15,12 @@
                                 foreach ($listbarang as $komp):
                                     ?>
                                     <option
-                                        value="<?= $komp->kode_barang ?>"
-                                        data-merk="<?= $komp->merk ?>"
-                                        data-harga="<?= $komp->harga_jual ?>"
+                                        value="<?= html_escape((string) $komp->kode_barang) ?>"
+                                        data-merk="<?= html_escape((string) $komp->merk) ?>"
+                                        data-harga="<?= html_escape((string) $komp->harga_jual) ?>"
                                         <?= ($kode_barang == $komp->kode_barang) ? 'selected' : ''; ?>>
-                                        <?= $komp->nama_barang ?> ||
-                                        <?= $komp->merk ?> || Rp.
+                                        <?= html_escape((string) $komp->nama_barang) ?> ||
+                                        <?= html_escape((string) $komp->merk) ?> || Rp.
                                         <?= $this->CodeGenerator->rp($komp->harga_jual) ?>
                                         
                                     </option>
@@ -65,9 +65,9 @@
                                 <?php
 								foreach ($karyawan as $karyawan_val):
 								    ?>
-                                <option value="<?= $karyawan_val->kode_karyawan; ?>"
+                                <option value="<?= html_escape((string) $karyawan_val->kode_karyawan) ?>"
                                     <?= ($karyawan_val->kode_karyawan == $filterkaryawan && !is_null($filterkaryawan)) ? "selected" : ""; ?>>
-                                    <?= $karyawan_val->kode_karyawan; ?>
+                                    <?= html_escape((string) $karyawan_val->kode_karyawan) ?>
                                 </option>
                                 <?php endforeach ?>
                             </select>
@@ -105,10 +105,10 @@
                 ?>
                 <tr>
                     <td width="80px"><?php echo ++$start ?></td>
-                    <td><?php echo $penjualan->kode_jual ?></td>
-                    <td><?php echo $penjualan->tanggal_jual ?></td>
-                    <td><?php echo $penjualan->nomor_polisi ?></td>
-                    <td><?php echo $penjualan->kode_karyawan ?></td>
+                    <td><?php echo html_escape((string) $penjualan->kode_jual) ?></td>
+                    <td><?php echo html_escape((string) $penjualan->tanggal_jual) ?></td>
+                    <td><?php echo html_escape((string) $penjualan->nomor_polisi) ?></td>
+                    <td><?php echo html_escape((string) $penjualan->kode_karyawan) ?></td>
                     <td>Rp. <?php
                         $total_jual = $this->config->item('display_round_500') ? floor($penjualan->total / 500) * 500 : $penjualan->total;
                         echo $this->CodeGenerator->rp($total_jual);

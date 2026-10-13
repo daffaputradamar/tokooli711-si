@@ -36,11 +36,11 @@
 
 		<tr>
 			<td><?= ++$no ?></td>
-			<td><?= $row->kode_beli ?></td>
-			<td><?= $row->tanggal_beli ?></td>
-			<td><?= $row->jumlah ?></td>
-			<td><?= $row->harga_beli ?></td>
-			<td><?= $row->subtotal ?></td>
+			<td><?= html_escape((string) $row->kode_beli) ?></td>
+			<td><?= html_escape((string) $row->tanggal_beli) ?></td>
+			<td><?= html_escape((string) $row->jumlah) ?></td>
+			<td><?= html_escape((string) $row->harga_beli) ?></td>
+			<td><?= html_escape((string) $row->subtotal) ?></td>
 		</tr>
 	<?php
 	} ?>

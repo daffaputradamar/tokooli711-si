@@ -36,7 +36,7 @@ class Pembelian_detail_model extends CI_Model
     }
     public function totalall($id)
     {
-        $jumlah = $this->db->query("select sum(subtotal) as total from pembelian_detail where kode_beli='$id'")->row();
+        $jumlah = $this->db->query("select sum(subtotal) as total from pembelian_detail where kode_beli=?", array((string) $id))->row();
         return $jumlah->total;
     }
 
@@ -88,16 +88,9 @@ class Pembelian_detail_model extends CI_Model
         foreach ($data as $row) {
             $this->db->query("
             INSERT INTO barang_stok_history (kode_barang, stok, createddate, createdby, modifieddate, modifiedby) 
-            VALUES (
-                '{$row->kode_barang}', 
-                {$row->jumlah}, 
-                NOW(), 
-                '{$user}',
-                NOW(), 
-                '{$user}'
-            )
-        ");
-            $this->db->query("update barang set stok=stok+" . $row->jumlah . " where kode_barang='$row->kode_barang' ");
+            VALUES (?, ?, NOW(), ?, NOW(), ?)
+        ", array($row->kode_barang, $row->jumlah, (string) $user, (string) $user));
+            $this->db->query("update barang set stok=stok+? where kode_barang=?", array($row->jumlah, $row->kode_barang));
         }
     }
 }

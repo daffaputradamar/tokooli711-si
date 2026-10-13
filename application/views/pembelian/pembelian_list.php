@@ -13,12 +13,12 @@
 								placeholder="kode_barang">
 								<?php foreach ($listbarang as $komp): ?>
 								<option
-									value="<?= $komp->kode_barang ?>"
-									data-merk="<?= $komp->merk ?>"
-									data-harga="<?= $komp->harga_jual ?>"
+									value="<?= html_escape((string) $komp->kode_barang) ?>"
+									data-merk="<?= html_escape((string) $komp->merk) ?>"
+									data-harga="<?= html_escape((string) $komp->harga_jual) ?>"
 									<?= ($kode_barang == $komp->kode_barang) ? 'selected' : ''; ?>>
-									<?= $komp->nama_barang ?> ||
-									<?= $komp->merk ?> || Rp.
+									<?= html_escape((string) $komp->nama_barang) ?> ||
+									<?= html_escape((string) $komp->merk) ?> || Rp.
 									<?= $this->CodeGenerator->rp($komp->harga_jual) ?>
 								</option>
 								<?php
@@ -97,11 +97,11 @@
                 ?>
 				<tr>
 					<td width="80px"><?php echo ++$start ?></td>
-					<td><?php echo $pembelian->kode_beli ?></td>
-					<td><?php echo $pembelian->tanggal_beli ?></td>
-					<td><?php echo $pembelian->waktu_beli ?></td>
-					<td><?php echo $pembelian->no_faktur ?></td>
-					<td><?php echo $pembelian->nama_suplier ?></td>
+					<td><?php echo html_escape((string) $pembelian->kode_beli) ?></td>
+					<td><?php echo html_escape((string) $pembelian->tanggal_beli) ?></td>
+					<td><?php echo html_escape((string) $pembelian->waktu_beli) ?></td>
+					<td><?php echo html_escape((string) $pembelian->no_faktur) ?></td>
+					<td><?php echo html_escape((string) $pembelian->nama_suplier) ?></td>
 					<?php if($_SESSION['level'] == 'admin') { ?>
 					<td>Rp.
 						<?php

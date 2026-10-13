@@ -77,11 +77,11 @@ class Percobaan_karyawan_model extends CI_Model
             SELECT pk.id_barang, b.nama_barang, COUNT(1) jml_percobaan, MAX(createdate) percobaan_terakhir
             FROM percobaan_karyawan pk
             JOIN barang b ON pk.id_barang = b.kode_barang
-            WHERE id_karyawan = '$id'
+            WHERE id_karyawan = ?
             AND isactive = 1
             GROUP BY pk.id_barang, b.nama_barang
             HAVING COUNT(1) >= 2
-        ")->result();
+        ", array((string) $id))->result();
     }
 
     public function get_detail_percobaan($id, $barang)
@@ -90,10 +90,10 @@ class Percobaan_karyawan_model extends CI_Model
             SELECT pk.id_barang, b.nama_barang, createdate
             FROM percobaan_karyawan pk
             JOIN barang b ON pk.id_barang = b.kode_barang
-            WHERE id_karyawan = '$id'
-            AND pk.id_barang = '$barang'
+            WHERE id_karyawan = ?
+            AND pk.id_barang = ?
             ORDER BY createdate DESC
-        ")->result();
+        ", array((string) $id, (string) $barang))->result();
     }
 
     public function get_percobaan_list_by_karyawan($id, $cari)
@@ -102,12 +102,12 @@ class Percobaan_karyawan_model extends CI_Model
             SELECT pk.id_barang, b.nama_barang, COUNT(1) jml_percobaan, MAX(createdate) percobaan_terakhir
             FROM percobaan_karyawan pk
             JOIN barang b ON pk.id_barang = b.kode_barang
-            WHERE id_karyawan = '$id'
+            WHERE id_karyawan = ?
             AND (
-                b.nama_barang LIKE '%$cari%'
+                b.nama_barang LIKE ?
             )
             GROUP BY pk.id_barang, b.nama_barang
-        ")->result();
+        ", array((string) $id, '%' . $cari . '%'))->result();
     }
 
 }

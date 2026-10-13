@@ -32,7 +32,7 @@
 	window.print();
 </script>
 <center>
-	<h4>Laporan Movement <br><?= $barang->nama_barang ?></h4>
+	<h4>Laporan Movement <br><?= html_escape((string) $barang->nama_barang) ?></h4>
 </center>
 <center>
 	<h4> <?= $this->uri->segment(4) ?> <?= $this->uri->segment(5) ?> sampai <?= $this->uri->segment(6) ?> <?= $this->uri->segment(7) ?></h4>
@@ -53,17 +53,17 @@
 	?>
 			<tr>
 				<td><?= ++$no ?></td>
-				<td><?= $row->kode_trans ?></td>
-				<td><?= $row->jenis_trans ?></td>
-				<td><?= $row->tanggal_trans ?></td>
+				<td><?= html_escape((string) $row->kode_trans) ?></td>
+				<td><?= html_escape((string) $row->jenis_trans) ?></td>
+				<td><?= html_escape((string) $row->tanggal_trans) ?></td>
 				<td class="danger"><?= number_format($row->jumlah, 2) ?></td>
 			</tr>
 		<?php elseif ($row->jenis_trans == 'Pembelian') : ?>
 			<tr>
 				<td><?= ++$no ?></td>
-				<td><?= $row->kode_trans ?></td>
-				<td><?= $row->jenis_trans ?></td>
-				<td><?= $row->tanggal_trans ?></td>
+				<td><?= html_escape((string) $row->kode_trans) ?></td>
+				<td><?= html_escape((string) $row->jenis_trans) ?></td>
+				<td><?= html_escape((string) $row->tanggal_trans) ?></td>
 				<td class="success"><?= number_format($row->jumlah, 2) ?></td>
 			</tr>
 		<?php else:

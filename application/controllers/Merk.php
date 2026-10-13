@@ -101,6 +101,7 @@ class Merk extends CI_Controller
 	    );
 
             $this->Merk_model->insert($data);
+            set_toast('success', 'Data merk ditambahkan.');
             redirect(site_url('merk'));
         }
     }
@@ -137,6 +138,7 @@ class Merk extends CI_Controller
 
             $this->Merk_model->update($this->uri->segment(3), $data);
             
+            set_toast('success', 'Data merk diperbarui.');
             redirect(site_url('merk'));
         }
     }
@@ -148,8 +150,11 @@ class Merk extends CI_Controller
         if ($row) {
             $this->Merk_model->delete($id);
             
+            set_toast('success', 'Data merk dihapus.');
             redirect(site_url('merk'));
         }
+        set_toast('error', 'Data merk tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('merk'));
     }
 
 }

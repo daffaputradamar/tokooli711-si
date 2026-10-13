@@ -13,6 +13,7 @@ class Promo extends CI_Controller
         $this->load->library('form_validation');
         $this->load->model('CodeGenerator');
         session_start();
+        require_login(array(), TRUE);
     }
 
     public function _rule()
@@ -82,6 +83,7 @@ class Promo extends CI_Controller
         );
 
             $this->Promo_model->insert($data);
+            set_toast('success', 'Data promo ditambahkan.');
             redirect(site_url('promo'));
         }
     }
@@ -118,6 +120,7 @@ class Promo extends CI_Controller
 
             $this->Promo_model->update($this->uri->segment(3), $data);
 
+            set_toast('success', 'Data promo diperbarui.');
             redirect(site_url('promo'));
         }
     }
@@ -129,8 +132,11 @@ class Promo extends CI_Controller
         if ($row) {
             $this->Promo_model->delete($id);
 
+            set_toast('success', 'Data promo dihapus.');
             redirect(site_url('promo'));
         }
+        set_toast('error', 'Data promo tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('promo'));
     }
 
     public function toggle($id)

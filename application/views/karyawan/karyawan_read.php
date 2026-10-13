@@ -53,8 +53,8 @@
 				</tr>
 				<?php foreach ($percobaan_barang as $percobaan) { ?>
 				<tr>
-					<td><?= $percobaan->nama_barang ?></td>
-					<td><?= $percobaan->jml_percobaan ?></td>
+					<td><?= html_escape((string) $percobaan->nama_barang) ?></td>
+					<td><?= html_escape((string) $percobaan->jml_percobaan) ?></td>
 					<td><?php echo date('Y-m-d H:i:s', strtotime($percobaan->percobaan_terakhir)) ?>
 					</td>
 				</tr>
@@ -104,15 +104,15 @@
 					        ?>
 				<tr>
 					<td width="80px"><?php echo ++$start ?></td>
-					<td><?php echo $percobaan_barang->nama_barang ?>
+					<td><?php echo html_escape((string) $percobaan_barang->nama_barang) ?>
 					</td>
-					<td><?php echo $percobaan_barang->jml_percobaan ?>
+					<td><?php echo html_escape((string) $percobaan_barang->jml_percobaan) ?>
 					</td>
 					<td><?php echo date('Y-m-d H:i:s', strtotime($percobaan_barang->percobaan_terakhir)) ?>
 					</td>
 					<td class="text-center">
 						<button class="btn btn-info btnModalDetailPercobaan"
-							data-barang="<?= $percobaan_barang->id_barang ?>"
+							data-barang="<?= html_escape((string) $percobaan_barang->id_barang) ?>"
 							data-karyawan="<?= $kode_karyawan ?>"
 							data-toggle="modal" data-target="#modal-detail-percobaan">Detail</button>
 					</td>

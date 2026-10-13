@@ -19,6 +19,8 @@ class Penjualan extends CI_Controller
         $this->load->model('Penjualan_detail_model');
         $this->load->model('Promo_model');
         session_start();
+        // get_by_date / save_penjualan are called by the sync server without a session
+        require_login(array('get_by_date', 'save_penjualan'));
     }
 
     public function _rule()
@@ -161,19 +163,43 @@ class Penjualan extends CI_Controller
         $_SESSION[$kode_user . 'nomor_polisi'] = $nomor_polisi;
         $_SESSION[$kode_user . 'km_kendaraan'] = $km_kendaraan;
 
+        // The cashier page calls this with fetch() and gets JSON back; a plain
+        // form post still gets a redirect, with the outcome as a toast.
+        $is_ajax = $this->input->is_ajax_request();
+
         if ($this->input->post('submitlist') <> "") {
-            $this->insert_detail_temp($this->input);
+            $result = $this->insert_detail_temp($this->input);
+            if ($is_ajax) {
+                json_reply($result['ok'] ? 200 : 422, $result);
+            }
+            set_toast($result['ok'] ? 'success' : 'error', $result['message']);
+            return $this->return_redirect();
+        }
+
+        $detail_penjualan = isset($_SESSION[$kode_user . 'detailbarang']) ? $_SESSION[$kode_user . 'detailbarang'] : array();
+        // A service-only sale (bea servis, no items) is allowed
+        if (empty($detail_penjualan) && (float) $this->input->post('ongkos_karyawan') <= 0) {
+            $message = 'Keranjang masih kosong. Tambahkan barang atau isi bea servis dulu.';
+            if ($is_ajax) {
+                json_reply(422, array('ok' => FALSE, 'message' => $message));
+            }
+            set_toast('error', $message);
             return $this->return_redirect();
         }
 
         $this->_rule();
 
         if (!$this->form_validation->run()) {
+            $message = trim(strip_tags($this->form_validation->error_string(' ', ' ')));
+            $message = $message !== '' ? 'Data belum lengkap: ' . $message : 'Data transaksi belum lengkap.';
+            if ($is_ajax) {
+                json_reply(422, array('ok' => FALSE, 'message' => $message));
+            }
+            set_toast('error', $message);
             return $this->return_redirect();
         }
 
         $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
-        $detail_penjualan = $_SESSION[$kode_user . 'detailbarang'];
         $total_all = 0;
         $total_all += isset($_SESSION[$_SESSION['kode'] . 'ongkos_karyawan']) ? $_SESSION[$_SESSION['kode'] . 'ongkos_karyawan'] : 0;
 
@@ -477,6 +503,7 @@ class Penjualan extends CI_Controller
 
             $this->Penjualan_model->update($this->uri->segment(3), $data);
 
+            set_toast('success', 'Data penjualan diperbarui.');
             redirect(site_url('penjualan'));
         }
     }
@@ -488,8 +515,11 @@ class Penjualan extends CI_Controller
         if ($row) {
             $this->Penjualan_model->delete($id);
             $this->Penjualan_detail_model->deletebykey($id);
+            set_toast('success', 'Data penjualan dihapus.');
             redirect(site_url('penjualan'));
         }
+        set_toast('error', 'Data penjualan tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('penjualan'));
     }
     public function struk($id)
     {
@@ -526,12 +556,37 @@ class Penjualan extends CI_Controller
         }
     }
 
+    /**
+     * Adds (or replaces) one line in the session cart.
+     *
+     * @param CI_Input $input
+     * @return array ok, message, and on refusal optionally stok / blocked
+     */
     private function insert_detail_temp($input)
     {
         $kode_user = $_SESSION['kode'];
+        $kode_barang = $input->post('kode_barang');
+        $jumlah = (float) str_replace(',', '.', (string) $input->post('jumlah'));
 
-        $barang = $this->Barang_model->selectById($input->post('kode_barang'));
-        $this->checkStok($barang, $input);
+        if ($kode_barang == '') {
+            return array('ok' => FALSE, 'message' => 'Pilih barang terlebih dahulu.');
+        }
+
+        $barang = $this->Barang_model->selectById($kode_barang);
+        if (!$barang) {
+            return array('ok' => FALSE, 'message' => 'Barang tidak ditemukan. Muat ulang halaman lalu coba lagi.');
+        }
+
+        if ($jumlah <= 0) {
+            return array('ok' => FALSE, 'message' => 'Jumlah harus lebih dari 0.');
+        }
+
+        $stok_check = $this->checkStok($barang, $input);
+        if ($stok_check !== TRUE) {
+            return $stok_check;
+        }
+
+        $already = isset($_SESSION[$kode_user . 'detailbarang'][$kode_barang]);
 
         $data = array(
             'kode_barang' => $input->post('kode_barang'),
@@ -544,27 +599,76 @@ class Penjualan extends CI_Controller
         );
 
         $_SESSION[$kode_user . 'detailbarang'][$input->post('kode_barang')] = $data;
+
+        $nama = trim($barang->nama_barang);
+        return array(
+            'ok' => TRUE,
+            'message' => $already
+                ? 'Jumlah ' . $nama . ' diubah menjadi ' . ($jumlah + 0) . '.'
+                : $nama . ' (' . ($jumlah + 0) . ') ditambahkan ke keranjang.',
+            'cart_count' => count($_SESSION[$kode_user . 'detailbarang'])
+        );
     }
 
+    /**
+     * Refuses quantities above the current stock. For employees each refusal
+     * is logged; two refusals lock the item until an admin clears them
+     * (Percobaan_karyawan_model: HAVING COUNT(1) >= 2).
+     *
+     * Users without stock access (can_see_stock) learn only that the quantity
+     * is refused: no remaining stock and no attempt count, so the refusal
+     * cannot be used to probe stock levels.
+     *
+     * @param object $barang
+     * @param CI_Input $input
+     * @return bool|array TRUE when enough stock, else a refusal result
+     */
     private function checkStok($barang, $input)
     {
         $kode_user = $_SESSION['kode'];
+        $jumlah = (float) str_replace(',', '.', (string) $input->post('jumlah'));
+        $stok = (float) $barang->stok;
 
-        if ($barang->stok >= $input->post('jumlah')) {
-            return true;
-        } else {
-            echo "<script>alert('Stok kurang')</script>";
-
-            if ($_SESSION['level'] != "admin") {
-                $this->Percobaan_karyawan_model->insert(array(
-                    'id_barang' => $input->post('kode_barang'),
-                    'id_karyawan' => $kode_user,
-                    'isactive' => 1
-                ));
-            }
-
-            $this->return_redirect();
+        if ($stok >= $jumlah) {
+            return TRUE;
         }
+
+        $can_see_stock = ($_SESSION['level'] == "admin" || !empty($_SESSION['can_see_stock']));
+        $nama = trim($barang->nama_barang);
+        $message = $can_see_stock
+            ? 'Stok ' . $nama . ' tidak cukup: tersisa ' . ($stok + 0) . ', diminta ' . ($jumlah + 0) . '.'
+            : 'Stok ' . $nama . ' tidak mencukupi.';
+        $blocked = FALSE;
+
+        if ($_SESSION['level'] != "admin") {
+            $this->Percobaan_karyawan_model->insert(array(
+                'id_barang' => $input->post('kode_barang'),
+                'id_karyawan' => $kode_user,
+                'isactive' => 1
+            ));
+            $attempts = $this->db->where(array(
+                'id_barang' => $input->post('kode_barang'),
+                'id_karyawan' => $kode_user,
+                'isactive' => 1
+            ))->count_all_results('percobaan_karyawan');
+
+            // Same lock notice the cashier page already shows for locked items
+            $blocked = ($attempts >= 2);
+            if ($blocked) {
+                $message .= ' Input data barang ini sudah lebih dari 2x. Hubungi admin agar bisa membuat transaksi.';
+            }
+        }
+
+        $result = array(
+            'ok' => FALSE,
+            'code' => 'stok_kurang',
+            'message' => $message,
+            'blocked' => $blocked
+        );
+        if ($can_see_stock) {
+            $result['stok'] = $stok;
+        }
+        return $result;
     }
 
     private function return_redirect()
@@ -599,9 +703,21 @@ class Penjualan extends CI_Controller
         }
         $penjualan_list = $this->db->get('penjualan')->result();
 
+        // One query for all lines instead of one per transaction
+        $details_by_kode = array();
+        if (!empty($penjualan_list)) {
+            $codes = array();
+            foreach ($penjualan_list as $penjualan) {
+                $codes[] = $penjualan->kode_jual;
+            }
+            foreach ($this->Penjualan_detail_model->selectByKodeJual($codes) as $detail) {
+                $details_by_kode[$detail->kode_jual][] = $detail;
+            }
+        }
+
         $result = array();
         foreach ($penjualan_list as $penjualan) {
-            $details = $this->Penjualan_detail_model->selectById($penjualan->kode_jual);
+            $details = isset($details_by_kode[$penjualan->kode_jual]) ? $details_by_kode[$penjualan->kode_jual] : array();
             $detail_array = array();
             foreach ($details as $detail) {
                 $detail_array[] = array(

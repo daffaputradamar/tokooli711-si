@@ -1,0 +1,644 @@
+/* ==========================================================================
+   Sync Dashboard - application/views/sync/sync_dashboard.php
+   Builds on report.css (rpt-* components) and the tokens in app.css.
+   ========================================================================== */
+
+/* Connection card */
+.sync-conn {
+	margin-bottom: 20px;
+}
+
+.sync-conn-main {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 14px;
+}
+
+.sync-conn-text {
+	flex: 1;
+	min-width: 0;
+}
+
+.sync-conn-label {
+	color: var(--muted);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+.sync-conn-host {
+	overflow: hidden;
+	color: var(--ink);
+	font-size: 17px;
+	font-weight: 700;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.sync-conn-flags {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 16px;
+	padding-top: 16px;
+	border-top: 1px solid var(--line-2);
+}
+
+body.app .sync-conn-flags .btn {
+	margin-left: auto;
+}
+
+.sync-flag {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+.sync-flag.is-on {
+	background: var(--ok-50);
+	color: var(--ok);
+}
+
+.sync-flag.is-off {
+	background: var(--line-2);
+	color: var(--muted);
+}
+
+body.app .sync-off {
+	margin: 16px 0 0;
+}
+
+/* Status pills */
+.sync-pill {
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 12px;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 650;
+	white-space: nowrap;
+}
+
+.sync-pill .fa {
+	font-size: 8px;
+}
+
+.sync-pill.is-idle {
+	background: var(--line-2);
+	color: var(--ink-2);
+}
+
+.sync-pill.is-ok {
+	background: var(--ok-50);
+	color: var(--ok);
+}
+
+.sync-pill.is-warn {
+	background: var(--warn-50);
+	color: var(--warn);
+}
+
+.sync-pill.is-bad {
+	background: var(--danger-50);
+	color: var(--danger);
+}
+
+/* Tabs */
+.sync-tabs {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 20px;
+	padding: 4px;
+	overflow-x: auto;
+	border-radius: 12px;
+	background: var(--line-2);
+	scrollbar-width: none;
+}
+
+.sync-tabs::-webkit-scrollbar {
+	display: none;
+}
+
+.sync-tab {
+	display: inline-flex;
+	flex: 1 0 auto;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 8px 16px;
+	border: 0;
+	border-radius: 9px;
+	background: none;
+	color: var(--ink-2);
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.sync-tab:hover {
+	color: var(--ink);
+}
+
+.sync-tab.is-active {
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(29, 31, 51, .12);
+	color: var(--brand-700);
+}
+
+.sync-tab:focus-visible {
+	outline: none;
+	box-shadow: var(--focus);
+}
+
+.sync-tab-badge {
+	min-width: 20px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 700;
+	line-height: 18px;
+	text-align: center;
+}
+
+.sync-tab-badge[hidden] {
+	display: none;
+}
+
+.sync-tab-badge.is-warn {
+	background: var(--warn);
+	color: #fff;
+}
+
+.sync-tab-badge.is-ok {
+	background: var(--ok-50);
+	color: var(--ok);
+}
+
+.sync-panel[hidden] {
+	display: none;
+}
+
+.sync-panel > .rpt-card + .rpt-grid {
+	margin-top: 20px;
+}
+
+/* Transactions */
+.sync-period {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 16px;
+}
+
+.sync-period .rpt-chips {
+	margin-bottom: 0;
+}
+
+body.app .sync-date {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+body.app .sync-date .form-control {
+	width: 170px;
+}
+
+body.app .sync-period .btn {
+	margin-left: auto;
+}
+
+.sync-trx-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.sync-trx-head .fa {
+	margin-right: 6px;
+	color: var(--brand-500);
+}
+
+.sync-counts {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px;
+	margin-bottom: 14px;
+}
+
+.sync-counts[hidden] {
+	display: none;
+}
+
+.sync-counts > div {
+	padding: 12px;
+	border-radius: 10px;
+	background: #f8f9fc;
+	text-align: center;
+}
+
+.sync-counts > .is-missing {
+	background: var(--warn-50);
+}
+
+.sync-counts > .is-missing.is-zero {
+	background: var(--ok-50);
+}
+
+.sync-count-num {
+	display: block;
+	color: var(--ink);
+	font-size: 22px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.sync-counts > .is-missing .sync-count-num {
+	color: var(--warn);
+}
+
+.sync-counts > .is-missing.is-zero .sync-count-num {
+	color: var(--ok);
+}
+
+.sync-count-label {
+	color: var(--muted);
+	font-size: 12px;
+}
+
+.sync-trx .rpt-note {
+	margin: 0 0 12px;
+}
+
+.sync-codes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	max-height: 168px;
+	margin-bottom: 14px;
+	overflow-y: auto;
+}
+
+.sync-code {
+	padding: 3px 10px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: #fff;
+	color: var(--ink-2);
+	font-size: 12px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	transition: background .15s, border-color .15s, color .15s;
+}
+
+.sync-code.is-sending {
+	border-color: var(--brand-300);
+	background: var(--brand-50);
+	color: var(--brand-700);
+}
+
+.sync-code.is-ok {
+	border-color: #bfe8d6;
+	background: var(--ok-50);
+	color: var(--ok);
+}
+
+.sync-code.is-ok::before {
+	content: "\f00c";
+	margin-right: 4px;
+	font-family: FontAwesome;
+}
+
+.sync-code.is-fail {
+	border-color: #f6c4cb;
+	background: var(--danger-50);
+	color: var(--danger);
+	cursor: help;
+}
+
+.sync-progress {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.sync-progress[hidden] {
+	display: none;
+}
+
+.sync-progress-bar {
+	flex: 1;
+	height: 8px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--line-2);
+}
+
+.sync-progress-bar span {
+	display: block;
+	width: 0;
+	height: 100%;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--brand-500), var(--accent));
+	transition: width .25s ease;
+}
+
+.sync-progress-text {
+	color: var(--ink-2);
+	font-size: 12.5px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+/* Stock & price */
+body.app .sync-compare {
+	flex-shrink: 0;
+	margin-left: auto;
+}
+
+.sync-summary {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 18px;
+}
+
+.sync-stat {
+	flex: 1 1 160px;
+	padding: 12px 14px;
+	border-radius: 10px;
+	background: #f8f9fc;
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.sync-stat span {
+	display: block;
+	color: var(--ink);
+	font-size: 20px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.sync-stat.is-warn {
+	background: var(--warn-50);
+}
+
+.sync-stat.is-warn span {
+	color: var(--warn);
+}
+
+.sync-stat.is-ok {
+	background: var(--ok-50);
+}
+
+.sync-stat.is-ok span {
+	color: var(--ok);
+}
+
+.sync-allgood {
+	flex-basis: 100%;
+	margin: 4px 0 0;
+	color: var(--ok);
+	font-weight: 600;
+}
+
+body.app .sync-select-all {
+	margin: 0;
+}
+
+.sync-table {
+	max-height: 520px;
+	overflow-y: auto;
+}
+
+body.app .sync-table td.sync-check {
+	width: 36px;
+}
+
+body.app .sync-table td.sync-changed {
+	color: var(--warn);
+	font-weight: 650;
+}
+
+.sync-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 16px;
+}
+
+.sync-selected {
+	margin-right: auto;
+	color: var(--muted);
+	font-size: 13px;
+}
+
+body.app .sync-actions .btn + .btn {
+	margin-left: 0;
+}
+
+/* Activity log */
+.sync-log-card {
+	margin-top: 20px;
+}
+
+.sync-log-card > summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	color: var(--ink);
+	font-weight: 650;
+	list-style: none;
+	cursor: pointer;
+}
+
+.sync-log-card > summary::-webkit-details-marker {
+	display: none;
+}
+
+.sync-log-card > summary .fa {
+	margin-right: 6px;
+	color: var(--brand-500);
+}
+
+.sync-log-count {
+	min-width: 24px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--line-2);
+	color: var(--ink-2);
+	font-size: 12px;
+	text-align: center;
+}
+
+.sync-log {
+	max-height: 280px;
+	margin: 14px 0 12px;
+	padding: 0;
+	overflow-y: auto;
+	list-style: none;
+	font-size: 13px;
+}
+
+.sync-log li {
+	padding: 7px 10px;
+	border-left: 3px solid var(--line);
+	border-radius: 0 6px 6px 0;
+	color: var(--ink-2);
+}
+
+.sync-log li + li {
+	margin-top: 4px;
+}
+
+.sync-log li time {
+	margin-right: 6px;
+	color: var(--muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.sync-log li.is-success { border-left-color: var(--ok); }
+.sync-log li.is-warning { border-left-color: #e19a0c; }
+.sync-log li.is-error { border-left-color: var(--danger); background: var(--danger-50); }
+.sync-log li.is-info { border-left-color: var(--brand-300); }
+
+.sync-log .sync-log-empty {
+	border-left-color: transparent;
+	color: var(--muted);
+}
+
+@media (max-width: 767px) {
+	.sync-conn-host {
+		font-size: 15px;
+	}
+
+	body.app .sync-conn-flags .btn {
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.sync-tab {
+		padding: 8px 12px;
+	}
+
+	body.app .sync-date,
+	body.app .sync-period .btn {
+		width: 100%;
+		margin-left: 0;
+	}
+
+	body.app .sync-date .form-control {
+		flex: 1;
+		width: auto;
+	}
+
+	.sync-counts {
+		gap: 6px;
+	}
+
+	.sync-counts > div {
+		padding: 10px 6px;
+	}
+
+	.sync-count-num {
+		font-size: 19px;
+	}
+
+	.sync-trx-head .sync-pill {
+		white-space: normal;
+		text-align: right;
+	}
+
+	.rpt-card-head .sync-compare {
+		width: 100%;
+	}
+
+	.sync-panel .rpt-card-head {
+		flex-wrap: wrap;
+	}
+
+	.sync-table {
+		max-height: none;
+		overflow: visible;
+	}
+
+	/* Card rows: checkbox pinned top-left, content beside it */
+	body.app .sync-table .rpt-table > tbody > tr {
+		position: relative;
+		padding-left: 46px;
+	}
+
+	body.app .sync-table td.sync-check {
+		position: absolute;
+		top: 14px;
+		left: 14px;
+		width: auto;
+	}
+
+	body.app .sync-table td.sync-check input {
+		width: 20px;
+		height: 20px;
+		margin: 0;
+	}
+
+	/* Price rows have four figures and no headline: 2 x 2 */
+	body.app #items-harga .sync-table .rpt-table > tbody > tr {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	body.app #items-harga .sync-table td.rpt-cell-title {
+		grid-column: 1 / -1;
+	}
+
+	.sync-actions {
+		position: sticky;
+		z-index: 5;
+		bottom: 0;
+		margin: 16px -16px -16px;
+		padding: 12px 16px;
+		border-top: 1px solid var(--line);
+		border-radius: 0 0 var(--radius) var(--radius);
+		background: rgba(255, 255, 255, .96);
+	}
+
+	.sync-selected {
+		width: 100%;
+	}
+
+	body.app .sync-actions .btn {
+		flex: 1 1 100%;
+	}
+
+	/* Three tiles side by side; the "all equal" line wraps below them */
+	.sync-summary {
+		gap: 8px;
+	}
+
+	.sync-stat {
+		flex: 1 1 0;
+		min-width: 0;
+		padding: 10px;
+		font-size: 11.5px;
+	}
+
+	.sync-stat span {
+		font-size: 17px;
+	}
+}

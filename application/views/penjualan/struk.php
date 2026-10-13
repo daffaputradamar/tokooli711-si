@@ -39,7 +39,7 @@
 			<!--<div class="row">-->
 			<!--    <?php foreach ($listdetail as $penjualandetail) { ?>-->
 			<!--        <div class="col-sm-6">-->
-			<!--            <?php echo $penjualandetail->nama_barang ?>-->
+			<!--            <?php echo html_escape((string) $penjualandetail->nama_barang) ?>-->
 			<!--        </div>-->
 			<!--        <div class="col-sm-3">-->
 			<!--            <?php echo $penjualandetail->jumlah . " x " . $penjualandetail->harga_jual ?>-->
@@ -55,7 +55,7 @@
 		    ?>
 				<tr>
 					<td colspan="2">
-						<?php echo $penjualandetail->nama_barang ?>
+						<?php echo html_escape((string) $penjualandetail->nama_barang) ?>
 					</td>
 				</tr>
 				<tr>

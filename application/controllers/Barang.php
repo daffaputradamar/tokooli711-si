@@ -120,6 +120,7 @@ class Barang extends CI_Controller
             );
 
             $this->Barang_model->insert($data);
+            set_toast('success', 'Data barang ditambahkan.');
             redirect(site_url('barang'));
         }
     }
@@ -151,6 +152,14 @@ class Barang extends CI_Controller
         $this->_rule();
 
         if ($this->form_validation->run() == false) {
+            if ($this->input->is_ajax_request()) {
+                $message = trim(strip_tags($this->form_validation->error_string(' ', ' ')));
+                json_reply(422, array(
+                    'ok' => FALSE,
+                    'status' => FALSE,
+                    'message' => $message !== '' ? 'Data belum lengkap: ' . $message : 'Data barang belum lengkap.'
+                ));
+            }
             $this->dataupdate($this->uri->segment(3));
         } else {
             $current_data = $this->Barang_model->selectById($this->uri->segment(3));
@@ -171,15 +180,19 @@ class Barang extends CI_Controller
                 return $this->output
                     ->set_content_type('application/json')
                     ->set_output(json_encode(array(
+                        'ok' => true,
                         'status' => true,
+                        'message' => trim($data['nama_barang']) . ' diperbarui.',
                         'harga_beli_changed' => $harga_beli_changed,
                         'kode_barang' => $data['kode_barang'],
                         'harga_beli'  => $data['harga_beli'],
                         'sync_enabled' => $this->config->item('sync_enabled'),
                         'sync_target_url' => $this->config->item('sync_target_url'),
+                        'sync_harga_url' => sync_target('sync/receive_barang_harga'),
                     )));
             }
 
+            set_toast('success', 'Data barang diperbarui.');
             redirect(site_url('barang'));
         }
     }
@@ -191,8 +204,11 @@ class Barang extends CI_Controller
         if ($row) {
             $this->Barang_model->delete($id);
 
+            set_toast('success', 'Data barang dihapus.');
             redirect(site_url('barang'));
         }
+        set_toast('error', 'Data barang tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('barang'));
     }
 }
 

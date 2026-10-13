@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 // $config['base_url'] = "http://localhost/solokuro";
 // $config['base_url'] = "http://localhost/bengkel";
-$config['base_url'] = "http://localhost/tokooli711-si";
+$config['base_url'] = getenv('CI_BASE_URL') ? getenv('CI_BASE_URL') : "http://localhost/tokooli711-si";
 // $config['base_url'] = "http://localhost:50004";
 //$config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 
@@ -527,10 +527,22 @@ $config['proxy_ips'] = '';
 | sync_target_url: The base URL of the target server to sync data to
 | sync_receive_enabled: Whether this app can receive sync data from other servers (TRUE/FALSE)
 |
+| CI_SYNC_ENABLED / CI_SYNC_TARGET_URL environment variables override the
+| first two (dev-router.php switches sync off locally so tests never reach
+| the live server).
+|
 */
-$config['sync_enabled'] = TRUE; // Set to FALSE to disable syncing from this app
-$config['sync_target_url'] = 'https://kurik.my.id'; // Target server URL for syncing
+$config['sync_enabled'] = getenv('CI_SYNC_ENABLED') !== FALSE ? (bool) getenv('CI_SYNC_ENABLED') : TRUE; // Set to FALSE to disable syncing from this app
+$config['sync_target_url'] = getenv('CI_SYNC_TARGET_URL') !== FALSE ? getenv('CI_SYNC_TARGET_URL') : 'https://kurik.my.id'; // Target server URL for syncing
 $config['sync_receive_enabled'] = TRUE; // Set to TRUE to allow this app to receive sync data
+
+/*
+| sync_api_key: shared secret for the sync endpoints (receive prices/stock,
+| save transactions, data exports). Empty = endpoints stay open as before.
+| To lock them down, put the SAME long random string on both servers.
+| (Environment variable CI_SYNC_API_KEY overrides it.)
+*/
+$config['sync_api_key'] = getenv('CI_SYNC_API_KEY') !== FALSE ? getenv('CI_SYNC_API_KEY') : '';
 
 /*
 |--------------------------------------------------------------------------

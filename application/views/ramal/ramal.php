@@ -46,10 +46,10 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $barang->nama_barang ?></td>
-			<td><?php echo $barang->kode_merk ?></td>
-			<td><?php echo $barang->harga_beli ?></td>
-			<td><?php echo $barang->harga_jual ?></td>
+			<td><?php echo html_escape((string) $barang->nama_barang) ?></td>
+			<td><?php echo html_escape((string) $barang->kode_merk) ?></td>
+			<td><?php echo html_escape((string) $barang->harga_beli) ?></td>
+			<td><?php echo html_escape((string) $barang->harga_jual) ?></td>
 			<td style="text-align:center">
 				<?php 
 				echo anchor(site_url('ramal/peramalan/'.$barang->kode_barang),'RAMAL','class="btn btn-danger"'); 

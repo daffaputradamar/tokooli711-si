@@ -105,6 +105,7 @@ class Admin extends CI_Controller
 	    );
 
             $this->Admin_model->insert($data);
+            set_toast('success', 'Data admin ditambahkan.');
             redirect(site_url('admin'));
         }
     }
@@ -143,6 +144,7 @@ class Admin extends CI_Controller
 
             $this->Admin_model->update($this->uri->segment(3), $data);
             
+            set_toast('success', 'Data admin diperbarui.');
             redirect(site_url('admin'));
         }
     }
@@ -154,8 +156,11 @@ class Admin extends CI_Controller
         if ($row) {
             $this->Admin_model->delete($id);
             
+            set_toast('success', 'Data admin dihapus.');
             redirect(site_url('admin'));
         }
+        set_toast('error', 'Data admin tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('admin'));
     }
 
 }

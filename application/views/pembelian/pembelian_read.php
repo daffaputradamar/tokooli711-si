@@ -46,11 +46,11 @@
                             ?>
                         <tr>
                             <td width="80px"><?php echo ++$start ?></td>
-                            <td><?php echo $pembelian_detail->nama_barang ?></td>
+                            <td><?php echo html_escape((string) $pembelian_detail->nama_barang) ?></td>
                             <?php if ($_SESSION['level'] == 'admin') { ?>
-                                <td><?php echo $pembelian_detail->harga_beli ?></td>
+                                <td><?php echo html_escape((string) $pembelian_detail->harga_beli) ?></td>
                             <?php } ?>
-                            <td><?php echo $pembelian_detail->jumlah ?></td>
+                            <td><?php echo html_escape((string) $pembelian_detail->jumlah) ?></td>
                             <?php if ($_SESSION['level'] == 'admin') { ?>
                                 <td>Rp. <?php echo $this->CodeGenerator->rp($pembelian_detail->subtotal) ?></td>
                             <?php } ?>

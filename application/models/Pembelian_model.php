@@ -53,45 +53,40 @@ class Pembelian_model extends CI_Model
             FROM pembelian p
             LEFT JOIN suplier s ON p.kode_suplier = s.kode_suplier
             WHERE 1 = 1";
+        $params = array();
 
         if (!empty($kode_barang)) {
             $sql .= " AND EXISTS (
                     SELECT 1 FROM pembelian_detail pd WHERE pd.kode_beli = p.kode_beli
-                    AND pd.kode_barang = '$kode_barang'
+                    AND pd.kode_barang = ?
                     )
-                    AND p.tanggal_beli_date BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+                    AND p.tanggal_beli_date BETWEEN ? AND ?";
+            array_push($params, $kode_barang, $tgl_awal, $tgl_akhir);
         }
 
         if (!empty($cari)) {
-            $sql .= " AND (LOWER(p.kode_beli) LIKE '%$cari%' OR LOWER(p.tanggal_beli) LIKE '%$cari%' OR LOWER(p.kode_admin) LIKE '%$cari%' OR LOWER(p.no_faktur) LIKE '%$cari%' OR LOWER(p.total) LIKE '%$cari%' OR LOWER(s.nama_suplier) LIKE '%$cari%')";
+            $sql .= " AND (LOWER(p.kode_beli) LIKE ? OR LOWER(p.tanggal_beli) LIKE ? OR LOWER(p.kode_admin) LIKE ? OR LOWER(p.no_faktur) LIKE ? OR LOWER(p.total) LIKE ? OR LOWER(s.nama_suplier) LIKE ?)";
+            $like = '%' . $cari . '%';
+            array_push($params, $like, $like, $like, $like, $like, $like);
         }
-            
+
         $sql .= " ORDER BY p.kode_beli DESC;";
 
-        $result = $this->db->query($sql)->result();
+        // Bound parameters: the filter values come straight from the URL
+        $result = $this->db->query($sql, $params)->result();
 
         return $result;
-
-        return $this->db->query("
-            SELECT p.*, s.*
-            FROM pembelian p
-            JOIN pembelian_detail pd ON p.kode_beli = pd.kode_beli
-            LEFT JOIN suplier s ON p.kode_suplier = s.kode_suplier
-            WHERE pd.kode_barang = '$kode_barang'
-            AND p.tanggal_beli_date BETWEEN '$tgl_awal' AND '$tgl_akhir'
-            ORDER BY p.kode_beli DESC
-        ")->result();
     }
 
 
     public function jumlahdata_plus($idbarang, $tahun, $bulan)
     {
-        return $this->db->query('select avg(pembelian_detail.harga_beli) as harga_beli, substr(pembelian.tanggal_beli,4,2) as bulan , substr(pembelian.tanggal_beli,7,4) as tahun  from pembelian left join pembelian_detail on pembelian.kode_beli=pembelian_detail.kode_beli where pembelian_detail.kode_barang="'.$idbarang.'" AND substr(pembelian.tanggal_beli,7,4)="'.$tahun.'" AND substr(pembelian.tanggal_beli,4,2)>="'.$bulan.'" group by substr(pembelian.tanggal_beli,4,2),substr(pembelian.tanggal_beli,7,4)')->result();
+        return $this->db->query('select avg(pembelian_detail.harga_beli) as harga_beli, substr(pembelian.tanggal_beli,4,2) as bulan , substr(pembelian.tanggal_beli,7,4) as tahun  from pembelian left join pembelian_detail on pembelian.kode_beli=pembelian_detail.kode_beli where pembelian_detail.kode_barang=? AND substr(pembelian.tanggal_beli,7,4)=? AND substr(pembelian.tanggal_beli,4,2)>=? group by substr(pembelian.tanggal_beli,4,2),substr(pembelian.tanggal_beli,7,4)', array((string) $idbarang, (string) $tahun, (string) $bulan))->result();
     }
 
     public function jumlahdata_min($idbarang, $tahun, $bulan)
     {
-        return $this->db->query('select avg(pembelian_detail.harga_beli) as harga_beli, substr(pembelian.tanggal_beli,4,2) as bulan , substr(pembelian.tanggal_beli,7,4) as tahun  from pembelian left join pembelian_detail on pembelian.kode_beli=pembelian_detail.kode_beli where pembelian_detail.kode_barang="'.$idbarang.'" AND substr(pembelian.tanggal_beli,7,4)="'.$tahun.'" AND substr(pembelian.tanggal_beli,4,2)<"'.$bulan.'" group by substr(pembelian.tanggal_beli,4,2),substr(pembelian.tanggal_beli,7,4)')->result();
+        return $this->db->query('select avg(pembelian_detail.harga_beli) as harga_beli, substr(pembelian.tanggal_beli,4,2) as bulan , substr(pembelian.tanggal_beli,7,4) as tahun  from pembelian left join pembelian_detail on pembelian.kode_beli=pembelian_detail.kode_beli where pembelian_detail.kode_barang=? AND substr(pembelian.tanggal_beli,7,4)=? AND substr(pembelian.tanggal_beli,4,2)<? group by substr(pembelian.tanggal_beli,4,2),substr(pembelian.tanggal_beli,7,4)', array((string) $idbarang, (string) $tahun, (string) $bulan))->result();
     }
 
     public function insert($data)
@@ -134,10 +129,10 @@ class Pembelian_model extends CI_Model
             FROM pembelian p
             LEFT JOIN pembelian_detail pd ON p.kode_beli = pd.kode_beli 
             LEFT JOIN barang b ON pd.kode_barang = b.kode_barang  
-            WHERE tanggal_beli_date BETWEEN '$tanggal1' and '$tanggal2' 
-            AND b.kode_barang = '$kode'"; 
+            WHERE tanggal_beli_date BETWEEN ? and ?
+            AND b.kode_barang = ?";
 
-        return $this->db->query($sql)->result();
+        return $this->db->query($sql, array($tanggal1, $tanggal2, $kode))->result();
     }
     public function beliByTgl($tanggal, $status)
     {

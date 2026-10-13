@@ -44,8 +44,8 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $merk->merk ?></td>
-			<td><?php echo $merk->keterangan ?></td>
+			<td><?php echo html_escape((string) $merk->merk) ?></td>
+			<td><?php echo html_escape((string) $merk->keterangan) ?></td>
 			<td style="text-align:center" width="250px">
 				<?php 
 				echo anchor(site_url('merk/view/'.$merk->kode_merk),'Lihat','class="btn btn-info"'); 

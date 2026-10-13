@@ -109,6 +109,7 @@ class Suplier extends CI_Controller
 	    );
 
             $this->Suplier_model->insert($data);
+            set_toast('success', 'Data supplier ditambahkan.');
             redirect(site_url('suplier'));
         }
     }
@@ -149,6 +150,7 @@ class Suplier extends CI_Controller
 
             $this->Suplier_model->update($this->uri->segment(3), $data);
             
+            set_toast('success', 'Data supplier diperbarui.');
             redirect(site_url('suplier'));
         }
     }
@@ -160,8 +162,11 @@ class Suplier extends CI_Controller
         if ($row) {
             $this->Suplier_model->delete($id);
             
+            set_toast('success', 'Data supplier dihapus.');
             redirect(site_url('suplier'));
         }
+        set_toast('error', 'Data supplier tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('suplier'));
     }
 
 }

@@ -1,0 +1,1638 @@
+/* ==========================================================================
+   Toko Oli 711 - application theme
+   Sits on top of Bootstrap 3 + Metronic component CSS and restyles them.
+   Load this stylesheet LAST.
+   ========================================================================== */
+
+:root {
+	--brand-50: #f3f2ff;
+	--brand-100: #e8e6ff;
+	--brand-200: #d3d0fd;
+	--brand-300: #b1acf7;
+	--brand-500: #6d64e8;
+	--brand-600: #5b4fd9;
+	--brand-700: #4b40bd;
+	--brand-800: #3c3497;
+	--brand-900: #2a2570;
+	--accent: #3fc1c9;
+
+	--ink: #1d1f33;
+	--ink-2: #4a4e69;
+	--muted: #7a7f9a;
+	--line: #e6e7f0;
+	--line-2: #eff0f6;
+	--surface: #ffffff;
+	--canvas: #f4f5fb;
+
+	--ok: #14946a;
+	--ok-50: #e7f7f0;
+	--warn: #c27803;
+	--warn-50: #fff6e0;
+	--danger: #d6334a;
+	--danger-50: #fdecee;
+	--info: #2f7fd8;
+	--info-50: #e9f2fd;
+
+	--radius: 12px;
+	--radius-sm: 9px;
+	--shadow-sm: 0 1px 2px rgba(29, 31, 51, .05);
+	--shadow: 0 1px 2px rgba(29, 31, 51, .04), 0 4px 16px rgba(29, 31, 51, .06);
+	--shadow-lg: 0 12px 40px rgba(29, 31, 51, .16);
+	--focus: 0 0 0 3px rgba(109, 100, 232, .22);
+
+	--sidebar-w: 248px;
+	--topbar-h: 60px;
+	--font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body.app {
+	margin: 0;
+	background: var(--canvas) !important;
+	color: var(--ink);
+	font-family: var(--font);
+	font-size: 14px;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+body.app h1, body.app h2, body.app h3, body.app h4, body.app h5, body.app h6 {
+	font-family: var(--font);
+	color: var(--ink);
+	font-weight: 650;
+	letter-spacing: -.01em;
+}
+
+body.app a {
+	color: var(--brand-600);
+}
+
+body.app a:hover,
+body.app a:focus {
+	color: var(--brand-800);
+	text-decoration: none;
+}
+
+body.app .text-muted {
+	color: var(--muted) !important;
+}
+
+body.app ::selection {
+	background: var(--brand-200);
+}
+
+.tabular {
+	font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Shell: sidebar
+   -------------------------------------------------------------------------- */
+.app-sidebar {
+	position: fixed;
+	z-index: 1040;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	width: var(--sidebar-w);
+	background: linear-gradient(180deg, #4d42c4 0%, #3b3496 100%);
+	color: #fff;
+	transition: transform .22s ease;
+}
+
+.app-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: var(--topbar-h);
+	padding: 0 18px;
+	border-bottom: 1px solid rgba(255, 255, 255, .1);
+	color: #fff !important;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -.01em;
+	white-space: nowrap;
+}
+
+.app-brand img {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: left center;
+	background: #fff;
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, .25);
+}
+
+.app-nav {
+	flex: 1;
+	overflow-y: auto;
+	padding: 12px 10px 24px;
+}
+
+.app-nav ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.app-nav-section {
+	margin: 18px 10px 6px;
+	color: rgba(255, 255, 255, .55);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+.app-nav-section:first-child {
+	margin-top: 4px;
+}
+
+.app-nav-link {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+	width: 100%;
+	margin: 1px 0;
+	padding: 9px 12px;
+	border: 0;
+	border-radius: 9px;
+	background: none;
+	color: rgba(255, 255, 255, .86) !important;
+	font-size: 14px;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+	transition: background .15s, color .15s;
+}
+
+.app-nav-link .fa {
+	width: 18px;
+	font-size: 15px;
+	text-align: center;
+	opacity: .9;
+}
+
+.app-nav-link:hover,
+.app-nav-link:focus {
+	background: rgba(255, 255, 255, .1);
+	color: #fff !important;
+	outline: none;
+}
+
+.app-nav-link.is-active {
+	background: #fff;
+	color: var(--brand-700) !important;
+	box-shadow: 0 2px 8px rgba(20, 16, 80, .25);
+}
+
+.app-nav-link .app-caret {
+	margin-left: auto;
+	font-size: 11px;
+	transition: transform .2s;
+}
+
+.app-nav-group.is-open > .app-nav-link .app-caret {
+	transform: rotate(90deg);
+}
+
+.app-nav-group.has-active > .app-nav-link {
+	color: #fff !important;
+	font-weight: 600;
+}
+
+.app-subnav {
+	display: none;
+	margin: 2px 0 6px 21px !important;
+	padding-left: 10px !important;
+	border-left: 1px solid rgba(255, 255, 255, .18);
+}
+
+.app-nav-group.is-open > .app-subnav {
+	display: block;
+}
+
+.app-subnav a {
+	display: block;
+	padding: 7px 10px;
+	border-radius: 8px;
+	color: rgba(255, 255, 255, .78) !important;
+	font-size: 13.5px;
+}
+
+.app-subnav a:hover {
+	background: rgba(255, 255, 255, .1);
+	color: #fff !important;
+}
+
+.app-subnav a.is-active {
+	background: rgba(255, 255, 255, .16);
+	color: #fff !important;
+	font-weight: 600;
+}
+
+.app-backdrop {
+	display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Shell: main column + top bar
+   -------------------------------------------------------------------------- */
+.app-main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+body.has-sidebar .app-main {
+	margin-left: var(--sidebar-w);
+}
+
+.app-topbar {
+	position: sticky;
+	z-index: 1030;
+	top: 0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	height: var(--topbar-h);
+	padding: 0 24px;
+	border-bottom: 1px solid var(--line);
+	background: rgba(255, 255, 255, .88);
+	-webkit-backdrop-filter: saturate(1.4) blur(10px);
+	backdrop-filter: saturate(1.4) blur(10px);
+}
+
+.app-burger {
+	display: none;
+	width: 40px;
+	height: 40px;
+	margin-left: -8px;
+	border: 0;
+	border-radius: 10px;
+	background: none;
+	color: var(--ink);
+	font-size: 18px;
+}
+
+.app-burger:hover {
+	background: var(--line-2);
+}
+
+.app-topbar-brand {
+	display: none;
+	align-items: center;
+	gap: 8px;
+	color: var(--ink) !important;
+	font-weight: 700;
+}
+
+.app-topbar-brand img {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: left center;
+}
+
+body:not(.has-sidebar) .app-topbar-brand {
+	display: flex;
+}
+
+.app-topbar-spacer {
+	flex: 1;
+}
+
+.app-clock {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	height: 34px;
+	padding: 0 12px;
+	border-radius: 999px;
+	background: var(--brand-50);
+	color: var(--brand-800);
+	font-size: 13.5px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: .02em;
+}
+
+.app-user {
+	position: relative;
+}
+
+.app-user > a {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 4px 8px 4px 4px;
+	border-radius: 999px;
+	color: var(--ink) !important;
+	font-weight: 600;
+}
+
+.app-user > a:hover {
+	background: var(--line-2);
+}
+
+.app-avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--brand-500), var(--accent));
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+/* Metronic forces left-aligned menus; anchor this one to the right edge */
+body.app .app-user .dropdown-menu {
+	right: 0 !important;
+	left: auto !important;
+	min-width: 200px;
+	margin-top: 8px;
+}
+
+body.app .app-user .dropdown-menu::before,
+body.app .app-user .dropdown-menu::after {
+	display: none !important;
+}
+
+.app-content {
+	flex: 1;
+	width: 100%;
+	max-width: 1480px;
+	margin: 0 auto;
+	padding: 24px;
+}
+
+.app-content::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.app-footer {
+	padding: 16px 24px 24px;
+	color: var(--muted);
+	font-size: 12.5px;
+	text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Panels / portlets / cards
+   -------------------------------------------------------------------------- */
+body.app .panel,
+body.app .portlet,
+body.app .box,
+.app-card {
+	margin-bottom: 20px;
+	border: 1px solid var(--line) !important;
+	border-radius: var(--radius) !important;
+	background: var(--surface);
+	box-shadow: var(--shadow-sm) !important;
+}
+
+body.app .panel > .panel-heading,
+body.app .portlet > .portlet-title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	min-height: 52px;
+	margin: 0;
+	padding: 12px 18px !important;
+	border-bottom: 1px solid var(--line) !important;
+	border-radius: var(--radius) var(--radius) 0 0 !important;
+	background: var(--surface) !important;
+	color: var(--ink) !important;
+	font-size: 15px !important;
+	font-weight: 650;
+}
+
+body.app .panel > .panel-heading .fa,
+body.app .portlet > .portlet-title .fa {
+	color: var(--brand-500);
+}
+
+body.app .panel > .panel-heading strong {
+	font-weight: 650;
+}
+
+/* The legacy views put a bell icon on every heading; it carries no meaning */
+body.app .panel-heading > .fa-bell,
+body.app .panel-heading > strong > .fa-bell {
+	display: none;
+}
+
+body.app .panel-body,
+body.app .portlet-body {
+	padding: 20px !important;
+}
+
+/* Bootstrap rows inside cards stack their columns; give each stacked block air */
+body.app .panel-body > .row + .row,
+body.app .panel-body > form > .row + .row {
+	margin-top: 4px;
+}
+
+body.app .panel-footer {
+	border-top: 1px solid var(--line);
+	border-radius: 0 0 var(--radius) var(--radius);
+	background: #fafbfe;
+}
+
+/* Nested panels (e.g. inside forms) read as sections, not cards */
+body.app .panel .panel {
+	box-shadow: none !important;
+}
+
+body.app .panel-info > .panel-heading,
+body.app .panel-primary > .panel-heading {
+	background: var(--brand-50) !important;
+	color: var(--brand-800) !important;
+}
+
+body.app .panel-success > .panel-heading {
+	background: var(--ok-50) !important;
+	color: var(--ok) !important;
+}
+
+body.app .panel-warning > .panel-heading {
+	background: var(--warn-50) !important;
+	color: var(--warn) !important;
+}
+
+body.app .panel-danger > .panel-heading {
+	background: var(--danger-50) !important;
+	color: var(--danger) !important;
+}
+
+body.app .portlet > .portlet-title > .caption {
+	float: none;
+	padding: 0;
+	color: var(--ink) !important;
+	font-size: 15px;
+	font-weight: 650;
+}
+
+body.app .portlet > .portlet-title > .tools,
+body.app .portlet > .portlet-title > .actions {
+	float: none;
+	margin-left: auto;
+	padding: 0;
+}
+
+/* Metronic dashboard tiles */
+body.app .dashboard-stat2 {
+	margin-bottom: 20px;
+	padding: 18px;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: var(--surface);
+	box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+body.app .btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 7px 14px;
+	border: 1px solid transparent;
+	border-radius: var(--radius-sm) !important;
+	box-shadow: none !important;
+	font-family: var(--font);
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1.3;
+	text-transform: none !important;
+	letter-spacing: 0;
+	transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+}
+
+body.app .btn:focus,
+body.app .btn:active:focus {
+	outline: none;
+	box-shadow: var(--focus) !important;
+}
+
+body.app .btn-lg {
+	min-height: 46px;
+	padding: 10px 20px;
+	font-size: 15px;
+}
+
+body.app .btn-sm,
+body.app .btn-xs {
+	min-height: 30px;
+	padding: 4px 10px;
+	font-size: 12.5px;
+}
+
+body.app .btn-block {
+	display: flex;
+	width: 100%;
+}
+
+body.app .btn-default,
+body.app .btn.default {
+	border-color: var(--line) !important;
+	background: #fff !important;
+	color: var(--ink-2) !important;
+}
+
+body.app .btn-default:hover,
+body.app .btn.default:hover {
+	border-color: #d4d6e4 !important;
+	background: #f7f8fc !important;
+	color: var(--ink) !important;
+}
+
+body.app .btn-primary,
+body.app .btn.blue {
+	border-color: var(--brand-600) !important;
+	background: var(--brand-600) !important;
+	color: #fff !important;
+}
+
+body.app .btn-primary:hover,
+body.app .btn-primary:focus,
+body.app .btn.blue:hover {
+	border-color: var(--brand-700) !important;
+	background: var(--brand-700) !important;
+	color: #fff !important;
+}
+
+body.app .btn-success,
+body.app .btn.green {
+	border-color: var(--ok) !important;
+	background: var(--ok) !important;
+	color: #fff !important;
+}
+
+body.app .btn-success:hover {
+	border-color: #0f7a57 !important;
+	background: #0f7a57 !important;
+}
+
+body.app .btn-info {
+	border-color: var(--info) !important;
+	background: var(--info) !important;
+	color: #fff !important;
+}
+
+body.app .btn-info:hover {
+	border-color: #2368b6 !important;
+	background: #2368b6 !important;
+}
+
+body.app .btn-warning,
+body.app .btn.yellow {
+	border-color: #e19a0c !important;
+	background: #e19a0c !important;
+	color: #fff !important;
+}
+
+body.app .btn-danger,
+body.app .btn.red {
+	border-color: var(--danger) !important;
+	background: var(--danger) !important;
+	color: #fff !important;
+}
+
+body.app .btn-danger:hover {
+	border-color: #b72a3e !important;
+	background: #b72a3e !important;
+}
+
+body.app .btn-link {
+	color: var(--brand-600) !important;
+}
+
+/* "Total Data : n" is rendered as a dead button link; show it as a count chip */
+body.app a.btn[href="#"] {
+	min-height: 32px;
+	padding: 4px 12px;
+	border-color: var(--line) !important;
+	background: #f6f7fb !important;
+	color: var(--ink-2) !important;
+	font-weight: 600;
+	pointer-events: none;
+}
+
+/* Row actions in tables: quiet, tinted buttons instead of a wall of colour */
+body.app .table .btn {
+	min-height: 30px;
+	margin: 2px 0;
+	padding: 4px 10px;
+	font-size: 12.5px;
+}
+
+body.app .table .btn-info {
+	border-color: transparent !important;
+	background: var(--info-50) !important;
+	color: var(--info) !important;
+}
+
+body.app .table .btn-success {
+	border-color: transparent !important;
+	background: var(--ok-50) !important;
+	color: var(--ok) !important;
+}
+
+body.app .table .btn-primary {
+	border-color: transparent !important;
+	background: var(--brand-100) !important;
+	color: var(--brand-700) !important;
+}
+
+body.app .table .btn-warning {
+	border-color: transparent !important;
+	background: var(--warn-50) !important;
+	color: var(--warn) !important;
+}
+
+body.app .table .btn-danger {
+	border-color: transparent !important;
+	background: var(--danger-50) !important;
+	color: var(--danger) !important;
+}
+
+/* Layout tables used for filter forms (see prepareFormTable in app.js) */
+body.app .table.app-form-table {
+	width: auto;
+	max-width: 100%;
+	background: none;
+}
+
+body.app .table.app-form-table > tbody > tr > td {
+	padding: 6px 10px 6px 0;
+	border: 0 !important;
+	background: none !important;
+}
+
+body.app .table.app-form-table td.app-form-label {
+	color: var(--ink-2);
+	font-size: 13px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+body.app .table.app-form-table td.app-form-sep {
+	width: 1%;
+	color: var(--muted);
+}
+
+body.app .table.app-form-table .bootstrap-select,
+body.app .table.app-form-table .form-control {
+	min-width: 260px;
+	max-width: 100%;
+}
+
+body.app .table td.app-actions-cell {
+	width: 1% !important;
+	white-space: nowrap;
+}
+
+body.app .table td.app-money-cell {
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+body.app .table .btn-info:hover,
+body.app .table .btn-success:hover,
+body.app .table .btn-primary:hover,
+body.app .table .btn-warning:hover,
+body.app .table .btn-danger:hover {
+	filter: brightness(.95);
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+body.app label,
+body.app .control-label {
+	margin-bottom: 6px;
+	color: var(--ink-2);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+body.app .form-group {
+	margin-bottom: 18px;
+}
+
+/* Inline filter rows ("Filter Karyawan: [select]  Filter Teks: [input]") */
+body.app .form-inline label {
+	margin-right: 8px;
+	margin-bottom: 0;
+}
+
+body.app .form-inline .form-group,
+body.app .form-inline > .input-group {
+	margin-right: 14px;
+	margin-bottom: 8px;
+}
+
+body.app .form-inline .form-control + label,
+body.app .form-inline select + label {
+	margin-left: 14px;
+}
+
+/* Legacy views print buttons back to back with no whitespace */
+body.app :not(.btn-group):not(.input-group-btn):not(.pos-dock) > .btn + .btn,
+body.app :not(.btn-group):not(.input-group-btn) > .btn + form,
+body.app :not(.btn-group):not(.input-group-btn) > form + .btn {
+	margin-left: 8px;
+}
+
+/* Breathing room between a filter/toolbar block and the table under it */
+body.app * + .app-table-wrap,
+body.app * + .table-responsive {
+	margin-top: 14px;
+}
+
+body.app .form-control {
+	height: 40px;
+	padding: 8px 12px;
+	border: 1px solid #d8dae6 !important;
+	border-radius: var(--radius-sm) !important;
+	background-color: #fff;
+	box-shadow: none !important;
+	color: var(--ink);
+	font-family: var(--font);
+	font-size: 14px;
+	transition: border-color .15s, box-shadow .15s;
+}
+
+body.app textarea.form-control {
+	height: auto;
+	min-height: 84px;
+}
+
+body.app .form-control:focus {
+	border-color: var(--brand-500) !important;
+	outline: none;
+	box-shadow: var(--focus) !important;
+}
+
+body.app .form-control[readonly],
+body.app .form-control[disabled] {
+	border-color: var(--line) !important;
+	background-color: #f6f7fb !important;
+	color: var(--ink-2);
+}
+
+/* Native checkboxes/radios, tinted to the brand (the old "uniform" plugin is gone) */
+body.app input[type="checkbox"],
+body.app input[type="radio"] {
+	width: 16px;
+	height: 16px;
+	margin: 0 6px 0 0;
+	vertical-align: -3px;
+	accent-color: var(--brand-600);
+	cursor: pointer;
+}
+
+body.app .form-control::placeholder {
+	color: #a3a7bd;
+}
+
+body.app .input-group .form-control:not(:last-child) {
+	border-top-right-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+}
+
+body.app .input-group .form-control:not(:first-child) {
+	border-top-left-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+}
+
+body.app .input-group-btn {
+	white-space: nowrap;
+}
+
+body.app .input-group-btn .btn {
+	display: inline-flex;
+	height: 40px;
+	vertical-align: top;
+}
+
+body.app .input-group-btn:last-child > .btn {
+	margin-left: -1px;
+	border-radius: 0 !important;
+}
+
+body.app .input-group-btn:last-child > .btn:last-child {
+	border-top-right-radius: var(--radius-sm) !important;
+	border-bottom-right-radius: var(--radius-sm) !important;
+}
+
+body.app .input-group-addon {
+	border-color: #d8dae6;
+	border-radius: var(--radius-sm);
+	background: #f6f7fb;
+	color: var(--muted);
+}
+
+body.app .has-error .form-control {
+	border-color: var(--danger) !important;
+}
+
+body.app label .text-danger,
+body.app label p {
+	display: inline;
+	color: var(--danger);
+	font-weight: 500;
+}
+
+/* bootstrap-select */
+body.app .bootstrap-select > .btn,
+body.app .bootstrap-select > .dropdown-toggle {
+	height: 40px;
+	min-height: 40px;
+	border: 1px solid #d8dae6 !important;
+	background: #fff !important;
+	color: var(--ink) !important;
+	font-weight: 500;
+	text-transform: none !important;
+}
+
+body.app .bootstrap-select:not(.input-group-btn) {
+	width: 100% !important;
+}
+
+/* bootstrap-select copies .form-control onto its wrapper; only the button should look like a field */
+body.app .bootstrap-select.form-control {
+	height: auto;
+	padding: 0;
+	border: 0 !important;
+	background: none;
+	box-shadow: none !important;
+}
+
+body.app .bootstrap-select.form-control > select.mobile-device {
+	height: 40px;
+	padding: 8px 12px;
+	border: 1px solid #d8dae6;
+	border-radius: var(--radius-sm);
+	background: #fff;
+	opacity: 1 !important;
+}
+
+/* The plugin keeps the real <select> as a near-invisible sliver; never let
+   width rules for .form-control stretch it back out (it overflows the page). */
+body.app .app-content .bootstrap-select > select.form-control:not(.mobile-device),
+body.app .app-content .bootstrap-select > select:not(.mobile-device) {
+	width: .5px !important;
+	min-width: 0 !important;
+	max-width: .5px !important;
+}
+
+body.app .bootstrap-select > .dropdown-toggle:focus,
+body.app .bootstrap-select.open > .dropdown-toggle {
+	border-color: var(--brand-500) !important;
+	outline: none !important;
+	box-shadow: var(--focus) !important;
+}
+
+body.app .bootstrap-select .dropdown-menu {
+	margin-top: 6px;
+}
+
+body.app .bootstrap-select .bs-searchbox .form-control {
+	height: 36px;
+}
+
+body.app .bootstrap-select .dropdown-menu li.selected a,
+body.app .bootstrap-select .dropdown-menu li.active a {
+	background: var(--brand-100);
+	color: var(--brand-800);
+	font-weight: 600;
+}
+
+body.app .bootstrap-select .filter-option {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-transform: none !important;
+	font-size: 14px !important;
+}
+
+body.app .bootstrap-select .dropdown-menu li a {
+	padding: 7px 12px;
+	white-space: normal;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+body.app .table-responsive,
+.app-table-wrap {
+	width: 100%;
+	margin-bottom: 12px;
+	overflow-x: auto;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	-webkit-overflow-scrolling: touch;
+}
+
+body.app .table-responsive > .table,
+.app-table-wrap > .table {
+	margin-bottom: 0 !important;
+	border: 0 !important;
+}
+
+body.app .table {
+	width: 100%;
+	margin-bottom: 12px;
+	background: #fff;
+	font-size: 13.5px;
+}
+
+body.app .table > thead > tr > th,
+body.app .table > tbody > tr > th,
+body.app .table > tr > th {
+	padding: 10px 12px;
+	border-top: 0 !important;
+	border-bottom: 1px solid var(--line) !important;
+	background: #f8f9fc;
+	color: var(--muted);
+	font-size: 11.5px;
+	font-weight: 650;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+body.app .table > tbody > tr > td,
+body.app .table > tfoot > tr > td,
+body.app .table > tr > td {
+	padding: 10px 12px;
+	border-top: 1px solid var(--line-2) !important;
+	color: var(--ink);
+	vertical-align: middle;
+}
+
+body.app .table-bordered,
+body.app .table-bordered > tbody > tr > td,
+body.app .table-bordered > tbody > tr > th,
+body.app .table-bordered > thead > tr > th,
+body.app .table-bordered > tfoot > tr > td {
+	border-right: 0 !important;
+	border-left: 0 !important;
+}
+
+body.app .table-striped > tbody > tr:nth-of-type(odd) {
+	background: #fff;
+}
+
+body.app .table-striped > tbody > tr:nth-of-type(even) {
+	background: #fbfbfe;
+}
+
+body.app .table-hover > tbody > tr:hover {
+	background: var(--brand-50) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Pagination, alerts, labels, dropdowns, modals
+   -------------------------------------------------------------------------- */
+body.app .pagination {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin: 0;
+}
+
+body.app .pagination > li > a,
+body.app .pagination > li > span {
+	min-width: 36px;
+	height: 36px;
+	margin: 0;
+	padding: 0 10px;
+	border: 1px solid var(--line);
+	border-radius: 9px !important;
+	background: #fff;
+	color: var(--ink-2);
+	font-weight: 500;
+	line-height: 34px;
+	text-align: center;
+}
+
+body.app .pagination > li > a:hover {
+	border-color: var(--brand-200);
+	background: var(--brand-50);
+	color: var(--brand-700);
+}
+
+body.app .pagination > .active > a,
+body.app .pagination > .active > span,
+body.app .pagination > .active > a:hover {
+	border-color: var(--brand-600);
+	background: var(--brand-600);
+	color: #fff;
+}
+
+body.app .alert {
+	border: 1px solid transparent;
+	border-radius: 10px;
+	font-weight: 500;
+}
+
+body.app .alert-success {
+	border-color: #bfe8d6;
+	background: var(--ok-50);
+	color: #0d6b4c;
+}
+
+body.app .alert-info {
+	border-color: #c8def8;
+	background: var(--info-50);
+	color: #1d5aa0;
+}
+
+body.app .alert-warning {
+	border-color: #f6dc9b;
+	background: var(--warn-50);
+	color: #8a5503;
+}
+
+body.app .alert-danger {
+	border-color: #f6c4cb;
+	background: var(--danger-50);
+	color: #a3233a;
+}
+
+body.app .label,
+body.app .badge {
+	padding: 3px 8px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 600;
+}
+
+body.app .dropdown-menu {
+	padding: 6px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	box-shadow: var(--shadow-lg);
+}
+
+body.app .dropdown-menu > li > a {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 12px;
+	border-radius: 8px;
+	color: var(--ink-2);
+	font-size: 13.5px;
+}
+
+body.app .dropdown-menu > li > a:hover {
+	background: var(--brand-50);
+	color: var(--brand-800);
+}
+
+body.app .dropdown-menu .divider {
+	margin: 6px 0;
+	background: var(--line);
+}
+
+body.app .modal-content {
+	border: 0;
+	border-radius: 16px;
+	box-shadow: var(--shadow-lg);
+}
+
+body.app .modal-header {
+	border-bottom: 1px solid var(--line);
+}
+
+body.app .modal-footer {
+	border-top: 1px solid var(--line);
+}
+
+body.app .well {
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: #fafbfe;
+	box-shadow: none;
+}
+
+body.app .nav-tabs {
+	border-bottom: 1px solid var(--line);
+}
+
+body.app .nav-tabs > li > a {
+	border-radius: 9px 9px 0 0;
+	color: var(--ink-2);
+	font-weight: 600;
+}
+
+body.app .nav-tabs > li.active > a {
+	border-color: var(--line) var(--line) transparent;
+	color: var(--brand-700);
+}
+
+/* Toasts (AppToast in app.js) */
+.app-toasts {
+	position: fixed;
+	z-index: 2000;
+	top: calc(var(--topbar-h) + 12px);
+	right: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 360px;
+	max-width: calc(100vw - 32px);
+	pointer-events: none;
+}
+
+.app-toast {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 14px 12px 14px 16px;
+	border: 1px solid var(--line);
+	border-left-width: 4px;
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--shadow-lg);
+	pointer-events: auto;
+	animation: app-toast-in .22s ease-out;
+}
+
+.app-toast.is-leaving {
+	opacity: 0;
+	transform: translateX(16px);
+	transition: opacity .2s, transform .2s;
+}
+
+.app-toast.is-success { border-left-color: var(--ok); }
+.app-toast.is-error { border-left-color: var(--danger); }
+.app-toast.is-warning { border-left-color: #e19a0c; }
+.app-toast.is-info { border-left-color: var(--brand-500); }
+
+.app-toast-icon {
+	margin-top: 1px;
+	font-size: 18px;
+}
+
+.app-toast.is-success .app-toast-icon { color: var(--ok); }
+.app-toast.is-error .app-toast-icon { color: var(--danger); }
+.app-toast.is-warning .app-toast-icon { color: #e19a0c; }
+.app-toast.is-info .app-toast-icon { color: var(--brand-500); }
+
+.app-toast-body {
+	flex: 1;
+	min-width: 0;
+}
+
+.app-toast-title {
+	color: var(--ink);
+	font-size: 14px;
+	font-weight: 650;
+}
+
+.app-toast-text {
+	margin-top: 2px;
+	color: var(--ink-2);
+	font-size: 13.5px;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+
+.app-toast-close {
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	margin: -4px -2px 0 0;
+	border: 0;
+	border-radius: 8px;
+	background: none;
+	color: var(--muted);
+}
+
+.app-toast-close:hover {
+	background: var(--line-2);
+	color: var(--ink);
+}
+
+@keyframes app-toast-in {
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (max-width: 767px) {
+	/* Phones: bottom of the screen, above the cashier dock, newest nearest the thumb */
+	.app-toasts {
+		top: auto;
+		right: 12px;
+		bottom: 16px;
+		left: 12px;
+		flex-direction: column-reverse;
+		width: auto;
+		max-width: none;
+	}
+
+	.page-home .app-toasts {
+		bottom: 88px;
+	}
+
+	@keyframes app-toast-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.app-toast,
+	.app-toast.is-leaving {
+		animation: none;
+		transition: none;
+	}
+}
+
+/* Confirm dialog (AppConfirm in app.js) */
+body.has-dialog {
+	overflow: hidden;
+}
+
+.app-dialog-backdrop {
+	position: fixed;
+	z-index: 2100;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background: rgba(20, 18, 50, .45);
+	animation: app-fade-in .15s ease-out;
+}
+
+.app-dialog {
+	width: 100%;
+	max-width: 460px;
+	max-height: calc(100vh - 32px);
+	padding: 22px;
+	overflow-y: auto;
+	border-radius: 16px;
+	background: #fff;
+	box-shadow: var(--shadow-lg);
+	animation: app-toast-in .18s ease-out;
+}
+
+body.app .app-dialog-title {
+	margin: 0 0 8px;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.app-dialog.is-danger .app-dialog-title::before {
+	content: "\f071";
+	margin-right: 8px;
+	color: var(--danger);
+	font-family: FontAwesome;
+	font-weight: normal;
+}
+
+.app-dialog-text {
+	margin: 0 0 12px;
+	color: var(--ink-2);
+	line-height: 1.55;
+}
+
+.app-dialog-list {
+	max-height: 220px;
+	margin: 0 0 16px;
+	padding: 10px 14px 10px 30px;
+	overflow-y: auto;
+	border-radius: 10px;
+	background: #f6f7fb;
+	color: var(--ink-2);
+	font-size: 13px;
+}
+
+.app-dialog-list li + li {
+	margin-top: 4px;
+}
+
+.app-dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 18px;
+}
+
+body.app .app-dialog-actions .btn + .btn {
+	margin-left: 0;
+}
+
+@keyframes app-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@media (max-width: 767px) {
+	.app-dialog-backdrop {
+		align-items: flex-end;
+		padding: 0;
+	}
+
+	.app-dialog {
+		max-width: none;
+		border-radius: 18px 18px 0 0;
+		padding-bottom: calc(22px + env(safe-area-inset-bottom));
+	}
+
+	.app-dialog-actions .btn {
+		flex: 1;
+	}
+}
+
+/* Scroll-to-top button */
+.app-to-top {
+	position: fixed;
+	z-index: 1020;
+	right: 20px;
+	bottom: 20px;
+	display: none;
+	width: 40px;
+	height: 40px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--shadow);
+	color: var(--ink-2);
+}
+
+.app-to-top.is-visible {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+	.app-sidebar {
+		transform: translateX(-100%);
+		box-shadow: none;
+	}
+
+	body.nav-open .app-sidebar {
+		transform: none;
+		box-shadow: var(--shadow-lg);
+	}
+
+	body.nav-open .app-backdrop {
+		position: fixed;
+		z-index: 1035;
+		inset: 0;
+		display: block;
+		background: rgba(20, 18, 50, .45);
+	}
+
+	body.nav-open {
+		overflow: hidden;
+	}
+
+	body.has-sidebar .app-main {
+		margin-left: 0;
+	}
+
+	body.has-sidebar .app-burger {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	body.has-sidebar .app-topbar-brand {
+		display: flex;
+	}
+
+	.app-topbar {
+		padding: 0 16px;
+	}
+
+	.app-content {
+		padding: 16px;
+	}
+}
+
+@media (max-width: 767px) {
+	.app-content {
+		padding: 16px 14px;
+	}
+
+	/* Bootstrap rows pull out by 15px; the page gutter here is only 14px */
+	.app-content > .row {
+		margin-right: -14px;
+		margin-left: -14px;
+	}
+
+	body.app .bootstrap-select .dropdown-menu {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.app-user-name {
+		display: none;
+	}
+
+	body.app .panel-body,
+	body.app .portlet-body {
+		padding: 16px !important;
+	}
+
+	body.app .panel > .panel-heading {
+		padding: 14px 16px !important;
+	}
+
+	/* 16px stops iOS from zooming into focused inputs */
+	body.app .form-control,
+	body.app .bootstrap-select .filter-option {
+		font-size: 16px !important;
+	}
+
+	body.app .text-right {
+		text-align: left;
+	}
+
+	body.app .pull-right {
+		float: none !important;
+	}
+
+	body.app .pagination {
+		margin-top: 8px;
+	}
+
+	/* Toolbars built from .row/.col-md-* stack with breathing room */
+	body.app .panel-body > .row > [class*="col-"] + [class*="col-"] {
+		margin-top: 8px;
+	}
+
+	body.app .form-inline .input-group {
+		display: table;
+		width: 100%;
+	}
+
+	.app-topbar-brand span {
+		display: none;
+	}
+
+	/* Form tables: label above field */
+	body.app .table.app-form-table,
+	body.app .table.app-form-table > tbody,
+	body.app .table.app-form-table > tbody > tr,
+	body.app .table.app-form-table > tbody > tr > td {
+		display: block;
+		width: 100% !important;
+	}
+
+	body.app .table.app-form-table > tbody > tr {
+		margin-bottom: 12px;
+	}
+
+	body.app .table.app-form-table > tbody > tr > td {
+		padding: 0 0 6px;
+	}
+
+	body.app .table.app-form-table td.app-form-sep {
+		display: none;
+	}
+
+	body.app .table.app-form-table .bootstrap-select,
+	body.app .table.app-form-table .form-control {
+		width: 100% !important;
+		min-width: 0;
+	}
+
+	/* List tables become one card per row */
+	.app-table-wrap.is-stack {
+		overflow: visible;
+		border: 0;
+	}
+
+	body.app .table.app-stack,
+	body.app .table.app-stack > tbody {
+		display: block;
+		background: none;
+	}
+
+	body.app .table.app-stack tr.app-stack-head {
+		display: none;
+	}
+
+	body.app .table.app-stack > tbody > tr {
+		display: block;
+		margin-bottom: 12px;
+		padding: 12px 16px;
+		border: 1px solid var(--line);
+		border-radius: 12px;
+		background: #fff !important;
+	}
+
+	body.app .table.app-stack > tbody > tr > td {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		width: auto !important;
+		padding: 5px 0;
+		border: 0 !important;
+		text-align: right !important;
+	}
+
+	body.app .table.app-stack > tbody > tr > td::before {
+		content: attr(data-label);
+		flex-shrink: 0;
+		color: var(--muted);
+		font-size: 12px;
+		font-weight: 600;
+		text-align: left;
+	}
+
+	body.app .table.app-stack > tbody > tr > td.app-stack-index {
+		display: none;
+	}
+
+	body.app .table.app-stack > tbody > tr > td:nth-child(2) {
+		color: var(--ink);
+		font-weight: 650;
+	}
+
+	body.app .table.app-stack > tbody > tr > td.app-stack-actions {
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 8px;
+		padding-top: 12px;
+		border-top: 1px solid var(--line-2) !important;
+	}
+
+	body.app .table.app-stack > tbody > tr > td.app-stack-actions::before {
+		display: none;
+	}
+
+	body.app .table.app-stack > tbody > tr > td.app-stack-actions .btn {
+		flex: 1;
+		min-height: 38px;
+		margin: 0 !important;
+	}
+
+	.app-to-top {
+		right: 12px;
+		bottom: 12px;
+	}
+}
+
+@media print {
+	.app-sidebar,
+	.app-topbar,
+	.app-footer,
+	.app-to-top {
+		display: none !important;
+	}
+
+	body.has-sidebar .app-main {
+		margin-left: 0;
+	}
+}

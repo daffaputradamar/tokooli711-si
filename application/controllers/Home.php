@@ -82,8 +82,6 @@ class Home extends CI_Controller
         $data['listbarang'] = $this->Barang_model->selectByAll();
         $data['listdetail'] = $detail_penjualan;
 
-        $data['listkaryawan'] = $this->Karyawan_model->selectByAll();
-
         if ($_SESSION['level'] != "admin") {
             $data['karyawan'] = $this->Karyawan_model->selectById($_SESSION['kode']);
             // return print_r($data['percobaan']);
@@ -91,16 +89,15 @@ class Home extends CI_Controller
             $data['admin'] = $this->Admin_model->selectById($_SESSION['kode']);
         }
 
-        $data['listgaji'] = $this->Penjualan_model->gajiall(date('d-m-Y'));
-        $data['semua'] = $this->Penjualan_model->omsetAll();
-        $data['byTgl'] = $this->Penjualan_model->beaLainByTgl(date('d-m-Y'), 1);
-        $data['byTgl2'] = $this->Penjualan_model->omsetByTgl2(date('d-m-Y'));
-        $data['totaltr'] = $this->Penjualan_detail_model->jumlahAll();
-
-        $data['totalkr'] = $this->Karyawan_model->total_rows();
-
-        foreach ($data['listkaryawan'] as $karyawan) {
-            $data['kasir'][$karyawan->kode_karyawan] = $this->Penjualan_model->kasir($karyawan->kode_karyawan);
+        // Today's summary is only shown to admins (home.php), and this page
+        // reloads after every item added to the cart, so cashiers skip it.
+        if ($_SESSION['level'] == "admin") {
+            $data['semua'] = $this->Penjualan_model->omsetAll();
+            $data['byTgl'] = $this->Penjualan_model->beaLainByTgl(date('d-m-Y'), 1);
+            $data['kasir'] = array();
+            foreach ($this->Karyawan_model->selectByAll() as $karyawan) {
+                $data['kasir'][$karyawan->kode_karyawan] = $this->Penjualan_model->kasir($karyawan->kode_karyawan);
+            }
         }
 
         if ($this->uri->segment(3) == 1) {

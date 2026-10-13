@@ -44,8 +44,8 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $admin->nama_admin ?></td>
-			<td><?php echo $admin->username ?></td>
+			<td><?php echo html_escape((string) $admin->nama_admin) ?></td>
+			<td><?php echo html_escape((string) $admin->username) ?></td>
 			<td style="text-align:center" width="230px">
 				<?php 
 				echo anchor(site_url('admin/view/'.$admin->kode_admin),'Lihat','class="btn btn-info"'); 

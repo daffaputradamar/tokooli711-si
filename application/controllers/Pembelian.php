@@ -16,6 +16,8 @@ class Pembelian extends CI_Controller
         $this->load->model('Pembelian_detail_model');
         $this->load->model('Suplier_model');
         session_start();
+        // get_by_date / save_pembelian are called by the sync server without a session
+        require_login(array('get_by_date', 'save_pembelian'), TRUE);
     }
 
     public function _rule()
@@ -152,9 +154,29 @@ class Pembelian extends CI_Controller
             $_SESSION[$kode_user . 'no_faktur'] = $no_faktur;
             $_SESSION[$kode_user . 'kode_suplier'] = $kode_supplier;
 
+            $is_ajax = $this->input->is_ajax_request();
+            $jumlah = (float) str_replace(',', '.', (string) $this->input->post('jumlah'));
+            $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
+            $error = '';
+            if ($this->input->post('kode_barang') == '') {
+                $error = 'Pilih barang terlebih dahulu.';
+            }
+            elseif (!$barang) {
+                $error = 'Barang tidak ditemukan. Muat ulang halaman lalu coba lagi.';
+            }
+            elseif ($jumlah <= 0) {
+                $error = 'Jumlah harus lebih dari 0.';
+            }
+            if ($error !== '') {
+                if ($is_ajax) {
+                    json_reply(422, array('ok' => FALSE, 'message' => $error));
+                }
+                set_toast('error', $error);
+                return redirect(site_url('pembelian/insert'), 'refresh');
+            }
+
             if ($this->input->post('jumlah') <> "") {
-                $barang = $this->Barang_model->selectById($this->input->post('kode_barang'));
-                //var_dump($barang);
+                $already = isset($_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')]);
                 $data = array(
                     // 'kode_beli' => $this->input->post('kode_beli'),
                     'kode_barang' => $this->input->post('kode_barang'),
@@ -167,17 +189,41 @@ class Pembelian extends CI_Controller
 
                 $_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')] = $data;
                 // $this->Pembelian_detail_model->insert($data);
+                $nama = trim($barang->nama_barang);
+                $message = $already
+                    ? 'Jumlah ' . $nama . ' diubah menjadi ' . ($jumlah + 0) . '.'
+                    : $nama . ' (' . ($jumlah + 0) . ') ditambahkan ke daftar pembelian.';
+                if ($is_ajax) {
+                    json_reply(200, array('ok' => TRUE, 'message' => $message));
+                }
+                set_toast('success', $message);
                 return redirect(site_url('pembelian/insert'), 'refresh');
             }
         }
 
+        $is_ajax = $this->input->is_ajax_request();
+        $detail_pembelian = isset($_SESSION[$kode_user . 'detailbarang_pembelian']) ? $_SESSION[$kode_user . 'detailbarang_pembelian'] : array();
+
+        // Saving with no lines used to create an empty Rp 0 purchase record
+        if (empty($detail_pembelian)) {
+            $message = 'Daftar barang masih kosong. Tambahkan barang dulu sebelum menyimpan.';
+            if ($is_ajax) {
+                json_reply(422, array('ok' => FALSE, 'message' => $message));
+            }
+            set_toast('error', $message);
+            return redirect(site_url('pembelian/insert'), 'refresh');
+        }
+
         $this->_rule();
         if ($this->form_validation->run() == false and $this->input->post('total') == null) {
+            if ($is_ajax) {
+                $message = trim(strip_tags($this->form_validation->error_string(' ', ' ')));
+                json_reply(422, array('ok' => FALSE, 'message' => $message !== '' ? 'Data belum lengkap: ' . $message : 'Data pembelian belum lengkap.'));
+            }
             return $this->datainsert();
         }
 
         $kode_beli = $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB');
-        $detail_pembelian = $_SESSION[$kode_user . 'detailbarang_pembelian'];
         $total_all = 0;
 
         foreach ($detail_pembelian as $pembeliandetail) {
@@ -449,6 +495,7 @@ class Pembelian extends CI_Controller
 
                 $this->Pembelian_model->update($this->uri->segment(3), $data);
 
+                set_toast('success', 'Data pembelian diperbarui.');
                 redirect(site_url('pembelian'));
             }
         }
@@ -464,8 +511,11 @@ class Pembelian extends CI_Controller
             $this->Pembelian_model->delete($id);
             $this->Pembelian_detail_model->deletebykey($id);
 
+            set_toast('success', 'Data pembelian dihapus.');
             redirect(site_url('pembelian'));
         }
+        set_toast('error', 'Data pembelian tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('pembelian'));
     }
     public function struk($id)
     {

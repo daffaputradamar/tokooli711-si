@@ -45,11 +45,11 @@
                         ?>
                     <tr>
                         <td width="80px"><?php echo ++$start ?></td>
-                        <td><?php echo $barang->nama_barang ?></td>
-                        <td><?php echo $barang->merk ?></td>
-                        <td><?php echo $barang->harga_beli ?></td>
-                        <td><?php echo $barang->harga_jual ?></td>
-                        <td><?php echo $barang->stok ?></td>
+                        <td><?php echo html_escape((string) $barang->nama_barang) ?></td>
+                        <td><?php echo html_escape((string) $barang->merk) ?></td>
+                        <td><?php echo html_escape((string) $barang->harga_beli) ?></td>
+                        <td><?php echo html_escape((string) $barang->harga_jual) ?></td>
+                        <td><?php echo html_escape((string) $barang->stok) ?></td>
                         <td style="text-align:center" width="250px">
                             <?php
                             echo anchor(site_url('barang/view/' . $barang->kode_barang), 'Lihat', 'class="btn btn-info"');

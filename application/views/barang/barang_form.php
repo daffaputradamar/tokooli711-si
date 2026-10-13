@@ -33,7 +33,7 @@
                     <?php foreach ($listmerk as $komp) {
                         if ($kode_merk == $komp->kode_merk) {
                             ?>
-                    <option value="<?= $komp->kode_merk ?>"><?= $komp->kode_merk." ".$komp->merk ?>
+                    <option value="<?= html_escape((string) $komp->kode_merk) ?>"><?= $komp->kode_merk." ".$komp->merk ?>
                     </option>
                     <?php
                         }
@@ -41,7 +41,7 @@
             foreach ($listmerk as $komp) {
                 if ($kode_merk <> $komp->kode_merk) {
                     ?>
-                    <option value="<?= $komp->kode_merk ?>"><?= $komp->kode_merk." ".$komp->merk ?>
+                    <option value="<?= html_escape((string) $komp->kode_merk) ?>"><?= $komp->kode_merk." ".$komp->merk ?>
                     </option>
                     <?php
                 }
@@ -96,48 +96,43 @@ document.addEventListener("DOMContentLoaded", function() {
         const formData = new FormData(form);
         const values = new URLSearchParams(formData);
 
-        fetch("<?= base_url('Barang/update/'.$this->uri->segment(3)) ?>", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Requested-With": "XMLHttpRequest",
-            },
-            body: values.toString(),
-        })
-        .then(response => response.text())
-        .then(data => {
-            const result = JSON.parse(data.trim());
-
-            if (!result.status) {
-                alert("Gagal menyimpan data");
-                submitter.disabled = false;
-                submitter.textContent = origText;
-                return;
-            }
+        AppHttp.postForm("<?= base_url('Barang/update/'.$this->uri->segment(3)) ?>", values)
+        .then(result => {
+            AppToast.next('success', result.message || 'Data barang diperbarui.');
 
             const hargaBeliChanged = parseInt(hargaBeliInput.value) !== originalHargaBeli;
-
-            if (hargaBeliChanged && result.sync_enabled) {
-                return fetch(result.sync_target_url + "/sync/receive_barang_harga", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        items: [{
-                            kode_barang: result.kode_barang,
-                            harga_beli: result.harga_beli,
-                        }]
-                    }),
-                });
+            if (!(hargaBeliChanged && result.sync_enabled)) {
+                return;
             }
+            // The save itself succeeded; a failed price sync only warrants a warning
+            return fetch(result.sync_harga_url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    items: [{
+                        kode_barang: result.kode_barang,
+                        harga_beli: result.harga_beli,
+                    }]
+                }),
+            }).then(r => {
+                if (!r.ok) {
+                    throw new Error('HTTP ' + r.status);
+                }
+            }).catch(syncError => {
+                console.error("Sync error:", syncError);
+                AppToast.next('warning', 'Harga beli tersimpan, tapi gagal dikirim ke server pusat.', { title: 'Sinkronisasi gagal' });
+            });
         })
         .then(() => {
             location.href = "<?= site_url('barang') ?>";
-        })
-        .catch(error => {
+        }, error => {
+            // Not saved: stay on the form so nothing typed is lost
             console.error("Error:", error);
-            location.href = "<?= site_url('barang') ?>";
+            submitter.disabled = false;
+            submitter.textContent = origText;
+            AppToast.show('error', error.message, { title: 'Barang belum tersimpan' });
         });
     });
 });

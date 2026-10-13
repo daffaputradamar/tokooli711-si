@@ -47,12 +47,12 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $penjualan_detail->kode_jual ?></td>
-			<td><?php echo $penjualan_detail->kode_barang ?></td>
-			<td><?php echo $penjualan_detail->harga_jual ?></td>
-			<td><?php echo $penjualan_detail->harga_beli ?></td>
-			<td><?php echo $penjualan_detail->jumlah ?></td>
-			<td><?php echo $penjualan_detail->subtotal ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->kode_jual) ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->kode_barang) ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->harga_jual) ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->harga_beli) ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->jumlah) ?></td>
+			<td><?php echo html_escape((string) $penjualan_detail->subtotal) ?></td>
 			
 		</tr>
                 <?php

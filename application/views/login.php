@@ -1,154 +1,252 @@
+<?php
+$error = isset($error) ? $error : '';
+$username = isset($username) ? $username : '';
+?>
 <!DOCTYPE html>
-<!-- 
-Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 4.1.0
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
-License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
--->
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en">
-<!--<![endif]-->
-<!-- BEGIN HEAD -->
+<html lang="id">
 <head>
-    <meta charset="utf-8"/>
-    <title>Login</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <!-- BEGIN PAGE LEVEL STYLES -->
-    <link href="<?=base_url()?>assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/admin/pages/css/login-soft.css" rel="stylesheet" type="text/css"/>
-    <!-- END PAGE LEVEL SCRIPTS -->
-    <!-- BEGIN THEME STYLES -->
-    <link href="<?=base_url()?>assets/global/css/components-md.css" id="style_components" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
-    <link id="style_color" href="<?=base_url()?>assets/admin/layout/css/themes/default.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url()?>assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
-    <!-- END THEME STYLES -->
-    <link rel="shortcut icon" href="favicon.ico"/>
+	<meta charset="utf-8"/>
+	<title>Masuk &middot; Toko Oli 711</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+	<meta name="theme-color" content="#4d42c4"/>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+	<link href="<?= base_url() ?>assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= asset_url('assets/css/app.css') ?>" rel="stylesheet" type="text/css"/>
+	<link rel="shortcut icon" href="<?= base_url() ?>assets/logonew.png"/>
+	<style>
+		.login-shell {
+			display: grid;
+			grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+			min-height: 100vh;
+		}
+
+		.login-brand {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 48px;
+			overflow: hidden;
+			background: linear-gradient(150deg, #5b4fd9 0%, #4d42c4 45%, #3b6fd0 100%);
+			color: #fff;
+		}
+
+		.login-brand::after {
+			content: "";
+			position: absolute;
+			right: -120px;
+			bottom: -160px;
+			width: 460px;
+			height: 460px;
+			border-radius: 50%;
+			background: radial-gradient(circle, rgba(63, 193, 201, .45), rgba(63, 193, 201, 0) 70%);
+		}
+
+		.login-logo {
+			position: relative;
+			z-index: 1;
+			width: 220px;
+			max-width: 70%;
+		}
+
+		.login-pitch {
+			position: relative;
+			z-index: 1;
+			max-width: 420px;
+		}
+
+		body.app .login-pitch h1 {
+			margin: 0 0 12px;
+			color: #fff;
+			font-size: 34px;
+			font-weight: 700;
+			line-height: 1.15;
+		}
+
+		.login-pitch p {
+			margin: 0;
+			color: rgba(255, 255, 255, .8);
+			font-size: 15px;
+		}
+
+		.login-foot {
+			position: relative;
+			z-index: 1;
+			color: rgba(255, 255, 255, .6);
+			font-size: 12.5px;
+		}
+
+		.login-panel {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 32px 20px;
+			background: var(--canvas);
+		}
+
+		.login-card {
+			width: 100%;
+			max-width: 380px;
+		}
+
+		body.app .login-card h2 {
+			margin: 0 0 6px;
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.login-card .login-sub {
+			margin: 0 0 24px;
+			color: var(--muted);
+		}
+
+		.login-input {
+			position: relative;
+		}
+
+		.login-input > .fa {
+			position: absolute;
+			top: 50%;
+			left: 14px;
+			transform: translateY(-50%);
+			color: var(--muted);
+		}
+
+		body.app .login-input > .form-control {
+			height: 46px;
+			padding-left: 40px;
+		}
+
+		.login-toggle {
+			position: absolute;
+			top: 50%;
+			right: 6px;
+			width: 36px;
+			height: 36px;
+			border: 0;
+			border-radius: 8px;
+			background: none;
+			color: var(--muted);
+			transform: translateY(-50%);
+		}
+
+		.login-toggle:hover {
+			background: var(--line-2);
+			color: var(--ink);
+		}
+
+		body.app .login-card .btn-lg {
+			height: 48px;
+			margin-top: 8px;
+		}
+
+		.login-mobile-logo {
+			display: none;
+		}
+
+		@media (max-width: 860px) {
+			.login-shell {
+				grid-template-columns: 1fr;
+			}
+
+			.login-brand {
+				display: none;
+			}
+
+			.login-panel {
+				align-items: flex-start;
+				min-height: 100vh;
+				padding-top: 0;
+				background:
+					linear-gradient(160deg, #5b4fd9 0%, #4d42c4 50%, #3b6fd0 100%) top / 100% 240px no-repeat,
+					var(--canvas);
+			}
+
+			.login-mobile-logo {
+				display: block;
+				width: 180px;
+				margin: 40px auto 28px;
+			}
+
+			.login-card {
+				padding: 24px 20px;
+				border-radius: 16px;
+				background: #fff;
+				box-shadow: var(--shadow);
+			}
+		}
+	</style>
 </head>
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<body class="page-md login" style="
-    background: #7474BF;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #348AC7, #7474BF);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #348AC7, #7474BF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-">
-<!-- BEGIN LOGO -->
-<div class="logo">
-    <a href="index.html">
-        <img src="<?=base_url()?>assets/logonew white.png" width="200" alt=""/>
-    </a>
+<body class="app">
+<div class="login-shell">
+	<section class="login-brand" aria-hidden="true">
+		<img class="login-logo" src="<?= base_url() ?>assets/logonew%20white.png" alt=""/>
+		<div class="login-pitch">
+			<h1>Kasir, stok, dan laporan bengkel dalam satu tempat.</h1>
+			<p>Masuk untuk mulai melayani pelanggan hari ini.</p>
+		</div>
+		<div class="login-foot">&copy; <?= date('Y') ?> Toko Oli 711</div>
+	</section>
+
+	<main class="login-panel">
+		<div>
+			<img class="login-mobile-logo" src="<?= base_url() ?>assets/logonew%20white.png" alt="Toko Oli 711"/>
+			<div class="login-card">
+				<h2>Masuk</h2>
+				<p class="login-sub">Gunakan akun yang diberikan admin toko.</p>
+
+				<?php if ($error != '') { ?>
+				<div class="alert alert-danger" role="alert">
+					<i class="fa fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?>
+				</div>
+				<?php } ?>
+
+				<?php echo form_open('login/index', 'class="login-form" autocomplete="off"'); ?>
+					<div class="form-group">
+						<label for="username">Username</label>
+						<div class="login-input">
+							<i class="fa fa-user"></i>
+							<input class="form-control" type="text" id="username" name="username" autocomplete="username"
+								autocapitalize="none" spellcheck="false" required
+								value="<?= htmlspecialchars($username) ?>"<?= $username == '' ? ' autofocus' : '' ?>/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="psswd">Password</label>
+						<div class="login-input">
+							<i class="fa fa-lock"></i>
+							<input class="form-control" type="password" id="psswd" name="psswd" autocomplete="current-password" required
+								<?= $username != '' ? ' autofocus' : '' ?>/>
+							<button type="button" class="login-toggle" id="togglePassword" aria-label="Tampilkan password">
+								<i class="fa fa-eye"></i>
+							</button>
+						</div>
+					</div>
+					<button type="submit" name="login" value="Login" class="btn btn-primary btn-lg btn-block">
+						Masuk <i class="fa fa-arrow-right"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+	</main>
 </div>
-<!-- END LOGO -->
-<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-<div class="menu-toggler sidebar-toggler">
-</div>
-<!-- END SIDEBAR TOGGLER BUTTON -->
-<!-- BEGIN LOGIN -->
-<div class="content" style="
-    background: #fff;
-">
-    <!-- BEGIN LOGIN FORM -->
-    <?php echo form_open('login/index','class="login-form"'); ?>
-        <h3 class="form-title text-center" style="
-            color: #000;
-        ">Login to your account</h3>
-        <div class="alert alert-danger display-hide">
-            <button class="close" data-close="alert"></button>
-            <span>
-			Enter any username and password. </span>
-        </div>
-        <div class="form-group">
-            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-            <label class="control-label visible-ie8 visible-ie9">Username</label>
-            <div class="input-icon">
-                <i class="fa fa-user"></i>
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <div class="input-icon">
-                <i class="fa fa-lock"></i>
-                <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="psswd"/>
-            </div>
-        </div>
-        <div class="form-actions">
-            <input type="submit" name="login" value="Login " class="btn blue pull-right">
 
-        </div>
-        <br><br>
-    </form>
-    <!-- END LOGIN FORM -->
-
-
-</div>
-<!-- END LOGIN -->
-<!-- BEGIN COPYRIGHT -->
-
-<!-- END COPYRIGHT -->
-<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<!-- BEGIN CORE PLUGINS -->
-<!--[if lt IE 9]>
-<script src="<?=base_url()?>assets/global/plugins/respond.min.js"></script>
-<script src="<?=base_url()?>assets/global/plugins/excanvas.min.js"></script>
-<![endif]-->
-<script src="<?=base_url()?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
-<!-- END CORE PLUGINS -->
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="<?=base_url()?>assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/global/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="<?=base_url()?>assets/global/plugins/select2/select2.min.js"></script>
-<!-- END PAGE LEVEL PLUGINS -->
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="<?=base_url()?>assets/global/scripts/metronic.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
-<script src="<?=base_url()?>assets/admin/pages/scripts/login-soft.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
 <script>
-    jQuery(document).ready(function() {
-        Metronic.init(); // init metronic core components
-        Layout.init(); // init current layout
-        Login.init();
-        Demo.init();
-        // init background slide images
-        $.backstretch([
-                "<?=base_url()?>assets/admin/pages/media/bg/1.jpg",
-                "<?=base_url()?>assets/admin/pages/media/bg/2.jpg",
-                "<?=base_url()?>assets/admin/pages/media/bg/3.jpg",
-                "<?=base_url()?>assets/admin/pages/media/bg/4.jpg"
-            ], {
-                fade: 1000,
-                duration: 8000
-            }
-        );
-    });
+	(function () {
+		var toggle = document.getElementById('togglePassword');
+		var input = document.getElementById('psswd');
+		toggle.addEventListener('click', function () {
+			var show = input.type === 'password';
+			input.type = show ? 'text' : 'password';
+			toggle.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+			toggle.firstElementChild.className = show ? 'fa fa-eye-slash' : 'fa fa-eye';
+			input.focus();
+		});
+	})();
 </script>
-<!-- END JAVASCRIPTS -->
 </body>
-<!-- END BODY -->
 </html>

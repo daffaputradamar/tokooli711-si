@@ -46,10 +46,10 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $suplier->nama_suplier ?></td>
-			<td><?php echo $suplier->alamat_suplier ?></td>
-			<td><?php echo $suplier->no_telp ?></td>
-			<td><?php echo $suplier->keterangan ?></td>
+			<td><?php echo html_escape((string) $suplier->nama_suplier) ?></td>
+			<td><?php echo html_escape((string) $suplier->alamat_suplier) ?></td>
+			<td><?php echo html_escape((string) $suplier->no_telp) ?></td>
+			<td><?php echo html_escape((string) $suplier->keterangan) ?></td>
 			<td style="text-align:center" width="250px">
 				<?php 
 				echo anchor(site_url('suplier/view/'.$suplier->kode_suplier),'Lihat','class="btn btn-info"'); 

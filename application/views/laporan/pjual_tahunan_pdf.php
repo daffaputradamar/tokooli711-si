@@ -166,7 +166,7 @@
 					$total += $nilai;
 				?>
 					<tr>
-						<td><?= $row->periode ?></td>
+						<td><?= html_escape((string) $row->periode) ?></td>
 						<td class="text-right"><?= number_format($nilai, 0, ',', '.') ?></td>
 					</tr>
 				<?php endforeach; ?>

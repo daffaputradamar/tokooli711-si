@@ -23,9 +23,9 @@
                 ?>
                 <tr>
             <td width="80px"><?php echo ++$start ?></td>
-            <td><?php echo $penjualandetail->nama_barang ?></td>
-            <td><?php echo $penjualandetail->harga_jual ?></td>
-            <td><?php echo $penjualandetail->jumlah ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->nama_barang) ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->harga_jual) ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->jumlah) ?></td>
             <td>Rp. <?php echo $this->CodeGenerator->rp($penjualandetail->subtotal) ?></td>
             
         </tr>

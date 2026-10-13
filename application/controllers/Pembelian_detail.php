@@ -160,7 +160,11 @@ class Pembelian_detail extends CI_Controller
         // if ($row) {
         // $this->Pembelian_detail_model->delete($id,$barang);
 
-        unset($_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian'][$barang]);
+        $cart_key = $_SESSION['kode'] . 'detailbarang_pembelian';
+        if (isset($_SESSION[$cart_key][$barang])) {
+            set_toast('info', trim($_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari daftar pembelian.');
+        }
+        unset($_SESSION[$cart_key][$barang]);
 
         redirect(site_url('pembelian/insert'));
         // }

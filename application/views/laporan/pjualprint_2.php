@@ -45,12 +45,12 @@
 
 		<tr>
 			<td><?= ++$no ?></td>
-			<td><?= $row->kode_jual ?></td>
-			<td><?= $row->tanggal_jual ?></td>
-			<td><?= $row->jumlah ?></td>
-			<td><?= $row->harga_jual ?></td>
-			<td><?= $row->subtotal ?></td>
-			<td><?= $row->harga_beli ?></td>
+			<td><?= html_escape((string) $row->kode_jual) ?></td>
+			<td><?= html_escape((string) $row->tanggal_jual) ?></td>
+			<td><?= html_escape((string) $row->jumlah) ?></td>
+			<td><?= html_escape((string) $row->harga_jual) ?></td>
+			<td><?= html_escape((string) $row->subtotal) ?></td>
+			<td><?= html_escape((string) $row->harga_beli) ?></td>
 			<td><?= ($row->harga_jual * $row->jumlah) - ($row->harga_beli * $row->jumlah) ?></td>
 		</tr>
 	<?php

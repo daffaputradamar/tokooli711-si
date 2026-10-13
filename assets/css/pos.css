@@ -1,0 +1,792 @@
+/* ==========================================================================
+   Kasir (POS) - application/views/home.php
+   Depends on the tokens defined in app.css.
+   ========================================================================== */
+.pos-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+body.app .pos-title {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+.pos-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-top: 4px;
+	color: var(--muted);
+	font-size: 13px;
+}
+
+.pos-meta .fa {
+	margin-right: 3px;
+	color: var(--brand-300);
+}
+
+.pos-head-actions {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+/* Admin daily summary */
+.pos-kpis {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 14px;
+	margin-bottom: 14px;
+}
+
+.pos-kpi,
+.pos-cashier {
+	padding: 14px 16px;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: #fff;
+}
+
+.pos-kpi:first-child {
+	border-color: transparent;
+	background: linear-gradient(135deg, var(--brand-600), #6a7fe0);
+	color: #fff;
+}
+
+.pos-kpi-label {
+	color: var(--muted);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+.pos-kpi:first-child .pos-kpi-label {
+	color: rgba(255, 255, 255, .8);
+}
+
+.pos-kpi-value {
+	margin-top: 4px;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -.01em;
+}
+
+.pos-cashiers {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.pos-cashier-name {
+	color: var(--ink-2);
+	font-weight: 600;
+}
+
+.pos-cashier-total {
+	margin: 2px 0;
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.pos-cashier-split {
+	color: var(--muted);
+	font-size: 12px;
+}
+
+/* Layout */
+.pos-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 360px;
+	align-items: start;
+	gap: 24px;
+}
+
+.pos-left > .app-card,
+.pos-right > .app-card {
+	padding: 20px;
+}
+
+.pos-right {
+	position: sticky;
+	top: calc(var(--topbar-h) + 16px);
+}
+
+.pos-card-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 6px;
+	margin-bottom: 16px;
+}
+
+body.app .pos-card-head h2 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 650;
+}
+
+.pos-card-note {
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.pos-count {
+	padding: 2px 10px;
+	border-radius: 999px;
+	background: var(--brand-50);
+	color: var(--brand-700);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+/* Fields */
+body.app .pos-field {
+	display: block;
+	margin: 0 0 16px;
+	font-weight: 400;
+}
+
+body.app .pos-field > span {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 6px;
+	color: var(--ink-2);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.pos-form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 16px;
+}
+
+body.app .pos-upper {
+	text-transform: uppercase;
+}
+
+.pos-money {
+	position: relative;
+}
+
+body.app .pos-field .pos-money > span {
+	position: absolute;
+	z-index: 2;
+	top: 50%;
+	left: 12px;
+	display: block;
+	margin: 0;
+	transform: translateY(-50%);
+	color: var(--muted);
+	font-weight: 600;
+	pointer-events: none;
+}
+
+body.app .pos-money > .form-control {
+	padding-left: 40px;
+	text-align: right;
+}
+
+body.app .pos-money-lg > .form-control {
+	height: 52px;
+	font-size: 22px !important;
+	font-weight: 700;
+}
+
+body.app .pos-field .pos-money-lg > span {
+	font-size: 16px;
+}
+
+/* Search combobox */
+.pos-search {
+	position: relative;
+}
+
+.pos-search-icon {
+	position: absolute;
+	z-index: 2;
+	top: 50%;
+	left: 16px;
+	transform: translateY(-50%);
+	color: var(--brand-500);
+	font-size: 16px;
+}
+
+body.app .pos-search-input {
+	height: 54px;
+	padding-right: 56px;
+	padding-left: 46px;
+	border-width: 1.5px !important;
+	border-radius: 12px !important;
+	font-size: 16px;
+}
+
+.pos-search-clear {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border: 0;
+	border-radius: 10px;
+	background: none;
+	color: var(--muted);
+	font-size: 18px;
+	transform: translateY(-50%);
+}
+
+.pos-search-clear:hover {
+	background: var(--line-2);
+	color: var(--ink);
+}
+
+.pos-search-clear[hidden] {
+	display: none;
+}
+
+/* Quantity: big − / + buttons around the number */
+.pos-stepper {
+	display: flex;
+	align-items: stretch;
+}
+
+.pos-step {
+	flex-shrink: 0;
+	width: 44px;
+	border: 1px solid #d8dae6;
+	background: #fff;
+	color: var(--ink-2);
+	font-size: 13px;
+}
+
+.pos-step:first-child {
+	border-right: 0;
+	border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.pos-step:last-child {
+	border-left: 0;
+	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.pos-step:hover {
+	background: var(--brand-50);
+	color: var(--brand-700);
+}
+
+.pos-step:active {
+	background: var(--brand-100);
+}
+
+body.app .pos-stepper .form-control {
+	min-width: 0;
+	border-radius: 0 !important;
+	text-align: center;
+}
+
+.pos-results {
+	position: absolute;
+	z-index: 1050;
+	top: calc(100% + 6px);
+	right: 0;
+	left: 0;
+	max-height: 420px;
+	max-height: min(420px, 60vh);
+	margin: 0;
+	padding: 6px;
+	overflow-y: auto;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--shadow-lg);
+	list-style: none;
+}
+
+.pos-results[hidden] {
+	display: none;
+}
+
+.pos-result {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 9px 12px;
+	border-radius: 9px;
+	cursor: pointer;
+}
+
+.pos-result.is-active,
+.pos-result:hover {
+	background: var(--brand-50);
+}
+
+.pos-result-main {
+	min-width: 0;
+}
+
+.pos-result-name {
+	color: var(--ink);
+	font-weight: 600;
+}
+
+.pos-result-sub {
+	color: var(--muted);
+	font-size: 12px;
+}
+
+.pos-result-side {
+	flex-shrink: 0;
+	text-align: right;
+}
+
+.pos-result-price {
+	color: var(--ink);
+	font-weight: 650;
+}
+
+.pos-noresult {
+	padding: 14px;
+	color: var(--muted);
+	text-align: center;
+}
+
+.pos-stock {
+	display: inline-block;
+	margin-top: 2px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--ok-50);
+	color: var(--ok);
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.pos-stock.is-low {
+	background: var(--warn-50);
+	color: var(--warn);
+}
+
+.pos-stock.is-out {
+	background: var(--danger-50);
+	color: var(--danger);
+}
+
+/* Picked item */
+.pos-picked {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 14px 16px;
+	margin-top: 16px;
+	padding: 16px;
+	border: 1px solid var(--brand-100);
+	border-radius: 12px;
+	background: var(--brand-50);
+}
+
+.pos-picked[hidden] {
+	display: none;
+}
+
+.pos-picked-info {
+	flex: 1 1 220px;
+	min-width: 0;
+}
+
+.pos-picked-name {
+	color: var(--ink);
+	font-size: 15px;
+	font-weight: 650;
+}
+
+.pos-picked-sub {
+	color: var(--ink-2);
+	font-size: 13px;
+}
+
+.pos-picked-inputs {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+}
+
+body.app .pos-picked-inputs .pos-field {
+	width: 110px;
+	margin: 0;
+}
+
+body.app .pos-picked-inputs .pos-qty {
+	width: 168px;
+}
+
+body.app .pos-picked-inputs .pos-qty .form-control {
+	text-align: center;
+}
+
+body.app .pos-picked-inputs #rupiahField {
+	width: 140px;
+}
+
+body.app .pos-picked-inputs .pos-field[hidden] {
+	display: none;
+}
+
+body.app .pos-picked-inputs .form-control {
+	text-align: right;
+}
+
+body.app .pos-add .btn {
+	height: 40px;
+}
+
+body.app .pos-add .btn[hidden] {
+	display: none;
+}
+
+.pos-blocked {
+	flex-basis: 100%;
+	padding: 10px 12px;
+	border-radius: 9px;
+	background: var(--danger-50);
+	color: var(--danger);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.pos-blocked[hidden] {
+	display: none;
+}
+
+/* Cart */
+.pos-empty {
+	padding: 28px 12px;
+	color: var(--muted);
+	text-align: center;
+}
+
+.pos-empty .fa {
+	margin-bottom: 10px;
+	color: var(--brand-200);
+	font-size: 34px;
+}
+
+.pos-empty p {
+	margin: 0;
+}
+
+.pos-lines {
+	margin: 0 -6px;
+	padding: 0;
+	list-style: none;
+}
+
+.pos-line {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 12px 6px;
+	border-top: 1px solid var(--line-2);
+}
+
+.pos-line:first-child {
+	border-top: 0;
+}
+
+.pos-line-main {
+	flex: 1;
+	min-width: 0;
+}
+
+.pos-line-name {
+	color: var(--ink);
+	font-weight: 600;
+}
+
+.pos-line-sub {
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.pos-line-total {
+	color: var(--ink);
+	font-weight: 650;
+	white-space: nowrap;
+}
+
+body.app .pos-line-remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 9px;
+	color: var(--muted);
+}
+
+body.app .pos-line-remove:hover {
+	background: var(--danger-50);
+	color: var(--danger);
+}
+
+/* Checkout */
+.pos-sum {
+	margin: 0 0 12px;
+}
+
+.pos-sum > div {
+	display: flex;
+	justify-content: space-between;
+	padding: 6px 0;
+	color: var(--ink-2);
+}
+
+.pos-sum dt {
+	font-weight: 500;
+}
+
+.pos-sum dd {
+	color: var(--ink);
+	font-weight: 600;
+}
+
+.pos-total {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin: 6px 0 18px;
+	padding: 16px 18px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, var(--brand-600), #6a7fe0);
+	color: #fff;
+}
+
+.pos-total span {
+	font-weight: 600;
+	opacity: .85;
+}
+
+.pos-total strong {
+	font-size: 26px;
+	font-weight: 750;
+	letter-spacing: -.01em;
+}
+
+.pos-cash {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: -4px 0 16px;
+}
+
+.pos-cash:empty {
+	display: none;
+}
+
+.pos-cash-btn {
+	flex: 1 1 auto;
+	min-height: 34px;
+	padding: 4px 10px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: #fff;
+	color: var(--ink-2);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+.pos-cash-btn:hover,
+.pos-cash-btn:focus {
+	border-color: var(--brand-300);
+	outline: none;
+	background: var(--brand-50);
+	color: var(--brand-700);
+}
+
+.pos-change {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-bottom: 16px;
+	padding: 14px 16px;
+	border: 1px dashed var(--line);
+	border-radius: 12px;
+	color: var(--ink-2);
+}
+
+.pos-change strong {
+	color: var(--ink);
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.pos-change.is-ok {
+	border-style: solid;
+	border-color: #bfe8d6;
+	background: var(--ok-50);
+	color: var(--ok);
+}
+
+.pos-change.is-ok strong {
+	color: var(--ok);
+}
+
+.pos-change.is-short {
+	border-style: solid;
+	border-color: #f6c4cb;
+	background: var(--danger-50);
+	color: var(--danger);
+}
+
+.pos-change.is-short strong {
+	color: var(--danger);
+}
+
+body.app .pos-check {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 16px;
+	color: var(--ink-2);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+body.app .pos-check input {
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	accent-color: var(--brand-600);
+}
+
+body.app .pos-check .checker {
+	margin: 0 !important;
+}
+
+body.app .pos-cancel {
+	margin-top: 8px;
+}
+
+.pos-checkout {
+	scroll-margin-top: calc(var(--topbar-h) + 12px);
+}
+
+.pos-dock {
+	display: none;
+}
+
+@media (max-width: 1199px) {
+	.pos-grid {
+		grid-template-columns: minmax(0, 1fr) 320px;
+	}
+}
+
+@media (max-width: 991px) {
+	.pos-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.pos-right {
+		position: static;
+	}
+
+	/* Leave room for the bottom dock */
+	.page-home .app-content {
+		padding-bottom: 96px;
+	}
+
+	.page-home .app-to-top {
+		bottom: 92px;
+	}
+
+	.pos-dock {
+		position: fixed;
+		z-index: 1025;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 10px 16px;
+		padding-bottom: calc(10px + env(safe-area-inset-bottom));
+		border-top: 1px solid var(--line);
+		background: rgba(255, 255, 255, .96);
+		box-shadow: 0 -6px 20px rgba(29, 31, 51, .08);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
+		transition: transform .2s ease;
+	}
+
+	/* The checkout card has its own total and button; get out of the way */
+	.pos-dock.is-hidden {
+		transform: translateY(110%);
+	}
+
+	.pos-dock-label {
+		color: var(--muted);
+		font-size: 12px;
+	}
+
+	.pos-dock-total {
+		color: var(--ink);
+		font-size: 20px;
+		font-weight: 750;
+	}
+
+	body.app .pos-dock .btn {
+		min-width: 120px;
+		min-height: 44px;
+	}
+}
+
+@media (max-width: 767px) {
+	.pos-kpis {
+		grid-template-columns: 1fr;
+	}
+
+	.pos-kpi-value {
+		overflow-wrap: anywhere;
+	}
+
+	.pos-form-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.pos-left > .app-card,
+	.pos-right > .app-card {
+		padding: 16px;
+	}
+
+	.pos-picked-inputs {
+		width: 100%;
+	}
+
+	body.app .pos-picked-inputs .pos-field,
+	body.app .pos-picked-inputs #rupiahField {
+		flex: 1;
+		width: auto;
+	}
+
+	.pos-results {
+		max-height: 55vh;
+	}
+
+	body.app .pos-head-actions .btn {
+		min-height: 34px;
+		font-size: 12.5px;
+	}
+}

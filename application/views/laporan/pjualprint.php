@@ -32,9 +32,9 @@ $no=0;foreach ($listjual as $row) {
 	
 	<tr>
 		<td><?= ++$no ?></td>
-		<td><?= $row->kode_jual ?></td>
-		<td><?= $row->tanggal_jual ?></td>
-		<td><?= $row->ongkos_karyawan ?></td>
+		<td><?= html_escape((string) $row->kode_jual) ?></td>
+		<td><?= html_escape((string) $row->tanggal_jual) ?></td>
+		<td><?= html_escape((string) $row->ongkos_karyawan) ?></td>
 		<td>Rp. <?= $this->CodeGenerator->rp($row->total); ?></td>
 	</tr>
 	<tr>
@@ -52,10 +52,10 @@ $no=0;foreach ($listjual as $row) {
 			?>
 				
 				<tr>
-					<td><?= $detail->nama_barang ?></td>
+					<td><?= html_escape((string) $detail->nama_barang) ?></td>
 					<td>Rp. <?= $this->CodeGenerator->rp($detail->harga_beli); $totalbeli+=(int)$detail->harga_beli;  ?></td>
 					<td>Rp. <?= $this->CodeGenerator->rp($detail->harga_jual); $totaljual+=(int)$detail->harga_jual; ?></td>
-					<td><?= $detail->jumlah ?></td>
+					<td><?= html_escape((string) $detail->jumlah) ?></td>
 					<td>Rp. <?= $this->CodeGenerator->rp($detail->subtotal) ?></td>
 				</tr>
 				<?php

@@ -70,12 +70,14 @@ class Barang_model extends CI_Model
                 STR_TO_DATE(CONCAT(p.tanggal_jual_date, ' ', p.waktu_jual), '%Y-%m-%d %r') AS tanggal_trans, pd.jumlah
             FROM penjualan p
             JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
-            WHERE pd.kode_barang = '$kode_barang'
+            WHERE pd.kode_barang = ?
             AND STR_TO_DATE(CONCAT(p.tanggal_jual_date, ' ', p.waktu_jual), '%Y-%m-%d %r') 
-                BETWEEN '$datetime_awal' AND '$datetime_akhir'
+                BETWEEN ? AND ?
             ORDER BY tanggal_trans
         ";
-        $penjualan = $this->db->query($sql_penjualan)->result();
+        // kode_barang comes from the URL
+        $params = array((string) $kode_barang, $datetime_awal, $datetime_akhir);
+        $penjualan = $this->db->query($sql_penjualan, $params)->result();
 
 
         $sql_pembelian = "
@@ -83,12 +85,12 @@ class Barang_model extends CI_Model
                 STR_TO_DATE(CONCAT(b.tanggal_beli_date, ' ', b.waktu_beli), '%Y-%m-%d %r') AS tanggal_trans, bd.jumlah
             FROM pembelian b
             JOIN pembelian_detail bd ON b.kode_beli = bd.kode_beli
-            WHERE bd.kode_barang = '$kode_barang'
+            WHERE bd.kode_barang = ?
             AND STR_TO_DATE(CONCAT(b.tanggal_beli_date, ' ', b.waktu_beli), '%Y-%m-%d %r') 
-                BETWEEN '$datetime_awal' AND '$datetime_akhir'
+                BETWEEN ? AND ?
             ORDER BY tanggal_trans
         ";
-        $pembelian = $this->db->query($sql_pembelian)->result();
+        $pembelian = $this->db->query($sql_pembelian, $params)->result();
 
 
 
@@ -116,12 +118,13 @@ class Barang_model extends CI_Model
         $count_sql = "
             SELECT COUNT(*) as total_count
             FROM barang_stok_history p
-            WHERE p.kode_barang = '$kode_barang'
-            AND p.createddate BETWEEN '$datetime_awal' AND '$datetime_akhir'
+            WHERE p.kode_barang = ?
+            AND p.createddate BETWEEN ? AND ?
         ";
+        $params = array($kode_barang, $datetime_awal, $datetime_akhir);
 
         // Execute the count query
-        $count_result = $this->db->query($count_sql)->row();
+        $count_result = $this->db->query($count_sql, $params)->row();
         $total_count = $count_result->total_count;
 
         // SQL query to fetch the limited list with LIMIT and OFFSET
@@ -129,14 +132,14 @@ class Barang_model extends CI_Model
             SELECT p.*, b.nama_barang
             FROM barang_stok_history p
             JOIN barang b ON p.kode_barang = b.kode_barang
-            WHERE p.kode_barang = '$kode_barang'
-            AND p.createddate BETWEEN '$datetime_awal' AND '$datetime_akhir'
+            WHERE p.kode_barang = ?
+            AND p.createddate BETWEEN ? AND ?
             ORDER BY p.createddate DESC
-            LIMIT $limit OFFSET $start
+            LIMIT " . (int) $limit . " OFFSET " . (int) $start . "
         ";
 
         // Execute the list query
-        $result = $this->db->query($sql)->result();
+        $result = $this->db->query($sql, $params)->result();
 
         // Return both the result list and the total count
         return [
@@ -152,10 +155,10 @@ class Barang_model extends CI_Model
             SELECT p.*, b.nama_barang
             FROM barang_stok_history p
             JOIN barang b ON p.kode_barang = b.kode_barang
-            WHERE p.id = '$id'
+            WHERE p.id = ?
         ";
 
-        $result = $this->db->query($sql)->row();
+        $result = $this->db->query($sql, array((string) $id))->row();
 
         // Return both the result list and the total count
         return $result;
@@ -187,15 +190,8 @@ class Barang_model extends CI_Model
             // Insert into barang_stok_history if the stock has changed
             $this->db->query("
                 INSERT INTO barang_stok_history (kode_barang, stok, createddate, createdby, modifieddate, modifiedby)
-                VALUES (
-                    '{$current_data->kode_barang}', 
-                    {$current_data->stok}, 
-                    NOW(), 
-                    '{$user}',
-                    NOW(), 
-                    '{$user}'
-                )
-            ");
+                VALUES (?, ?, NOW(), ?, NOW(), ?)
+            ", array($current_data->kode_barang, $current_data->stok, (string) $user, (string) $user));
         }
 
         $this->db->where($this->primary, $id);

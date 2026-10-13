@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -79,7 +79,7 @@ $db['default'] = array(
     'hostname' => 'localhost',
     'username' => 'root',
     'password' => 'root',
-    'database' => 'tokooli',
+    'database' => getenv('CI_DB_NAME') ? getenv('CI_DB_NAME') : 'tokooli',
     'port' => '3306',
     // 'database' => 'C:/application/database/databengkel.db',
     'dbdriver' => 'mysqli',

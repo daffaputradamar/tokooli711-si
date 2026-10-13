@@ -21,7 +21,29 @@ class Laporan extends CI_Controller
         $this->load->model('Pembelian_detail_model');
         $this->load->model('CodeGenerator');
         $this->load->model('Stok_cutoff_model');
+        $this->load->helper('laporan');
     }
+
+    /**
+     * Report hub: headline figures plus a card for every report.
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $today = date('d-m-Y');
+        $data = array(
+            'jual_hari_ini' => $this->Penjualan_model->jualByTgl($today, 0) + $this->Penjualan_model->gajiAllby($today, 0),
+            'jual_bulan_ini' => $this->Penjualan_model->jualByTgl($today, 1) + $this->Penjualan_model->gajiAllby($today, 1),
+            'laba_bulan_ini' => $this->Penjualan_model->omsetByTgl($today, 1),
+            'beli_bulan_ini' => $this->Pembelian_model->beliByTgl($today, 1),
+            'today' => $today
+        );
+        $this->load->view('nav');
+        $this->load->view('laporan/index', $data);
+        $this->load->view('foot');
+    }
+
     public function beli()
     {
         $this->load->view('nav');
@@ -164,7 +186,7 @@ class Laporan extends CI_Controller
         $data = $query->result();
 
         if (empty($data)) {
-            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            set_toast('warning', 'Tidak ada data untuk tahun ' . $tahun . '.');
             redirect('laporan/jual');
             return;
         }
@@ -209,7 +231,7 @@ class Laporan extends CI_Controller
         $data = $query->result();
 
         if (empty($data)) {
-            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            set_toast('warning', 'Tidak ada data untuk tahun ' . $tahun . '.');
             redirect('laporan/beli');
             return;
         }
@@ -254,7 +276,7 @@ class Laporan extends CI_Controller
         $data_report = $query->result();
 
         if (empty($data_report)) {
-            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            set_toast('warning', 'Tidak ada data untuk tahun ' . $tahun . '.');
             redirect('laporan/jual');
             return;
         }
@@ -288,7 +310,7 @@ class Laporan extends CI_Controller
         $data_report = $query->result();
 
         if (empty($data_report)) {
-            $this->session->set_flashdata('message', 'Tidak ada data untuk tahun ' . $tahun);
+            set_toast('warning', 'Tidak ada data untuk tahun ' . $tahun . '.');
             redirect('laporan/beli');
             return;
         }
@@ -419,32 +441,41 @@ class Laporan extends CI_Controller
         $this->load->view('nav');
 
         $data_trans = array(
-            'list' => [],
+            'list' => array(),
             'total_count' => 0
         );
 
-        if ($_POST) {
-            $kode_barang = $this->input->post('kode_barang');
-            $datetime_awal = date('Y-m-d H:i:s', strtotime("{$this->input->post('tgl_awal')} {$this->input->post('wkt_awal')}"));
-            $datetime_akhir = date('Y-m-d H:i:s', strtotime("{$this->input->post('tgl_akhir')} {$this->input->post('wkt_akhir')}"));
-
-            $data_trans_db = $this->Barang_model->get_list_history_by_barang($kode_barang, $datetime_awal, $datetime_akhir, $config['per_page'], $start);
-
-            $data_trans['list'] = $data_trans_db['list'];
-            $data_trans['total_count'] = $data_trans_db['total_count'];
-        
-            $data['kode_barang'] = $kode_barang;
-            $data['tgl_awal'] = $this->input->post('tgl_awal');
-            $data['wkt_awal'] = $this->input->post('wkt_awal');
-            $data['tgl_akhir'] = $this->input->post('tgl_akhir');
-            $data['wkt_akhir'] = $this->input->post('wkt_akhir');
+        // The filter travels in the query string (GET) so pagination links keep it.
+        // POST is still accepted for old bookmarks/forms.
+        $filter = array();
+        foreach (array('kode_barang', 'tgl_awal', 'wkt_awal', 'tgl_akhir', 'wkt_akhir') as $field) {
+            $filter[$field] = (string) $this->input->get_post($field);
+        }
+        if ($filter['wkt_awal'] === '') {
+            $filter['wkt_awal'] = '00:00';
+        }
+        if ($filter['wkt_akhir'] === '') {
+            $filter['wkt_akhir'] = '23:59';
         }
 
-        $config['total_rows'] = $data_trans['total_count'];
+        $has_filter = ($filter['kode_barang'] !== '' && $filter['tgl_awal'] !== '' && $filter['tgl_akhir'] !== '');
+        if ($has_filter) {
+            $datetime_awal = date('Y-m-d H:i:s', strtotime($filter['tgl_awal'] . ' ' . $filter['wkt_awal']));
+            $datetime_akhir = date('Y-m-d H:i:s', strtotime($filter['tgl_akhir'] . ' ' . $filter['wkt_akhir']));
 
+            $data_trans = $this->Barang_model->get_list_history_by_barang($filter['kode_barang'], $datetime_awal, $datetime_akhir, $config['per_page'], $start);
+
+            $config['base_url'] = site_url('laporan/history_stok') . '?' . http_build_query($filter);
+            $config['total_rows'] = $data_trans['total_count'];
+            $this->pagination->initialize($config);
+        }
+
+        $data = $filter;
+        $data['has_filter'] = $has_filter;
         $data['barang'] = $this->Barang_model->selectByAll();
         $data['history'] = $data_trans['list'];
-        $data['pagination'] = $this->pagination->create_links();
+        $data['pagination'] = $has_filter ? $this->pagination->create_links() : '';
+        $config['total_rows'] = $data_trans['total_count'];
         $data['total_rows'] = $config['total_rows'];
         $data['start'] = $start;
 
@@ -462,7 +493,12 @@ class Laporan extends CI_Controller
             $history_stok = $this->input->post('stok');
 
             $this->Barang_model->update_history_by_id($history_id, $history_stok);
-            
+
+            // Return to the filtered list the user came from (same-site URLs only).
+            $back = (string) $this->input->post('back');
+            if ($back !== '' && strpos($back, site_url('laporan/history_stok')) === 0) {
+                redirect($back . (strpos($back, '?') === FALSE ? '?' : '&') . 'saved=1');
+            }
             redirect('laporan/history_stok/' . $history_id . '/update');
         }
         // Load the model if needed

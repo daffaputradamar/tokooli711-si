@@ -49,13 +49,13 @@ function sum() {
             <?php foreach ($listbarang as $komp) {
               if($kode_barang==$komp->kode_barang){
             ?>
-                <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
+                <option value="<?= html_escape((string) $komp->kode_barang) ?>"><?= html_escape((string) $komp->nama_barang) ?></option>
             <?php
              } }
              foreach ($listbarang as $komp) {
              if($kode_barang<>$komp->kode_barang){
                 ?>
-                <option value="<?= $komp->kode_barang ?>"><?= $komp->nama_barang ?></option>
+                <option value="<?= html_escape((string) $komp->kode_barang) ?>"><?= html_escape((string) $komp->nama_barang) ?></option>
                 <?php
              }
          }
@@ -86,9 +86,9 @@ function sum() {
                 ?>
                 <tr>
             <td width="80px"><?php echo ++$start ?></td>
-            <td><?php echo $penjualandetail->nama_barang ?></td>
-            <td><?php echo $penjualandetail->harga_jual ?></td>
-            <td><?php echo $penjualandetail->jumlah ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->nama_barang) ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->harga_jual) ?></td>
+            <td><?php echo html_escape((string) $penjualandetail->jumlah) ?></td>
             <td>Rp. <?php echo $this->CodeGenerator->rp($penjualandetail->subtotal) ?></td>
             <td style="text-align:center" width="50px">
                 <?php 
@@ -118,13 +118,13 @@ function sum() {
             <?php foreach ($listkaryawan as $komp) {
               if($kode_karyawan==$komp->kode_karyawan){
             ?>
-                <option value="<?= $komp->kode_karyawan ?>"><?= $komp->nama_karyawan ?></option>
+                <option value="<?= html_escape((string) $komp->kode_karyawan) ?>"><?= html_escape((string) $komp->nama_karyawan) ?></option>
             <?php
              } }
              foreach ($listkaryawan as $komp) {
              if($kode_karyawan<>$komp->kode_karyawan){
                 ?>
-                <option value="<?= $komp->kode_karyawan ?>"><?= $komp->nama_karyawan ?></option>
+                <option value="<?= html_escape((string) $komp->kode_karyawan) ?>"><?= html_escape((string) $komp->nama_karyawan) ?></option>
                 <?php
              }
          }

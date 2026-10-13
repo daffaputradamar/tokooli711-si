@@ -36,7 +36,7 @@
                 foreach ($listdetail as $penjualandetail) {
                     ?>
                     <tr>
-                        <td><?php echo $penjualandetail->nama_barang ?></td>
+                        <td><?php echo html_escape((string) $penjualandetail->nama_barang) ?></td>
                         <td><?php echo $penjualandetail->jumlah." x ".$penjualandetail->harga_jual ?></td>
                         <td>Rp. <?php echo $this->CodeGenerator->rp($penjualandetail->subtotal) ?></td>
 

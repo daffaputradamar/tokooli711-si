@@ -28,8 +28,8 @@ if ($this->uri->segment(4) == 1) {
 	
 	<tr>
 		<td><?= ++$no ?></td>
-		<td><?= $row->kode_beli ?></td>
-		<td><?= $row->tanggal_beli ?></td>
+		<td><?= html_escape((string) $row->kode_beli) ?></td>
+		<td><?= html_escape((string) $row->tanggal_beli) ?></td>
 		<td>Rp. <?= $this->CodeGenerator->rp($row->total) ?></td>
 	</tr>
 	<tr>
@@ -46,9 +46,9 @@ if ($this->uri->segment(4) == 1) {
 			?>
 				
 				<tr>
-					<td><?= $detail->nama_barang ?></td>
+					<td><?= html_escape((string) $detail->nama_barang) ?></td>
 					<td>Rp. <?= $this->CodeGenerator->rp($detail->harga_beli) ?></td>
-					<td><?= $detail->jumlah ?></td>
+					<td><?= html_escape((string) $detail->jumlah) ?></td>
 					<td>Rp. <?= $this->CodeGenerator->rp($detail->subtotal) ?></td>
 				</tr>
 				<?php

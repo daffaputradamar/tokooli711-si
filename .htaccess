@@ -17,8 +17,48 @@
     # RewriteCond $1 !^(index\.php|resources|robots\.txt)
     # RewriteCond %{REQUEST_FILENAME} !-f
     # RewriteCond %{REQUEST_FILENAME} !-d
-    # RewriteRule ^(.*)$ index.php/$1 [L,QSA] 
+    # RewriteRule ^(.*)$ index.php/$1 [L,QSA]
 
+</IfModule>
+
+# --- Security -------------------------------------------------------------
+# Never serve database dumps, local databases, logs or project metadata,
+# even if they get uploaded alongside the app.
+<FilesMatch "\.(sql|db|sqlite|log|md|bak|env|ini|lock)$|^(composer\.json|package\.json|dev-router\.php)$">
+    <IfModule authz_core_module>
+        Require all denied
+    </IfModule>
+    <IfModule !authz_core_module>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Speed ----------------------------------------------------------------
+# Compress text responses (HTML pages shrink ~80% over the wire).
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# Assets can be cached for a long time: the app's own CSS/JS URLs carry
+# ?v=<file time> (asset_helper.php), so a changed file gets a new URL.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
 </IfModule>
 
 # BEGIN cPanel-generated php ini directives, do not edit

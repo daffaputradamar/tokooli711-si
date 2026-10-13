@@ -40,6 +40,8 @@ class Karyawan_model extends CI_Model
 
     public function get_limit_data($limit, $start = 0, $cari = null)
     {
+        // The search text comes from the URL: escape() quotes it safely
+        $like = $this->db->escape('%' . $cari . '%');
         return $this->db->query("
             SELECT 
                 k.kode_karyawan,
@@ -58,10 +60,10 @@ class Karyawan_model extends CI_Model
                 HAVING COUNT(1) >= 2
             ) pk ON k.kode_karyawan = pk.id_karyawan
             WHERE 
-                k.kode_karyawan LIKE '%$cari%'
-                OR k.nama_karyawan LIKE '%$cari%'
-                OR k.alamat_karyawan LIKE '%$cari%'
-                OR k.telp_karyawan LIKE '%$cari%'
+                k.kode_karyawan LIKE {$like}
+                OR k.nama_karyawan LIKE {$like}
+                OR k.alamat_karyawan LIKE {$like}
+                OR k.telp_karyawan LIKE {$like}
             GROUP BY
                 k.kode_karyawan,
                 k.nama_karyawan,
@@ -69,7 +71,7 @@ class Karyawan_model extends CI_Model
                 k.telp_karyawan,
                 k.start_working_hour,
                 k.end_working_hour
-            LIMIT $start, $limit;
+            LIMIT " . (int) $start . ", " . (int) $limit . ";
         ")->result();
     }
 
@@ -95,8 +97,8 @@ class Karyawan_model extends CI_Model
         $this->db->query("
             UPDATE karyawan
             SET percobaan_stok = percobaan_stok + 1
-            WHERE kode_karyawan = '$id' 
-        ");
+            WHERE kode_karyawan = ?
+        ", array((string) $id));
     }
 
     public function isWithinWorkingHours($karyawan)

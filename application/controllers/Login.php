@@ -19,7 +19,8 @@ class Login extends CI_Controller
     public function index()
     {
         $is_valid_login = false;
-        $this->load->view('login');
+        $error = '';
+        $user = '';
         $kode = 'ADM00001';
         $level = "";
         $can_see_stock = false;
@@ -61,14 +62,19 @@ class Login extends CI_Controller
                         } else {
                             $start_time = date('H:i', strtotime($karyawan->start_working_hour));
                             $end_time = date('H:i', strtotime($karyawan->end_working_hour));
-                            echo "<script>alert('Karyawan ini hanya dapat login antara jam $start_time - $end_time');</script>";
+                            $error = "Karyawan ini hanya dapat login antara jam $start_time - $end_time.";
                         }
                     }
                 }
             }
 
+            if (!$is_valid_login && $error == '') {
+                $error = 'Username atau password salah.';
+            }
         }
         if($is_valid_login) {
+            // New session id on login, so a pre-planted session cookie is useless
+            session_regenerate_id(TRUE);
             $_SESSION["username"] = $user;
             $_SESSION["kode"] = $kode;
             $_SESSION["level"] = $level;
@@ -77,6 +83,11 @@ class Login extends CI_Controller
 
             redirect('home', 'refresh');
         }
+
+        $this->load->view('login', array(
+            'error' => $error,
+            'username' => $user
+        ));
 
 
     }

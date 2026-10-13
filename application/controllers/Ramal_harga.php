@@ -9,6 +9,7 @@ class Ramal_harga extends CI_Controller
     {
         parent::__construct();
         session_start();
+        require_login(array(), TRUE);
         error_reporting(0);
         $this->load->model('Barang_model');
         $this->load->model('Pembelian_model');

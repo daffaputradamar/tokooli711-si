@@ -30,17 +30,20 @@ class Penjualan_model extends CI_Model
         $this->db->from($this->table);
         $_cari = strtolower($cari);
         if ($filterkaryawan <> 'ALL') {
-            $this->db->where("(kode_karyawan = '$filterkaryawan') AND (
-                LOWER(kode_jual) = '$_cari' OR
-                LOWER(tanggal_jual) = '$_cari' OR
-                LOWER(kode_admin) = '$_cari' OR
-                LOWER(kode_karyawan) = '$_cari' OR
-                LOWER(keterangan) = '$_cari' OR
-                LOWER(nomor_polisi) = '$_cari' OR
-                LOWER(ongkos_karyawan) = '$_cari' OR
-                LOWER(total) = '$_cari' OR
-                LOWER(bayar) = '$_cari' OR
-                LOWER(pelanggan) = '$_cari'
+            // Both values come from the URL: escape() quotes them safely
+            $k = $this->db->escape($filterkaryawan);
+            $c = $this->db->escape($_cari);
+            $this->db->where("(kode_karyawan = $k) AND (
+                LOWER(kode_jual) = $c OR
+                LOWER(tanggal_jual) = $c OR
+                LOWER(kode_admin) = $c OR
+                LOWER(kode_karyawan) = $c OR
+                LOWER(keterangan) = $c OR
+                LOWER(nomor_polisi) = $c OR
+                LOWER(ongkos_karyawan) = $c OR
+                LOWER(total) = $c OR
+                LOWER(bayar) = $c OR
+                LOWER(pelanggan) = $c
             )");
         } else {
             $this->db->like('LOWER(kode_jual)', $_cari);
@@ -61,17 +64,20 @@ class Penjualan_model extends CI_Model
     {
         $_cari = strtolower($cari);
         if ($filterkaryawan <> 'ALL') {
-            $this->db->where("(kode_karyawan = '$filterkaryawan') AND (
-                LOWER(kode_jual) = '$_cari' OR
-                LOWER(tanggal_jual) = '$_cari' OR
-                LOWER(kode_admin) = '$_cari' OR
-                LOWER(kode_karyawan) = '$_cari' OR
-                LOWER(keterangan) = '$_cari' OR
-                LOWER(nomor_polisi) = '$_cari' OR
-                LOWER(ongkos_karyawan) = '$_cari' OR
-                LOWER(total) = '$_cari' OR
-                LOWER(bayar) = '$_cari' OR
-                LOWER(pelanggan) = '$_cari'
+            // Both values come from the URL: escape() quotes them safely
+            $k = $this->db->escape($filterkaryawan);
+            $c = $this->db->escape($_cari);
+            $this->db->where("(kode_karyawan = $k) AND (
+                LOWER(kode_jual) = $c OR
+                LOWER(tanggal_jual) = $c OR
+                LOWER(kode_admin) = $c OR
+                LOWER(kode_karyawan) = $c OR
+                LOWER(keterangan) = $c OR
+                LOWER(nomor_polisi) = $c OR
+                LOWER(ongkos_karyawan) = $c OR
+                LOWER(total) = $c OR
+                LOWER(bayar) = $c OR
+                LOWER(pelanggan) = $c
             )");
         } else {
             $this->db->like('LOWER(kode_jual)', $_cari);
@@ -96,26 +102,36 @@ class Penjualan_model extends CI_Model
         $sql = "SELECT p.*
             FROM penjualan p
             WHERE 1 = 1";
+        $params = array();
 
         if (!empty($kode_barang)) {
             $sql .= " AND EXISTS (
                     SELECT 1 FROM penjualan_detail pd WHERE pd.kode_jual = p.kode_jual
-                    AND pd.kode_barang = '$kode_barang'
+                    AND pd.kode_barang = ?
                     )
-                    AND p.tanggal_jual_date BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+                    AND p.tanggal_jual_date BETWEEN ? AND ?";
+            array_push($params, $kode_barang, $tgl_awal, $tgl_akhir);
         }
-        
+
         if ($filterkaryawan <> 'ALL') {
-            $sql .= " AND p.kode_karyawan = '$filterkaryawan'";
+            $sql .= " AND p.kode_karyawan = ?";
+            $params[] = $filterkaryawan;
         }
 
         if (!empty($cari)) {
-            $sql .= " AND (LOWER(p.kode_jual) LIKE '%$cari%' OR LOWER(p.tanggal_jual) LIKE '%$cari%' OR LOWER(p.kode_admin) LIKE '%$cari%' OR LOWER(p.kode_karyawan) LIKE '%$cari%' OR LOWER(p.keterangan) LIKE '%$cari%' OR LOWER(p.nomor_polisi) LIKE '%$cari%' OR LOWER(p.km_kendaraan) LIKE '%$cari%' OR LOWER(p.ongkos_karyawan) LIKE '%$cari%' OR LOWER(p.total) LIKE '%$cari%' OR LOWER(p.bayar) LIKE '%$cari%' OR LOWER(p.pelanggan) LIKE '%$cari%')";
+            $columns = array('kode_jual', 'tanggal_jual', 'kode_admin', 'kode_karyawan', 'keterangan', 'nomor_polisi', 'km_kendaraan', 'ongkos_karyawan', 'total', 'bayar', 'pelanggan');
+            $likes = array();
+            foreach ($columns as $column) {
+                $likes[] = 'LOWER(p.' . $column . ') LIKE ?';
+                $params[] = '%' . $cari . '%';
+            }
+            $sql .= " AND (" . implode(' OR ', $likes) . ")";
         }
-            
+
         $sql .= " ORDER BY p.kode_jual DESC;";
 
-        $result = $this->db->query($sql)->result();
+        // Bound parameters: the filter values come straight from the URL
+        $result = $this->db->query($sql, $params)->result();
 
         return $result;
     }
@@ -139,12 +155,12 @@ class Penjualan_model extends CI_Model
 
     public function jumlahdata_plus($idbarang, $tahun, $bulan)
     {
-        return $this->db->query('select sum(penjualan_detail.jumlah) as jumlah, substr(penjualan.tanggal_jual,4,2) as bulan , substr(penjualan.tanggal_jual,7,4) as tahun  from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual where penjualan_detail.kode_barang="'.$idbarang.'" AND substr(penjualan.tanggal_jual,7,4)="'.$tahun.'" AND substr(penjualan.tanggal_jual,4,2)>="'.$bulan.'" group by substr(penjualan.tanggal_jual,4,2),substr(penjualan.tanggal_jual,7,4)')->result();
+        return $this->db->query('select sum(penjualan_detail.jumlah) as jumlah, substr(penjualan.tanggal_jual,4,2) as bulan , substr(penjualan.tanggal_jual,7,4) as tahun  from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual where penjualan_detail.kode_barang=? AND substr(penjualan.tanggal_jual,7,4)=? AND substr(penjualan.tanggal_jual,4,2)>=? group by substr(penjualan.tanggal_jual,4,2),substr(penjualan.tanggal_jual,7,4)', array((string) $idbarang, (string) $tahun, (string) $bulan))->result();
     }
 
     public function jumlahdata_min($idbarang, $tahun, $bulan)
     {
-        return $this->db->query('select sum(penjualan_detail.jumlah) as jumlah, substr(penjualan.tanggal_jual,4,2) as bulan , substr(penjualan.tanggal_jual,7,4) as tahun  from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual where penjualan_detail.kode_barang="'.$idbarang.'" AND substr(penjualan.tanggal_jual,7,4)="'.$tahun.'" AND substr(penjualan.tanggal_jual,4,2)<"'.$bulan.'" group by substr(penjualan.tanggal_jual,4,2),substr(penjualan.tanggal_jual,7,4)')->result();
+        return $this->db->query('select sum(penjualan_detail.jumlah) as jumlah, substr(penjualan.tanggal_jual,4,2) as bulan , substr(penjualan.tanggal_jual,7,4) as tahun  from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual where penjualan_detail.kode_barang=? AND substr(penjualan.tanggal_jual,7,4)=? AND substr(penjualan.tanggal_jual,4,2)<? group by substr(penjualan.tanggal_jual,4,2),substr(penjualan.tanggal_jual,7,4)', array((string) $idbarang, (string) $tahun, (string) $bulan))->result();
     }
 
     public function gajiAll($tanggal)
@@ -186,27 +202,22 @@ class Penjualan_model extends CI_Model
 
     public function laporan2($tanggal1, $tanggal2, $kode)
     {
-        $tanggal1 = date('d-m-Y', strtotime($tanggal1));
-        $tgl1 = explode('-', $tanggal1);
-
-        $tanggal2 = date('d-m-Y', strtotime($tanggal2));
-        $tgl2 = explode('-', $tanggal2);
-
-        return $this->db->query('select *, substr(tanggal_jual,4,2),substr(tanggal_jual,7,4) from penjualan left join penjualan_detail on penjualan.kode_jual=penjualan_detail.kode_jual left join barang on penjualan_detail.kode_barang =barang.kode_barang  where  (substr(tanggal_jual,1,2)>="'.$tgl1[0].'" and substr(tanggal_jual,4,2)>="'.$tgl1[1].'" and substr(tanggal_jual,7,4)>="'.$tgl1[2].'") and (substr(tanggal_jual,1,2)<="'.$tgl2[0].'" and substr(tanggal_jual,4,2)<="'.$tgl2[1].'" and substr(tanggal_jual,7,4)<="'.$tgl2[2].'") and barang.kode_barang="'.$kode.'"')->result();
-
-        $tanggal1=date('Y-m-d', strtotime($tanggal1));
-        $tanggal2=date('Y-m-d', strtotime($tanggal2));
+        // The old version compared day, month and year separately, so any range
+        // crossing a month boundary (e.g. 25-09 .. 05-10) returned nothing.
+        $tanggal1 = date('Y-m-d', strtotime($tanggal1));
+        $tanggal2 = date('Y-m-d', strtotime($tanggal2));
 
         $sql = "SELECT *
             , SUBSTR(tanggal_jual,4,2)
-            , SUBSTR(tanggal_jual,7,4) 
+            , SUBSTR(tanggal_jual,7,4)
             FROM penjualan p
-            LEFT JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual 
-            LEFT JOIN barang b ON pd.kode_barang = b.kode_barang  
-            WHERE tanggal_jual_date BETWEEN '$tanggal1' and '$tanggal2' 
-            AND b.kode_barang = '$kode'"; 
+            LEFT JOIN penjualan_detail pd ON p.kode_jual = pd.kode_jual
+            LEFT JOIN barang b ON pd.kode_barang = b.kode_barang
+            WHERE p.tanggal_jual_date BETWEEN ? AND ?
+            AND b.kode_barang = ?
+            ORDER BY p.tanggal_jual_date, p.kode_jual";
 
-        return $this->db->query($sql)->result();
+        return $this->db->query($sql, array($tanggal1, $tanggal2, $kode))->result();
     }
 
     public function omsetAll()
@@ -287,11 +298,11 @@ class Penjualan_model extends CI_Model
 
         // $total = $this->db->query('select SUM(total) as total from penjualan where substr(penjualan.tanggal_jual,1,2)="'.$tgl[0].'" and substr(penjualan.tanggal_jual,4,2)="'.$tgl[1].'" and substr(penjualan.tanggal_jual,7,4)="'.$tgl[2].'" and penjualan.kode_karyawan="'.$kasir.'" ')->row();
 
-        $transaksi = $this->db->query('select sum(harga_jual*jumlah) as transaksi from penjualan_detail left join penjualan on penjualan_detail.kode_jual=penjualan.kode_jual where substr(penjualan.tanggal_jual,1,2)="'.$tgl[0].'" and substr(penjualan.tanggal_jual,4,2)="'.$tgl[1].'" and substr(penjualan.tanggal_jual,7,4)="'.$tgl[2].'" and penjualan.kode_karyawan="'.$kasir.'" ')->row();
+        $transaksi = $this->db->query('select sum(harga_jual*jumlah) as transaksi from penjualan_detail left join penjualan on penjualan_detail.kode_jual=penjualan.kode_jual where substr(penjualan.tanggal_jual,1,2)="'.$tgl[0].'" and substr(penjualan.tanggal_jual,4,2)="'.$tgl[1].'" and substr(penjualan.tanggal_jual,7,4)="'.$tgl[2].'" and penjualan.kode_karyawan=? ', array((string) $kasir))->row();
 
-        $bea = $this->db->query('select sum(ongkos_karyawan) as bea from penjualan where substr(penjualan.tanggal_jual,1,2)="'.$tgl[0].'" and substr(penjualan.tanggal_jual,4,2)="'.$tgl[1].'" and substr(penjualan.tanggal_jual,7,4)="'.$tgl[2].'" and penjualan.kode_karyawan="'.$kasir.'" ')->row();
+        $bea = $this->db->query('select sum(ongkos_karyawan) as bea from penjualan where substr(penjualan.tanggal_jual,1,2)="'.$tgl[0].'" and substr(penjualan.tanggal_jual,4,2)="'.$tgl[1].'" and substr(penjualan.tanggal_jual,7,4)="'.$tgl[2].'" and penjualan.kode_karyawan=? ', array((string) $kasir))->row();
 
-        $nama = $this->db->query('select nama_karyawan as nama from karyawan where kode_karyawan="'.$kasir.'"')->row();
+        $nama = $this->db->query('select nama_karyawan as nama from karyawan where kode_karyawan=?', array((string) $kasir))->row();
 
         $data = array();
         $data['total'] = $transaksi->transaksi + $bea->bea;

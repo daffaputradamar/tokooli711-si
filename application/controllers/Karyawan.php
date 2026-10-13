@@ -146,6 +146,7 @@ class Karyawan extends CI_Controller
             );
 
             $this->Karyawan_model->insert($data);
+            set_toast('success', 'Data karyawan ditambahkan.');
             redirect(site_url('karyawan'));
         }
     }
@@ -190,6 +191,7 @@ class Karyawan extends CI_Controller
             );
 
             $this->Karyawan_model->update($this->uri->segment(3), $data);
+            set_toast('success', 'Data karyawan diperbarui.');
             redirect(site_url('karyawan'));
         }
     }
@@ -201,8 +203,11 @@ class Karyawan extends CI_Controller
         if ($row) {
             $this->Karyawan_model->delete($id);
 
+            set_toast('success', 'Data karyawan dihapus.');
             redirect(site_url('karyawan'));
         }
+        set_toast('error', 'Data karyawan tidak ditemukan; mungkin sudah dihapus.');
+        redirect(site_url('karyawan'));
     }
 
     public function resetpercobaan($id)

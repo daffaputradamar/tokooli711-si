@@ -47,11 +47,11 @@
                 ?>
                 <tr>
 			<td width="80px"><?php echo ++$start ?></td>
-			<td><?php echo $pembelian_detail->kode_beli ?></td>
-			<td><?php echo $pembelian_detail->kode_barang ?></td>
-			<td><?php echo $pembelian_detail->harga_beli ?></td>
-			<td><?php echo $pembelian_detail->jumlah ?></td>
-			<td><?php echo $pembelian_detail->subtotal ?></td>
+			<td><?php echo html_escape((string) $pembelian_detail->kode_beli) ?></td>
+			<td><?php echo html_escape((string) $pembelian_detail->kode_barang) ?></td>
+			<td><?php echo html_escape((string) $pembelian_detail->harga_beli) ?></td>
+			<td><?php echo html_escape((string) $pembelian_detail->jumlah) ?></td>
+			<td><?php echo html_escape((string) $pembelian_detail->subtotal) ?></td>
 			
 		</tr>
                 <?php

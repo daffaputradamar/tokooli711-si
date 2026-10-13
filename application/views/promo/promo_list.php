@@ -48,7 +48,7 @@
                 ?>
 				<tr>
 					<td width="80px"><?php echo ++$start ?></td>
-					<td><?php echo $promo->text ?></td>
+					<td><?php echo html_escape((string) $promo->text) ?></td>
 					<td><?php echo date('Y-m-d', strtotime($promo->dtfrom)) ?>
 					</td>
 					<td><?php echo date('Y-m-d', strtotime($promo->dtthru)) ?>

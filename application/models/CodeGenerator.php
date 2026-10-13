@@ -1,4 +1,3 @@
-
 <?php
 //created maruf 14/06/2016
 defined('BASEPATH') OR exit('No direct script access allowed');

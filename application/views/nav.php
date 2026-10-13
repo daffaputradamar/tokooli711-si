@@ -1,286 +1,193 @@
+<?php
+$level = isset($_SESSION['level']) ? $_SESSION['level'] : '';
+$can_see_sales = !empty($_SESSION['can_see_sales']);
+$is_admin = ($level == "admin");
+$is_karyawan_admin = ($level == "karyawan_admin");
+$has_sidebar = ($is_admin || $is_karyawan_admin || $can_see_sales);
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+
+$seg1 = strtolower($this->uri->segment(1));
+$seg2 = strtolower($this->uri->segment(2));
+
+$is_master = in_array($seg1, array('barang', 'merk', 'karyawan', 'suplier', 'promo'));
+$is_laporan = ($seg1 == 'laporan');
+$is_ramal = in_array($seg1, array('ramal', 'ramal_harga'));
+
+$laporan_items = array(
+	'' => 'Ringkasan',
+	'laporan_barang' => 'Laporan Barang',
+	'movement' => 'Movement Barang',
+	'history_stok' => 'History Stok Barang',
+	'stok_cutoff' => 'Cut-off Stok Bulanan',
+	'beli' => 'Laporan Pembelian',
+	'jual' => 'Laporan Penjualan'
+);
+?>
 <!DOCTYPE html>
-
-<html lang="en" class="no-js">
-<!--<![endif]-->
-<!-- BEGIN HEAD -->
+<html lang="id">
 <head>
-    <meta charset="utf-8"/>
-    <title>Bengkel</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-    <link href="<?=base_url();?>/assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css"/>
-    <!-- <link href="<?=base_url();?>/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css"> -->
-    <!-- END PAGE LEVEL PLUGIN STYLES -->
-    <!-- BEGIN PAGE STYLES -->
-    <link href="<?=base_url();?>/assets/admin/pages/css/tasks.css" rel="stylesheet" type="text/css"/>
-    <!-- END PAGE STYLES -->
-    <!-- BEGIN THEME STYLES -->
-    <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
-    <link href="<?=base_url();?>/assets/global/css/components-md.css" id="style_components" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/admin/layout4/css/layout.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/admin/layout4/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color"/>
-    <link href="<?=base_url();?>/assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=base_url();?>/assets/global/css/style.css" rel="stylesheet" type="text/css"/>
-    
-    <!-- END THEME STYLES -->
-    <link rel="shortcut icon" href="favicon.ico"/>
-    <script src="<?=base_url();?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-    <style>
-        .server-time-item {
-            height: 100% !important;
-            display: flex !important;
-            align-items: center;
-            padding: 0 15px;
-            font-weight: 600;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
-            margin-right: 15px;
-        }
-        .server-time-item i {
-            margin-right: 8px;
-            font-size: 14px;
-        }
-        #server-time {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-    </style>
+	<meta charset="utf-8"/>
+	<title>Toko Oli 711</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+	<meta name="theme-color" content="#4d42c4"/>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+	<link href="<?= base_url() ?>assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/global/css/components-md.css" id="style_components" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= base_url() ?>assets/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
+	<link href="<?= asset_url('assets/css/app.css') ?>" rel="stylesheet" type="text/css"/>
+	<?php if ($seg1 == '' || $seg1 == 'home') { ?>
+	<link href="<?= asset_url('assets/css/pos.css') ?>" rel="stylesheet" type="text/css"/>
+	<?php } ?>
+	<?php if ($seg1 == 'laporan' || $seg1 == 'sync') { ?>
+	<link href="<?= asset_url('assets/css/report.css') ?>" rel="stylesheet" type="text/css"/>
+	<?php } ?>
+	<?php if ($seg1 == 'sync') { ?>
+	<link href="<?= asset_url('assets/css/sync.css') ?>" rel="stylesheet" type="text/css"/>
+	<?php } ?>
+	<link rel="shortcut icon" href="<?= base_url() ?>assets/logonew.png"/>
+	<script src="<?= base_url() ?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 </head>
+<body class="app page-<?= $seg1 == '' ? 'home' : htmlspecialchars($seg1) ?><?= $has_sidebar ? ' has-sidebar' : '' ?>">
 
-<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
-<body class="page-md page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo" style="background: #7f7fd5; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */">
-<!-- BEGIN HEADER -->
-<div class="page-header md-shadow-z-1-i navbar navbar-fixed-top">
-    <!-- BEGIN HEADER INNER -->
-    <div class="page-header-inner">
-        <!-- BEGIN LOGO -->
-        <div class="page-logo">
-            <a href="home">
-                <img src="<?=base_url();?>/assets/logonew.png" height="60" style="position: absolute; margin-top: 6px; margin-left: -5px;" alt="logo" class="logo-default"/>
-            </a>
-            <div class="menu-toggler sidebar-toggler">
-                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-            </div>
-        </div>
-        <!-- END LOGO -->
-        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-        </a>
-        <!-- END RESPONSIVE MENU TOGGLER -->
+<?php if ($has_sidebar) { ?>
+<aside class="app-sidebar" id="appSidebar" aria-label="Menu utama">
+	<a class="app-brand" href="<?= base_url() ?>home">
+		<img src="<?= base_url() ?>assets/logonew.png" alt=""/>
+		<span>Toko Oli 711</span>
+	</a>
+	<nav class="app-nav">
+		<div class="app-nav-section">Transaksi</div>
+		<ul>
+			<li>
+				<a class="app-nav-link<?= ($seg1 == '' || $seg1 == 'home') ? ' is-active' : '' ?>" href="<?= base_url() ?>home">
+					<i class="fa fa-shopping-cart"></i><span>Kasir</span>
+				</a>
+			</li>
+			<?php if ($is_admin || $can_see_sales) { ?>
+			<li>
+				<a class="app-nav-link<?= in_array($seg1, array('penjualan', 'penjualan_detail')) ? ' is-active' : '' ?>" href="<?= base_url() ?>penjualan">
+					<i class="fa fa-list-alt"></i><span>Penjualan</span>
+				</a>
+			</li>
+			<?php } ?>
+			<?php if ($is_admin || $is_karyawan_admin) { ?>
+			<li>
+				<a class="app-nav-link<?= in_array($seg1, array('pembelian', 'pembelian_detail')) ? ' is-active' : '' ?>" href="<?= base_url() ?>pembelian">
+					<i class="fa fa-truck"></i><span>Pembelian</span>
+				</a>
+			</li>
+			<?php } ?>
+		</ul>
 
-        <!-- BEGIN PAGE TOP -->
-        <div class="page-top">
-            <!-- BEGIN HEADER SEARCH BOX -->
+		<?php if ($is_admin) { ?>
+		<div class="app-nav-section">Data</div>
+		<ul>
+			<li class="app-nav-group<?= $is_master ? ' is-open has-active' : '' ?>">
+				<button type="button" class="app-nav-link" data-nav-toggle>
+					<i class="fa fa-database"></i><span>Master Data</span><i class="fa fa-chevron-right app-caret"></i>
+				</button>
+				<ul class="app-subnav">
+					<li><a href="<?= base_url() ?>barang"<?= $seg1 == 'barang' ? ' class="is-active"' : '' ?>>Barang</a></li>
+					<li><a href="<?= base_url() ?>merk"<?= $seg1 == 'merk' ? ' class="is-active"' : '' ?>>Merk</a></li>
+					<li><a href="<?= base_url() ?>karyawan"<?= $seg1 == 'karyawan' ? ' class="is-active"' : '' ?>>Karyawan</a></li>
+					<li><a href="<?= base_url() ?>suplier"<?= $seg1 == 'suplier' ? ' class="is-active"' : '' ?>>Suplier</a></li>
+					<li><a href="<?= base_url() ?>promo"<?= $seg1 == 'promo' ? ' class="is-active"' : '' ?>>Promo</a></li>
+				</ul>
+			</li>
+			<li class="app-nav-group<?= $is_laporan ? ' is-open has-active' : '' ?>">
+				<button type="button" class="app-nav-link" data-nav-toggle>
+					<i class="fa fa-bar-chart"></i><span>Laporan</span><i class="fa fa-chevron-right app-caret"></i>
+				</button>
+				<ul class="app-subnav">
+					<?php
+					// Result pages (pjual, pbeli, ...) belong to their form's menu entry
+					$active_slug = $seg2;
+					if (in_array($seg2, array('pjual', 'pjualprint'))) {
+						$active_slug = 'jual';
+					}
+					elseif (in_array($seg2, array('pbeli', 'pbeliprint'))) {
+						$active_slug = 'beli';
+					}
+					elseif ($seg2 == 'index') {
+						$active_slug = '';
+					}
+					foreach ($laporan_items as $slug => $label) { ?>
+					<li><a href="<?= base_url() ?>laporan<?= $slug !== '' ? '/' . $slug : '' ?>"<?= ($is_laporan && $active_slug === $slug) ? ' class="is-active"' : '' ?>><?= $label ?></a></li>
+					<?php } ?>
+				</ul>
+			</li>
+		</ul>
 
-            <!-- BEGIN TOP NAVIGATION MENU -->
-            <div class="top-menu">
-                <ul class="nav navbar-nav pull-right">
-                    <!-- BEGIN SERVER TIME DISPLAY -->
-                    <li class="server-time-item">
-                        <i class="fa fa-clock-o"></i>
-                        <span id="server-time"
-                              data-epoch="<?php echo time(); ?>"
-                              data-utc-offset="<?php echo (int) date('Z'); ?>"
-                              data-sync-url="<?php echo base_url('home/server_time'); ?>"><?php echo date('H:i:s'); ?></span>
-                    </li>
-                    <!-- END SERVER TIME DISPLAY -->
-                    <!-- BEGIN USER LOGIN DROPDOWN -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-user dropdown-dark">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-						<span class="username username-hide-on-mobile">
-						<?php
-                        // session_start();
-                         $_SESSION['username']; ?> </span>
-                            <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used -->
-                            <img alt="" class="img-circle" src="<?=base_url();?>/assets/user.png"/>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-default">
-                        <?php if($_SESSION['level'] == "admin") { ?>
-                            <li>
-                                <a href="<?=base_url();?>admin/update/ADM00001">
-                                    <i class="icon-user"></i> My Profile </a>
-                            </li>
-                            <li class="divider">
-                            </li>
-                        <?php } ?>
-                            <li>
-                                <a href="<?=base_url();?>logout/logout">
-                                    <i class="icon-key"></i> Log Out </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END USER LOGIN DROPDOWN -->
-                </ul>
-            </div>
-            <!-- END TOP NAVIGATION MENU -->
-        </div>
-        <!-- END PAGE TOP -->
-    </div>
-    <!-- END HEADER INNER -->
-</div>
-<!-- END HEADER -->
-<div class="clearfix">
-</div>
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-    <!-- BEGIN SIDEBAR -->
-    <?php if($_SESSION['level'] == "admin" || $_SESSION['level'] == "karyawan_admin" || $_SESSION['can_see_sales'] == true) { ?>
-    <div class="page-sidebar-wrapper">
-        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-        <div class="page-sidebar md-shadow-z-2-i  navbar-collapse collapse">
-            <!-- BEGIN SIDEBAR MENU -->
-            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-            <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" >
-                <?php if($_SESSION['level'] == "admin" || $_SESSION['level'] == "karyawan_admin" || $_SESSION['can_see_sales'] == true) { ?>
-                    <li class="start">
-                        <a href="<?=base_url()?>home">
-                            <i class="icon-home"></i>
-                            <span class="title">Dashboard</span>
-                        </a>
-                    </li>
-                <?php } ?>
-                <?php if($_SESSION['level'] == "admin") { ?>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-briefcase"></i>
-                            <span class="title">Master Data</span>
-                            <span class="arrow "></span>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="<?= base_url() ?>barang">Barang</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>merk">Merk</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>karyawan">Karyawan</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>suplier">Suplier</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>promo">Promo</a>
-                            </li>
-                        </ul>
-                    </li>
-                <?php } ?>
-                <?php if($_SESSION['level'] == "admin" || $_SESSION['level'] == "karyawan_admin") { ?>
-                    <li>
-                        <a href="<?= base_url() ?>pembelian">
-                            <i class="icon-basket"></i>
-                            <span class="title">Pembelian</span>
-                        </a>
-                    </li>
-                <?php } ?>
-                <?php if($_SESSION['level'] == "admin" || $_SESSION['can_see_sales'] == true) { ?>
-                    <li>
-                        <a href="<?= base_url() ?>penjualan">
-                            <i class="icon-basket"></i>
-                            <span class="title">Penjualan</span>
-                        </a>
-                    </li>
-                <?php } ?>
-                <?php if($_SESSION['level'] == "admin") { ?>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-wallet"></i>
-                            <span class="title">Laporan</span>
-                            <span class="arrow "></span>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="<?= base_url() ?>laporan/laporan_barang">
-                                    Laporan Barang</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>laporan/movement">
-                                    Laporan Movement Barang</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>laporan/history_stok">
-                                    Laporan History Stok Barang</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>laporan/stok_cutoff">
-                                    Cut-off Stok Bulanan</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>laporan/beli">
-                                    Laporan Pembelian</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url() ?>laporan/jual">
-                                    Laporan Penjualan</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="<?= base_url() ?>ramal">
-                            <i class="icon-graph"></i>
-                            <span class="title">Ramal Stok </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url() ?>ramal/index2">
-                            <i class="icon-graph"></i>
-                            <span class="title">Pengujian Ramal Stok</span>
-                        </a>
-                    </li>
-    
-                    <li>
-                        <a href="<?= base_url() ?>ramal_harga">
-                            <i class="icon-graph"></i>
-                            <span class="title">Ramal Harga </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url() ?>ramal_harga/index2">
-                            <i class="icon-graph"></i>
-                            <span class="title">Pengujian Ramal Harga</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url() ?>sync">
-                            <i class="icon-refresh"></i>
-                            <span class="title">Sync Dashboard</span>
-                        </a>
-                    </li>
-                <?php } ?>
+		<div class="app-nav-section">Analitik</div>
+		<ul>
+			<li class="app-nav-group<?= $is_ramal ? ' is-open has-active' : '' ?>">
+				<button type="button" class="app-nav-link" data-nav-toggle>
+					<i class="fa fa-line-chart"></i><span>Peramalan</span><i class="fa fa-chevron-right app-caret"></i>
+				</button>
+				<ul class="app-subnav">
+					<li><a href="<?= base_url() ?>ramal"<?= ($seg1 == 'ramal' && $seg2 != 'index2') ? ' class="is-active"' : '' ?>>Ramal Stok</a></li>
+					<li><a href="<?= base_url() ?>ramal/index2"<?= ($seg1 == 'ramal' && $seg2 == 'index2') ? ' class="is-active"' : '' ?>>Pengujian Ramal Stok</a></li>
+					<li><a href="<?= base_url() ?>ramal_harga"<?= ($seg1 == 'ramal_harga' && $seg2 != 'index2') ? ' class="is-active"' : '' ?>>Ramal Harga</a></li>
+					<li><a href="<?= base_url() ?>ramal_harga/index2"<?= ($seg1 == 'ramal_harga' && $seg2 == 'index2') ? ' class="is-active"' : '' ?>>Pengujian Ramal Harga</a></li>
+				</ul>
+			</li>
+			<li>
+				<a class="app-nav-link<?= $seg1 == 'sync' ? ' is-active' : '' ?>" href="<?= base_url() ?>sync">
+					<i class="fa fa-refresh"></i><span>Sync Dashboard</span>
+				</a>
+			</li>
+		</ul>
+		<?php } ?>
+	</nav>
+</aside>
+<div class="app-backdrop" data-nav-close></div>
+<?php } ?>
 
-            </ul>
-            <!-- END SIDEBAR MENU -->
-        </div>
-    </div>
-    <?php } ?>
-    <!-- END SIDEBAR -->
-    <!-- BEGIN CONTENT -->
-    <?php if($_SESSION['level'] == "admin" || $_SESSION['level'] == "karyawan_admin" || $_SESSION['can_see_sales'] == true) { ?>
-    <div class="page-content-wrapper">
-    <?php } ?>
-        <div class="page-content">
+<div class="app-main">
+	<header class="app-topbar">
+		<?php if ($has_sidebar) { ?>
+		<button type="button" class="app-burger" data-nav-open aria-label="Buka menu" aria-controls="appSidebar">
+			<i class="fa fa-bars"></i>
+		</button>
+		<?php } ?>
+		<a class="app-topbar-brand" href="<?= base_url() ?>home">
+			<img src="<?= base_url() ?>assets/logonew.png" alt=""/>
+			<span>Toko Oli 711</span>
+		</a>
+		<div class="app-topbar-spacer"></div>
+
+		<span class="app-clock" title="Waktu server">
+			<i class="fa fa-clock-o"></i>
+			<span id="server-time"
+				data-epoch="<?php echo time(); ?>"
+				data-utc-offset="<?php echo (int) date('Z'); ?>"
+				data-sync-url="<?php echo base_url('home/server_time'); ?>"><?php echo date('H:i:s'); ?></span>
+		</span>
+
+		<div class="dropdown app-user">
+			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="app-avatar"><?= htmlspecialchars(substr($username, 0, 1)) ?></span>
+				<span class="app-user-name"><?= htmlspecialchars($username) ?></span>
+				<i class="fa fa-angle-down text-muted"></i>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-right">
+				<?php if ($is_admin) { ?>
+				<li>
+					<a href="<?= base_url() ?>admin/update/ADM00001"><i class="fa fa-user"></i> Profil Saya</a>
+				</li>
+				<li class="divider"></li>
+				<?php } ?>
+				<li>
+					<a href="<?= base_url() ?>logout/logout"><i class="fa fa-sign-out"></i> Keluar</a>
+				</li>
+			</ul>
+		</div>
+	</header>
+
+	<main class="app-content page-content">

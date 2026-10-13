@@ -48,10 +48,10 @@
 				?>
 					<tr>
 						<td width="80px"><?php echo ++$start ?></td>
-						<td><?php echo $karyawan->kode_karyawan ?></td>
-						<td><?php echo $karyawan->nama_karyawan ?></td>
-						<td><?php echo $karyawan->alamat_karyawan ?></td>
-						<td><?php echo $karyawan->telp_karyawan ?></td>
+						<td><?php echo html_escape((string) $karyawan->kode_karyawan) ?></td>
+						<td><?php echo html_escape((string) $karyawan->nama_karyawan) ?></td>
+						<td><?php echo html_escape((string) $karyawan->alamat_karyawan) ?></td>
+						<td><?php echo html_escape((string) $karyawan->telp_karyawan) ?></td>
 						<td><?php echo date('H:i', strtotime($karyawan->start_working_hour)) ?></td>
 						<td><?php echo date('H:i', strtotime($karyawan->end_working_hour)) ?></td>
 						<td style="text-align:center">
