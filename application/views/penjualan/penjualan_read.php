@@ -9,7 +9,8 @@
 	    <tr><td>Kode Jual</td><td><?php echo $kode_jual; ?></td></tr>
 	    <tr><td>Tanggal Jual</td><td><?php echo $tanggal_jual; ?></td></tr>
 	    <tr><td>Kode Admin</td><td><?php echo $kode_admin; ?></td></tr>
-	    
+        </table>
+
         <table class="table table-bordered table-hover table-striped" >
                  <tr>
                 <th>No</th>
@@ -60,8 +61,7 @@
         <!-- <div class="row">
         <div class="col-md-4 pull-right"><b>Bayar = Rp. <?php echo $this->CodeGenerator->rp($bayar); ?></b></div>
         </div> -->
-	    <tr><td>Total</td><td></td></tr>
-	    <tr><td>Bayar</td><td></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('penjualan') ?>" class="btn btn-default">Cancel</a></td></tr>
-	</table></div></div></div>
-       
+        <div class="text-right" style="margin-top: 14px;">
+            <a href="<?php echo site_url('penjualan') ?>" class="btn btn-default">Kembali</a>
+        </div>
+	</div></div></div>

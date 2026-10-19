@@ -30,6 +30,8 @@
                     <td>No Faktur</td>
                     <td><?php echo $no_faktur; ?></td>
                 </tr>
+            </table>
+
                 <table class="table table-bordered table-hover table-striped">
                     <tr>
                         <th>No</th>
@@ -74,11 +76,10 @@
                     </div>
                 <?php } ?>
 
-                <tr>
-                    <td></td>
-                    <td><a href="<?php echo site_url('pembelian') ?>" class="btn btn-default">Cancel</a></td>
-                </tr>
-            </table>
+            <div class="clearfix"></div>
+            <div class="text-right">
+                <a href="<?php echo site_url('pembelian') ?>" class="btn btn-default">Kembali</a>
+            </div>
         </div>
     </div>
 </div>
