@@ -13,10 +13,6 @@
         } ?>
         
 	  
-        <div class="form-group">
-            <label for="double"> <?php echo form_error('') ?></label>
-            <input type="text" class="form-control" name="" id="" placeholder="" value="<?php echo $; ?>" />
-        </div>
 
         
 	    <div class="form-group">
@@ -28,8 +24,8 @@
             <input type="text" class="form-control" name="kode_barang" id="kode_barang" placeholder="Kode Barang" value="<?php echo $kode_barang; ?>" />
         </div>
 	    <div class="form-group">
-            <label for=>Harga Jual <?php echo form_error('harga jual') ?></label>
-            <input type="number" class="form-control" name="harga jual" id="harga jual" placeholder="Harga Jual" value="<?php echo $harga jual; ?>" />
+            <label for=>Harga Jual <?php echo form_error('harga_jual') ?></label>
+            <input type="number" class="form-control" name="harga_jual" id="harga_jual" placeholder="Harga Jual" value="<?php echo $harga_jual; ?>" />
         </div>
 	    <div class="form-group">
             <label for=>Harga Beli <?php echo form_error('harga_beli') ?></label>

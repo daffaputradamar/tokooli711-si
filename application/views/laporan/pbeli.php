@@ -132,7 +132,7 @@ $tx_count = count($listbeli);
 				<ul class="rpt-lines">
 					<?php foreach ($lines as $line) { ?>
 					<li class="rpt-line">
-						<span class="rpt-line-name"><?= htmlspecialchars($line->nama_barang) ?></span>
+						<span class="rpt-line-name"><?= htmlspecialchars((string) $line->nama_barang) ?></span>
 						<span class="rpt-line-total"><?= lap_rp($line->subtotal) ?></span>
 						<span class="rpt-line-sub"><?= lap_num($line->jumlah) ?> &times; <?= lap_rp($line->harga_beli) ?></span>
 					</li>

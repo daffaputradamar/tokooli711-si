@@ -59,7 +59,7 @@
 					</td>
 				</tr>
 				<tr>
-					<?php $harga_jual = $penjualandetail->subtotal / $penjualandetail->jumlah ?>
+					<?php $harga_jual = (float) $penjualandetail->jumlah != 0 ? $penjualandetail->subtotal / $penjualandetail->jumlah : 0 // PHP 8: dividing by 0 throws ?>
 					<td><?php echo $penjualandetail->jumlah . " x " . $penjualandetail->harga_jual ?>
 					</td>
 					<td>Rp.

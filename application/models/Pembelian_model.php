@@ -47,7 +47,7 @@ class Pembelian_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
-    public function get_limit_data_filter($limit, $start = 0,$kode_barang, $tgl_awal, $tgl_akhir, $cari = '')
+    public function get_limit_data_filter($limit, $start, $kode_barang, $tgl_awal, $tgl_akhir, $cari = '')
     {
         $sql = "SELECT p.*, s.*
             FROM pembelian p

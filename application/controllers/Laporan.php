@@ -200,11 +200,11 @@ class Laporan extends CI_Controller
         $output = fopen('php://output', 'w');
         
         // Header
-        fputcsv($output, array('Periode', $label_tipe));
+        fputcsv($output, array('Periode', $label_tipe), ',', '"', '\\');
         
         // Data
         foreach ($data as $row) {
-            fputcsv($output, array($row->periode, $row->total_harga));
+            fputcsv($output, array($row->periode, $row->total_harga), ',', '"', '\\');
         }
         
         fclose($output);
@@ -242,16 +242,16 @@ class Laporan extends CI_Controller
 
         // Write header based on supplier toggle
         if ($tampilkan_supplier) {
-            fputcsv($output, array('Periode', 'Nama Supplier', 'Total Pembelian'));
+            fputcsv($output, array('Periode', 'Nama Supplier', 'Total Pembelian'), ',', '"', '\\');
             // Data with supplier
             foreach ($data as $row) {
-                fputcsv($output, array($row->periode, $row->nama_suplier, $row->total_pembelian));
+                fputcsv($output, array($row->periode, $row->nama_suplier, $row->total_pembelian), ',', '"', '\\');
             }
         } else {
-            fputcsv($output, array('Periode', 'Total Pembelian'));
+            fputcsv($output, array('Periode', 'Total Pembelian'), ',', '"', '\\');
             // Data without supplier
             foreach ($data as $row) {
-                fputcsv($output, array($row->periode, $row->total_pembelian));
+                fputcsv($output, array($row->periode, $row->total_pembelian), ',', '"', '\\');
             }
         }
 
@@ -596,7 +596,7 @@ class Laporan extends CI_Controller
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         $out = fopen('php://output', 'w');
 
-        fputcsv($out, array('Kode Barang', 'Nama Barang', 'Merk', 'Stok', 'Harga Beli', 'Harga Jual', 'Nilai Stok (Beli)', 'Nilai Stok (Jual)'));
+        fputcsv($out, array('Kode Barang', 'Nama Barang', 'Merk', 'Stok', 'Harga Beli', 'Harga Jual', 'Nilai Stok (Beli)', 'Nilai Stok (Jual)'), ',', '"', '\\');
         foreach ($rows as $row) {
             fputcsv($out, array(
                 $row->kode_barang,
@@ -607,7 +607,7 @@ class Laporan extends CI_Controller
                 $row->harga_jual,
                 $row->nilai_stok_beli,
                 $row->nilai_stok_jual
-            ));
+            ), ',', '"', '\\');
         }
         fclose($out);
         exit;

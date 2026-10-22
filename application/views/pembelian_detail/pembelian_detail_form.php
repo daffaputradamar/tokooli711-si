@@ -13,10 +13,6 @@
         } ?>
         
 	  
-        <div class="form-group">
-            <label for="int"> <?php echo form_error('') ?></label>
-            <input type="text" class="form-control" name="" id="" placeholder="" value="<?php echo $; ?>" />
-        </div>
 
         
 	    <div class="form-group">

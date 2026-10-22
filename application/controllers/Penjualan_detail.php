@@ -27,7 +27,7 @@ class Penjualan_detail extends CI_Controller
     {
          $this->load->view('nav');
         $this->load->library('pagination');
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
         
         if ($cari <> '') {
@@ -101,7 +101,7 @@ class Penjualan_detail extends CI_Controller
             $data = array(
                 'kode_jual' => $this->input->post('kode_jual'),
                 'kode_barang' => $this->input->post('kode_barang'),
-                'harga jual' => $this->input->post('harga_jual'),
+                'harga_jual' => $this->input->post('harga_jual'),
                 'harga_beli' => $this->input->post('harga_beli'),
                 'jumlah' => $this->input->post('jumlah'),
                 'subtotal' => $this->input->post('subtotal'),
@@ -162,7 +162,7 @@ class Penjualan_detail extends CI_Controller
             // $this->Penjualan_detail_model->delete($id,$barang);
         $cart_key = $_SESSION['kode'] . 'detailbarang';
         if (isset($_SESSION[$cart_key][$barang])) {
-            set_toast('info', trim($_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari keranjang.');
+            set_toast('info', trim((string) $_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari keranjang.');
         }
         unset($_SESSION[$cart_key][$barang]);
         if($this->uri->segment(4)<>"" and $this->uri->segment(4)==1){

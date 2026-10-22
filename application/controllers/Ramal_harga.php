@@ -20,7 +20,7 @@ class Ramal_harga extends CI_Controller
     function index(){
     	$this->load->view('nav');
         $this->load->library('pagination');
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
         
         if ($cari <> '') {
@@ -52,7 +52,7 @@ class Ramal_harga extends CI_Controller
     function index2(){
         $this->load->view('nav');
         $this->load->library('pagination');
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
         
         if ($cari <> '') {

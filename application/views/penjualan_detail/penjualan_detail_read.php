@@ -8,7 +8,7 @@
         <table class="table">
 	    <tr><td>Kode Jual</td><td><?php echo $kode_jual; ?></td></tr>
 	    <tr><td>Kode Barang</td><td><?php echo $kode_barang; ?></td></tr>
-	    <tr><td>Harga Jual</td><td><?php echo $harga jual; ?></td></tr>
+	    <tr><td>Harga Jual</td><td><?php echo $harga_jual; ?></td></tr>
 	    <tr><td>Harga Beli</td><td><?php echo $harga_beli; ?></td></tr>
 	    <tr><td>Jumlah</td><td><?php echo $jumlah; ?></td></tr>
 	    <tr><td>Subtotal</td><td><?php echo $subtotal; ?></td></tr>

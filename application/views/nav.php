@@ -6,8 +6,8 @@ $is_karyawan_admin = ($level == "karyawan_admin");
 $has_sidebar = ($is_admin || $is_karyawan_admin || $can_see_sales);
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
-$seg1 = strtolower($this->uri->segment(1));
-$seg2 = strtolower($this->uri->segment(2));
+$seg1 = strtolower((string) $this->uri->segment(1));
+$seg2 = strtolower((string) $this->uri->segment(2));
 
 $is_master = in_array($seg1, array('barang', 'merk', 'karyawan', 'suplier', 'promo'));
 $is_laporan = ($seg1 == 'laporan');

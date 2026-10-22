@@ -24,8 +24,8 @@ $items = array();
 foreach ($listbarang as $komp) {
 	$item = array(
 		'k' => $komp->kode_barang,
-		'n' => trim($komp->nama_barang),
-		'm' => trim($komp->merk),
+		'n' => trim((string) $komp->nama_barang),
+		'm' => trim((string) $komp->merk),
 		'h' => (float) $komp->harga_jual
 	);
 	if ($can_see_stock) {
@@ -165,15 +165,15 @@ if ($items_json === FALSE) {
 						<?php foreach ($listdetail as $line) { ?>
 						<li class="pos-line">
 							<div class="pos-line-main">
-								<div class="pos-line-name"><?= htmlspecialchars($line['nama_barang']) ?></div>
+								<div class="pos-line-name"><?= htmlspecialchars((string) $line['nama_barang']) ?></div>
 								<div class="pos-line-sub tabular">
-									<?= $line['jumlah'] + 0 ?> &times; Rp <?= $this->CodeGenerator->rp($line['harga_jual']) ?>
+									<?= (float) $line['jumlah'] + 0 ?> &times; Rp <?= $this->CodeGenerator->rp($line['harga_jual']) ?>
 								</div>
 							</div>
 							<div class="pos-line-total tabular">Rp <?= $this->CodeGenerator->rp($line['subtotal']) ?></div>
 							<a class="pos-line-remove" title="Hapus dari keranjang"
 								href="<?= site_url('penjualan_detail/delete/' . $line['kode_barang'] . '/1') ?>"
-								onclick="return confirm('Hapus <?= htmlspecialchars(addslashes($line['nama_barang'])) ?> dari keranjang?')">
+								onclick="return confirm('Hapus <?= htmlspecialchars(addslashes((string) $line['nama_barang'])) ?> dari keranjang?')">
 								<i class="fa fa-trash-o"></i><span class="sr-only">Hapus</span>
 							</a>
 						</li>

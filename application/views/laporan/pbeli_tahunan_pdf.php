@@ -188,7 +188,7 @@
 									<td rowspan="<?= count($suppliers) + 1 ?>"><?= $periode ?></td>
 								<?php endif; ?>
 								<td><?= isset($row->nama_suplier) ? $row->nama_suplier : '-' ?></td>
-								<td class="text-right"><?= number_format($row->total_pembelian, 0, ',', '.') ?></td>
+								<td class="text-right"><?= number_format((float) $row->total_pembelian, 0, ',', '.') ?></td>
 							</tr>
 						<?php
 							$is_first_row = false;

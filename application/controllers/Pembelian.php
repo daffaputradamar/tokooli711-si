@@ -26,7 +26,7 @@ class Pembelian extends CI_Controller
         $this->form_validation->set_rules('tanggal_beli', 'tanggal beli', 'trim|required');
         $this->form_validation->set_rules('kode_admin', 'kode admin', 'trim|required');
         $this->form_validation->set_rules('total', 'total', 'trim|required');
-        $this->form_validation->set_rules('kode_suplier', 'total', 'trim|required');
+        $this->form_validation->set_rules('kode_suplier', 'kode suplier', 'trim|required');
     }
 
     public function index()
@@ -36,12 +36,12 @@ class Pembelian extends CI_Controller
         $config['per_page'] = 10;
         $config['page_query_string'] = true;
 
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
 
-        $filter_barang = urldecode($this->input->get('kode_barang'));
-        $filter_tgl_awal = urldecode($this->input->get('tgl_awal'));
-        $filter_tgl_akhir = urldecode($this->input->get('tgl_akhir'));
+        $filter_barang = urldecode((string) $this->input->get('kode_barang'));
+        $filter_tgl_awal = urldecode((string) $this->input->get('tgl_awal'));
+        $filter_tgl_akhir = urldecode((string) $this->input->get('tgl_akhir'));
 
         $pembelian_all = $this->Pembelian_model->get_limit_data_filter($config['per_page'], $start, $filter_barang, $filter_tgl_awal, $filter_tgl_akhir, $cari);
 
@@ -112,7 +112,7 @@ class Pembelian extends CI_Controller
         $detail_pembelian = isset($_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian']) ? $_SESSION[$_SESSION['kode'] . 'detailbarang_pembelian'] : array();
         ;
         foreach ($detail_pembelian as $pembeliandetail) {
-            $total_all += $pembeliandetail['harga_beli'] * $pembeliandetail['jumlah'];
+            $total_all += (float) $pembeliandetail['harga_beli'] * (float) $pembeliandetail['jumlah'];
         }
 
         $data = array(
@@ -124,7 +124,6 @@ class Pembelian extends CI_Controller
             'no_faktur' => set_value('no_faktur', '-'),
             'total' => set_value('total', $this->Pembelian_detail_model->totalall($this->input->post('kode_beli'))),
             'kode_suplier' => set_value('kode_suplier'),
-            'total' => set_value($total_all)
         );
         $data['listbarang'] = $this->Barang_model->selectByAll();
         // $data['listdetail']=$this->Pembelian_detail_model->selectById($data['kode_beli']);
@@ -143,6 +142,12 @@ class Pembelian extends CI_Controller
 
     public function insert()
     {
+        // Opening the page shows the form; only a POST adds a line or saves.
+        // Without this, a GET with an empty list redirected to itself forever.
+        if ($this->input->method() !== 'post') {
+            return $this->datainsert();
+        }
+
         $kode_user = $_SESSION['kode'];
 
         if ($this->input->post('submitlist') <> "") {
@@ -183,13 +188,14 @@ class Pembelian extends CI_Controller
                     'nama_barang' => $barang->nama_barang,
                     'harga_beli' => $barang->harga_beli,
                     'harga_jual' => $barang->harga_jual,
-                    'jumlah' => $this->input->post('jumlah'),
-                    'subtotal' => (float)$barang->harga_beli * (float)$this->input->post('jumlah'),
+                    // The parsed number, so "1,5" is kept as 1.5 instead of the raw text
+                    'jumlah' => $jumlah,
+                    'subtotal' => (float)$barang->harga_beli * $jumlah,
                 );
 
                 $_SESSION[$kode_user . 'detailbarang_pembelian'][$this->input->post('kode_barang')] = $data;
                 // $this->Pembelian_detail_model->insert($data);
-                $nama = trim($barang->nama_barang);
+                $nama = trim((string) $barang->nama_barang);
                 $message = $already
                     ? 'Jumlah ' . $nama . ' diubah menjadi ' . ($jumlah + 0) . '.'
                     : $nama . ' (' . ($jumlah + 0) . ') ditambahkan ke daftar pembelian.';
@@ -215,7 +221,9 @@ class Pembelian extends CI_Controller
         }
 
         $this->_rule();
-        if ($this->form_validation->run() == false and $this->input->post('total') == null) {
+        // The form always posts "total", so the old "and total == null" check
+        // skipped validation and saved purchases with no date or supplier
+        if ($this->form_validation->run() == false) {
             if ($is_ajax) {
                 $message = trim(strip_tags($this->form_validation->error_string(' ', ' ')));
                 json_reply(422, array('ok' => FALSE, 'message' => $message !== '' ? 'Data belum lengkap: ' . $message : 'Data pembelian belum lengkap.'));
@@ -227,7 +235,7 @@ class Pembelian extends CI_Controller
         $total_all = 0;
 
         foreach ($detail_pembelian as $pembeliandetail) {
-            $total_all += $pembeliandetail['harga_beli'] * $pembeliandetail['jumlah'];
+            $total_all += (float) $pembeliandetail['harga_beli'] * (float) $pembeliandetail['jumlah'];
             $data = array(
                 'kode_beli' => $kode_beli,
                 'kode_barang' => $pembeliandetail['kode_barang'],
@@ -239,7 +247,8 @@ class Pembelian extends CI_Controller
         }
 
         $data = array(
-            'kode_beli' => $this->CodeGenerator->buatkode('pembelian', 'kode_beli', 10, 'TRB'),
+            // Same code as the lines above (a second buatkode() could differ)
+            'kode_beli' => $kode_beli,
             'tanggal_beli' => $this->input->post('tanggal_beli'),
             'tanggal_beli_date' => date('Y-m-d', strtotime($this->input->post('tanggal_beli'))),
             'waktu_beli' => date("h:i:s a"),
@@ -314,8 +323,10 @@ class Pembelian extends CI_Controller
             log_message('info', 'API Call Successful: ' . $response);
         }
 
-        // Close cURL
-        curl_close($ch);
+        // Close cURL (PHP 8.0+ frees the handle itself; curl_close() is deprecated in PHP 8.5)
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
     }
 
     public function save_pembelian()
@@ -345,7 +356,8 @@ class Pembelian extends CI_Controller
         }
 
         // Validate required fields in the input
-        if (empty($input['kode_beli']) || empty($input['tanggal_beli']) || empty($input['details'])) {
+        if (empty($input['kode_beli']) || empty($input['tanggal_beli']) || empty($input['details'])
+            || !is_string($input['kode_beli']) || !sync_details_valid($input, 'tanggal_beli')) {
             $response = [
                 'status' => false,
                 'message' => 'Missing required fields',
@@ -375,14 +387,17 @@ class Pembelian extends CI_Controller
             // Insert the details
             foreach ($input['details'] as $detail) {
                 $row = $this->Barang_model->selectById($detail['kode_barang']);
-                $harga_beli = $row->harga_beli;
+                // An item only the sending store has: keep the price it sent
+                // (reading ->harga_beli on NULL printed a warning into the JSON)
+                $harga_beli = $row ? $row->harga_beli : (isset($detail['harga_beli']) ? $detail['harga_beli'] : 0);
+                $jumlah = (float) str_replace(',', '.', (string) $detail['jumlah']);
 
                 $detail_data = [
                     'kode_beli' => $input['kode_beli'],
                     'kode_barang' => $detail['kode_barang'],
                     'harga_beli' => $harga_beli,
-                    'jumlah' => $detail['jumlah'],
-                    'subtotal' => (float)$harga_beli * (float)$detail['jumlah'],
+                    'jumlah' => $jumlah,
+                    'subtotal' => (float)$harga_beli * $jumlah,
                 ];
                 $totalall += $detail_data['subtotal'];
 

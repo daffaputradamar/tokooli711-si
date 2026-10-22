@@ -44,6 +44,31 @@ if (!function_exists('sync_target')) {
 	}
 }
 
+if (!function_exists('sync_details_valid')) {
+	/**
+	 * Checks a received sync payload before anything is written. On PHP 8 a
+	 * non-string date or a line that isn't an array throws a TypeError (PHP 7
+	 * only warned), which left detail rows saved without their header.
+	 *
+	 * @param array $input Decoded JSON payload
+	 * @param string $date_key 'tanggal_jual' or 'tanggal_beli'
+	 * @return bool
+	 */
+	function sync_details_valid($input, $date_key)
+	{
+		if (!is_string($input[$date_key]) || !is_array($input['details'])) {
+			return FALSE;
+		}
+		foreach ($input['details'] as $detail) {
+			if (!is_array($detail) || empty($detail['kode_barang']) || !is_string($detail['kode_barang'])
+				|| !isset($detail['jumlah']) || !is_numeric(str_replace(',', '.', (string) $detail['jumlah']))) {
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+}
+
 if (!function_exists('require_login')) {
 	/**
 	 * Sends visitors without a session to the login page.

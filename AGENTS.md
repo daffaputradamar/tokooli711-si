@@ -181,10 +181,15 @@ $this->pagination->initialize($config);
 
 ## PHP Compatibility
 
-- **Minimum**: PHP 5.2.4
-- **Recommended**: PHP 5.4+
-- Avoid PHP 5.3+ features without fallbacks for older versions
-- Check CodeIgniter compatibility for all libraries used
+- **Framework**: CodeIgniter 3.1.13 (`system/`), patched for PHP 8.2–8.5
+- **Tested on**: PHP 8.4 and 8.5, with `error_reporting(-1)` and no notices
+- **Minimum**: PHP 7.0 (the app uses `??` and short array syntax)
+- New code must run on PHP 8.5 without deprecations:
+  - Cast values that can be NULL before passing them to built-ins, e.g. `(string) $this->input->get('q')`
+  - Pass the `$escape` argument explicitly to `fputcsv()`
+  - Don't use `++` on code strings like `'ADM00001'`; build the next code from its number
+  - Use `(int)`/`(bool)`/`(float)` casts, never `(integer)`/`(boolean)`/`(double)`
+- If you patch `system/`, comment the PHP version that needs it (e.g. `// PHP 8.4: ...`), so the patch can be reapplied after a framework update
 
 ## Git Workflow
 

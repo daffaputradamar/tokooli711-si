@@ -42,12 +42,12 @@ class Penjualan extends CI_Controller
         $config['per_page'] = 10;
         $config['page_query_string'] = true;
 
-        $cari = urldecode($this->input->get('cari'));
-        $filterkaryawan = empty(urldecode($this->input->get('filterkaryawan'))) ? "ALL" : urldecode($this->input->get('filterkaryawan'));
+        $cari = urldecode((string) $this->input->get('cari'));
+        $filterkaryawan = empty(urldecode((string) $this->input->get('filterkaryawan'))) ? "ALL" : urldecode((string) $this->input->get('filterkaryawan'));
 
-        $filter_barang = urldecode($this->input->get('kode_barang'));
-        $filter_tgl_awal = urldecode($this->input->get('tgl_awal'));
-        $filter_tgl_akhir = urldecode($this->input->get('tgl_akhir'));
+        $filter_barang = urldecode((string) $this->input->get('kode_barang'));
+        $filter_tgl_awal = urldecode((string) $this->input->get('tgl_awal'));
+        $filter_tgl_akhir = urldecode((string) $this->input->get('tgl_akhir'));
 
         $start = intval($this->input->get('start'));
 
@@ -150,6 +150,13 @@ class Penjualan extends CI_Controller
 
     public function insert()
     {
+        // Only a POST adds to the cart or saves. A GET (e.g. after deleting a
+        // cart line) used to fail validation and redirect to itself forever;
+        // the cart lives on the cashier page, so send it there.
+        if ($this->input->method() !== 'post') {
+            return redirect(site_url('home'));
+        }
+
         $kode_user = $_SESSION['kode'];
 
         $keterangan = $this->input->post('keterangan');
@@ -201,10 +208,11 @@ class Penjualan extends CI_Controller
 
         $kode_jual = $this->CodeGenerator->buatkode('penjualan', 'kode_jual', 10, 'TRJ');
         $total_all = 0;
-        $total_all += isset($_SESSION[$_SESSION['kode'] . 'ongkos_karyawan']) ? $_SESSION[$_SESSION['kode'] . 'ongkos_karyawan'] : 0;
+        $total_all += isset($_SESSION[$_SESSION['kode'] . 'ongkos_karyawan']) ? (float) $_SESSION[$_SESSION['kode'] . 'ongkos_karyawan'] : 0;
 
         foreach ($detail_penjualan as $penjualandetail) {
-            $total_all += $penjualandetail['is_using_rupiah'] ? $penjualandetail['subtotal'] : $penjualandetail['harga_jual'] * $penjualandetail['jumlah'];
+            // Casts: carts saved before the cart stored numbers still hold text
+            $total_all += $penjualandetail['is_using_rupiah'] ? (float) $penjualandetail['subtotal'] : (float) $penjualandetail['harga_jual'] * (float) $penjualandetail['jumlah'];
             $data = array(
                 'kode_jual' => $kode_jual,
                 'kode_barang' => $penjualandetail['kode_barang'],
@@ -337,8 +345,10 @@ class Penjualan extends CI_Controller
             log_message('info', 'API Call Successful: ' . $response);
         }
 
-        // Close cURL
-        curl_close($ch);
+        // Close cURL (PHP 8.0+ frees the handle itself; curl_close() is deprecated in PHP 8.5)
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
     }
 
     public function save_penjualan()
@@ -368,7 +378,8 @@ class Penjualan extends CI_Controller
         }
 
         // Validate required fields in the input
-        if (empty($input['kode_jual']) || empty($input['tanggal_jual']) || empty($input['details'])) {
+        if (empty($input['kode_jual']) || empty($input['tanggal_jual']) || empty($input['details'])
+            || !is_string($input['kode_jual']) || !sync_details_valid($input, 'tanggal_jual')) {
             $response = [
                 'status' => false,
                 'message' => 'Missing required fields',
@@ -397,16 +408,19 @@ class Penjualan extends CI_Controller
             // Insert the details
             foreach ($input['details'] as $detail) {
                 $row = $this->Barang_model->selectById($detail['kode_barang']);
-                $harga_jual = $row->harga_jual;
-                $harga_beli = $row->harga_beli;
+                // An item only the sending store has: keep the prices it sent
+                // (reading properties of NULL printed warnings into the JSON)
+                $harga_jual = $row ? $row->harga_jual : (isset($detail['harga_jual']) ? $detail['harga_jual'] : 0);
+                $harga_beli = $row ? $row->harga_beli : (isset($detail['harga_beli']) ? $detail['harga_beli'] : 0);
+                $jumlah = (float) str_replace(',', '.', (string) $detail['jumlah']);
 
                 $detail_data = [
                     'kode_jual' => $input['kode_jual'],
                     'kode_barang' => $detail['kode_barang'],
                     'harga_jual' => $harga_jual,
                     'harga_beli' => $harga_beli,
-                    'jumlah' => $detail['jumlah'],
-                    'subtotal' => (float)$harga_jual * (float)$detail['jumlah']
+                    'jumlah' => $jumlah,
+                    'subtotal' => (float)$harga_jual * $jumlah
                 ];
                 $totalall += $detail_data['subtotal'];
 
@@ -588,19 +602,22 @@ class Penjualan extends CI_Controller
 
         $already = isset($_SESSION[$kode_user . 'detailbarang'][$kode_barang]);
 
+        // Store numbers, not the raw text: "1,5" or an empty rupiah made the
+        // checkout arithmetic warn (or throw a TypeError) on PHP 8
+        $is_using_rupiah = ($input->post('rupiah') <> -1);
         $data = array(
             'kode_barang' => $input->post('kode_barang'),
             'nama_barang' => $barang->nama_barang,
             'harga_jual' => $barang->harga_jual,
             'harga_beli' => $barang->harga_beli,
-            'jumlah' => $input->post('jumlah'),
-            'subtotal' => ($input->post('rupiah') <> -1) ? $input->post('rupiah') : (float)$barang->harga_jual * (float)$input->post('jumlah'),
-            'is_using_rupiah' => ($input->post('rupiah') <> -1) ? true : false,
+            'jumlah' => $jumlah,
+            'subtotal' => $is_using_rupiah ? (float) $input->post('rupiah') : (float)$barang->harga_jual * $jumlah,
+            'is_using_rupiah' => $is_using_rupiah,
         );
 
         $_SESSION[$kode_user . 'detailbarang'][$input->post('kode_barang')] = $data;
 
-        $nama = trim($barang->nama_barang);
+        $nama = trim((string) $barang->nama_barang);
         return array(
             'ok' => TRUE,
             'message' => $already
@@ -634,7 +651,7 @@ class Penjualan extends CI_Controller
         }
 
         $can_see_stock = ($_SESSION['level'] == "admin" || !empty($_SESSION['can_see_stock']));
-        $nama = trim($barang->nama_barang);
+        $nama = trim((string) $barang->nama_barang);
         $message = $can_see_stock
             ? 'Stok ' . $nama . ' tidak cukup: tersisa ' . ($stok + 0) . ', diminta ' . ($jumlah + 0) . '.'
             : 'Stok ' . $nama . ' tidak mencukupi.';

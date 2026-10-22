@@ -59,7 +59,7 @@ class Home extends CI_Controller
         // $total_all +=  isset($_SESSION[ $_SESSION['kode'] . 'ongkos_karyawan']) ? $_SESSION[ $_SESSION['kode'] . 'ongkos_karyawan'] : 0;
 
         foreach ($detail_penjualan as $penjualandetail) {
-            $total_all += $penjualandetail['is_using_rupiah'] ? $penjualandetail['subtotal'] : $penjualandetail['harga_jual'] * $penjualandetail['jumlah'];
+            $total_all += $penjualandetail['is_using_rupiah'] ? (float) $penjualandetail['subtotal'] : (float) $penjualandetail['harga_jual'] * (float) $penjualandetail['jumlah'];
         }
 
         // return print_r($total_all);

@@ -36,7 +36,7 @@ class Karyawan extends CI_Controller
     {
         $this->load->view('nav');
         $this->load->library('pagination');
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
 
         if ($cari <> '') {
@@ -71,7 +71,7 @@ class Karyawan extends CI_Controller
         $this->load->view('nav');
         $this->load->library('pagination');
 
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
 
         if ($cari <> '') {

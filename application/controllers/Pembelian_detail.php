@@ -31,7 +31,7 @@ class Pembelian_detail extends CI_Controller
     {
         $this->load->view('nav');
         $this->load->library('pagination');
-        $cari = urldecode($this->input->get('cari'));
+        $cari = urldecode((string) $this->input->get('cari'));
         $start = intval($this->input->get('start'));
 
         if ($cari <> '') {
@@ -162,7 +162,7 @@ class Pembelian_detail extends CI_Controller
 
         $cart_key = $_SESSION['kode'] . 'detailbarang_pembelian';
         if (isset($_SESSION[$cart_key][$barang])) {
-            set_toast('info', trim($_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari daftar pembelian.');
+            set_toast('info', trim((string) $_SESSION[$cart_key][$barang]['nama_barang']) . ' dihapus dari daftar pembelian.');
         }
         unset($_SESSION[$cart_key][$barang]);
 
