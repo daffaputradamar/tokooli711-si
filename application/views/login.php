@@ -186,8 +186,8 @@ $username = isset($username) ? $username : '';
 	<section class="login-brand" aria-hidden="true">
 		<img class="login-logo" src="<?= base_url() ?>assets/logonew%20white.png" alt=""/>
 		<div class="login-pitch">
-			<h1>Kasir, stok, dan laporan bengkel dalam satu tempat.</h1>
-			<p>Masuk untuk mulai melayani pelanggan hari ini.</p>
+			<h1>Aplikasi kasir yang cepat dan mudah.</h1>
+			<p>Masuk untuk mulai mencatat transaksi hari ini.</p>
 		</div>
 		<div class="login-foot">&copy; <?= date('Y') ?> Toko Oli 711</div>
 	</section>
